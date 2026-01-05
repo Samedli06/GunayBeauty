@@ -3,136 +3,136 @@ import { Loader2, Upload, X } from "lucide-react";
 import { useEditCategoryWithImageMutation } from "../../../store/API";
 import { toast } from "react-toastify";
 
-const EditCategoryUI = ({item, setOpen, categories}) => {
-    const [isCategoryLoading, setIsCategoryLoading] = useState(false);
-    const [editCategory, { isLoading }] = useEditCategoryWithImageMutation();
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
-    const [isNewImage, setIsNewImage] = useState(false);
-    
-    const [formData, setFormData] = useState({
-      name: "",
-      description: ""
-    });
+const EditCategoryUI = ({ item, setOpen, categories }) => {
+  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
+  const [editCategory, { isLoading }] = useEditCategoryWithImageMutation();
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isNewImage, setIsNewImage] = useState(false);
 
-    useEffect(() => {
-      const input = document.getElementById('image-upload');
-      if (input) {
-        input.addEventListener('change', handleImageChange);
-      }
-    }, []);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: ""
+  });
 
-    useEffect(() => {
-  if (item) {
-    setFormData({
-      name: item.name || "",
-      description: item.description || ""
-    });
-
-    if (item.imageUrl) {
-      setImagePreview(item.imageUrl);
-      setIsNewImage(false);
-    } else {
-      setImagePreview(null); // 👈 clear old preview
-      setImageFile(null);
-      setIsNewImage(false);
+  useEffect(() => {
+    const input = document.getElementById('image-upload');
+    if (input) {
+      input.addEventListener('change', handleImageChange);
     }
-  }
-}, [item]);
+  }, []);
 
+  useEffect(() => {
+    if (item) {
+      setFormData({
+        name: item.name || "",
+        description: item.description || ""
+      });
 
-    const handleImageChange = (e) => {
-      const file = e.target.files?.[0];
-      
-      if (!file) {
-        return;
+      if (item.imageUrl) {
+        setImagePreview(item.imageUrl);
+        setIsNewImage(false);
+      } else {
+        setImagePreview(null); // 👈 clear old preview
+        setImageFile(null);
+        setIsNewImage(false);
       }
+    }
+  }, [item]);
 
- 
-      
-      if (!file.type.startsWith('image/')) {
-        alert("Please select a valid image file");
-        return;
-      }
-      
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Image size should be less than 5MB");
-        return;
-      }
 
-      setImageFile(file);
-      setIsNewImage(true);
-      
-      const reader = new FileReader();
-      
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+
+
+    if (!file.type.startsWith('image/')) {
+      alert("Please select a valid image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size should be less than 5MB");
+      return;
+    }
+
+    setImageFile(file);
+    setIsNewImage(true);
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+
+    reader.onerror = (error) => {
+      alert("Error reading file");
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleCategory = async (e) => {
+    e.preventDefault();
+
+    try {
+      setIsCategoryLoading(true);
+
+      const formDataToSend = new FormData();
+
+      const categoryData = {
+        name: formData.name,
+        description: formData.description || "description",
+        isActive: true,
+        sortOrder: 1,
+        parentCategoryId: item.parentCategoryId
       };
-      
-      reader.onerror = (error) => {
-        alert("Error reading file");
-      };
-      
-      reader.readAsDataURL(file);
-    };
 
-    const handleCategory = async (e) => {
-      e.preventDefault(); 
-      
-      try {
-        setIsCategoryLoading(true);
-        
-        const formDataToSend = new FormData();
-        
-        const categoryData = {
-          name: formData.name,
-          description: formData.description || "description",
-          isActive: true,
-          sortOrder: 1,
-          parentCategoryId: item.parentCategoryId
-        };
-        
-        formDataToSend.append('categoryData', JSON.stringify(categoryData));
-        
-        if (imageFile) {
-          formDataToSend.append('imageFile', imageFile);
-        }
+      formDataToSend.append('categoryData', JSON.stringify(categoryData));
 
-        const result = await editCategory({
-          id: item.id,
-          formData: formDataToSend
-        }).unwrap();
-        
-        toast.success("Kateqoriya uğurla yeniləndi");
-        setIsCategoryLoading(false);
-        if (setOpen) setOpen();
-      } catch (error) {
-        toast.error(error?.data?.message || "Kateqoriyanı yeniləmək uğursuz oldu");
-        setIsCategoryLoading(false);
+      if (imageFile) {
+        formDataToSend.append('imageFile', imageFile);
       }
-    };
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
+      const result = await editCategory({
+        id: item.id,
+        formData: formDataToSend
+      }).unwrap();
 
-    const getImageUrl = () => {
-      
-      // If it's a new image (just uploaded), imagePreview is already a data URL
-      if (isNewImage) {
-        return imagePreview;
-      } 
-      // If it's an existing image URL from the server
-      else if (imagePreview) {
-        return `https://smartteamazreal-001-site1.ktempurl.com/${imagePreview}`;
-      }
-      
-      return null;
-    };
+      toast.success("Kateqoriya uğurla yeniləndi");
+      setIsCategoryLoading(false);
+      if (setOpen) setOpen();
+    } catch (error) {
+      toast.error(error?.data?.message || "Kateqoriyanı yeniləmək uğursuz oldu");
+      setIsCategoryLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const getImageUrl = () => {
+
+    // If it's a new image (just uploaded), imagePreview is already a data URL
+    if (isNewImage) {
+      return imagePreview;
+    }
+    // If it's an existing image URL from the server
+    else if (imagePreview) {
+      return `http://mynera-001-site3.jtempurl.com/${imagePreview}`;
+    }
+
+    return null;
+  };
 
   return (
-    <form 
+    <form
       onSubmit={handleCategory}
       className="flex flex-col gap-6 p-6 bg-[#1f1f1f] rounded-lg w-96 max-w-full"
     >
@@ -146,7 +146,7 @@ const EditCategoryUI = ({item, setOpen, categories}) => {
           name="name"
           type="text"
           required
-          value={formData.name} 
+          value={formData.name}
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
         />
       </div>
@@ -160,7 +160,7 @@ const EditCategoryUI = ({item, setOpen, categories}) => {
           onChange={handleChange}
           name="description"
           rows="3"
-          value={formData.description} 
+          value={formData.description}
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400 resize-none"
           placeholder="Kateqoriya açıqlamasını daxil edin"
         />
@@ -170,18 +170,18 @@ const EditCategoryUI = ({item, setOpen, categories}) => {
         <label className="text-white text-sm mb-2">
           Kateqoriya şəkli
         </label>
-        
+
         {imagePreview && (
           <div className="relative mb-3 w-full h-40 rounded-lg overflow-hidden bg-[#2a2a2a] border border-gray-700">
-            <img 
-              src={getImageUrl()} 
-              alt="Preview" 
+            <img
+              src={getImageUrl()}
+              alt="Preview"
               className="w-full h-full object-cover"
             />
           </div>
         )}
 
-        <label 
+        <label
           htmlFor="image-upload"
           className="flex items-center justify-center gap-2 px-4 py-3 bg-[#2a2a2a] text-white border border-gray-700 rounded-lg cursor-pointer hover:bg-[#333333] transition-colors"
         >

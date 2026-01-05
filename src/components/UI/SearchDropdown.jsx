@@ -33,32 +33,32 @@ const ProductSkeletonDesktop = () => (
   </div>
 );
 
-const SearchDropdown = ({ 
-  searchQuery, 
-  searchResult, 
-  isSearching, 
+const SearchDropdown = ({
+  searchQuery,
+  searchResult,
+  isSearching,
   onClose,
   onProductClick,
   onCategoryClick,
   onBrandClick,
   onViewAllProducts,
   t,
-  width 
+  width
 }) => {
   const { i18n } = useTranslation();
-  
+
   // Dynamic translation states
   const [translatedSearchResult, setTranslatedSearchResult] = useState(null);
-  
+
   // Dynamic translation effect
   useEffect(() => {
     async function translateSearchResult() {
       if (!searchResult) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = { ...searchResult };
-        
+
         // Translate categories
         if (searchResult.categories) {
           translated.categories = await Promise.all(
@@ -68,7 +68,7 @@ const SearchDropdown = ({
             }))
           );
         }
-        
+
         // Translate brands
         if (searchResult.brands) {
           translated.brands = await Promise.all(
@@ -78,7 +78,7 @@ const SearchDropdown = ({
             }))
           );
         }
-        
+
         // Translate products
         if (searchResult.products) {
           translated.products = await Promise.all(
@@ -89,7 +89,7 @@ const SearchDropdown = ({
             }))
           );
         }
-        
+
         setTranslatedSearchResult(translated);
       } else {
         setTranslatedSearchResult(searchResult);
@@ -211,7 +211,7 @@ const SearchDropdown = ({
         <div className="mb-6">
           <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
             <Tag className="w-4 h-4" />
-{t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
+            {t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
           </h3>
           <div className="flex flex-wrap gap-2">
             {currentSearchResult.brands.slice(0, 6).map((brand) => (
@@ -221,8 +221,8 @@ const SearchDropdown = ({
                 className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full cursor-pointer transition-colors group border border-gray-200"
               >
                 {brand.logoUrl ? (
-                  <img 
-                    src={`https://smartteamazreal-001-site1.ktempurl.com${brand.logoUrl}`}
+                  <img
+                    src={`http://mynera-001-site3.jtempurl.com${brand.logoUrl}`}
                     alt={brand.name}
                     className="w-6 h-6 rounded-full object-cover"
                     onError={(e) => {
@@ -257,8 +257,8 @@ const SearchDropdown = ({
                 className="bg-white rounded-lg border border-[#dee2e6] p-3 hover:shadow-md cursor-pointer transition-all group"
               >
                 <div className="relative w-full aspect-square bg-white rounded-lg flex items-center justify-center mb-3 overflow-hidden">
-                  <img 
-                    src={`https://smartteamazreal-001-site1.ktempurl.com${product.primaryImageUrl}`}
+                  <img
+                    src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
                     alt={product.name}
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
@@ -297,7 +297,7 @@ const SearchDropdown = ({
               </div>
             ))}
           </div>
-          
+
           {currentSearchResult.products.length > 4 && (
             <button
               onClick={onViewAllProducts}

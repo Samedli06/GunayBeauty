@@ -2,14 +2,14 @@ import { Loader2, Pen, Trash, Image, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import Modal from "../../UI/Modal";
 import { toast } from "react-toastify";
-import { 
-  useAddBannerMutation, 
-  useDeleteBannerMutation, 
-  useGetBannersQuery, 
+import {
+  useAddBannerMutation,
+  useDeleteBannerMutation,
+  useGetBannersQuery,
   useGetParentCategoriesQuery,
   useUpdateBannerMutation,
   useUploadMobileImageMutation,
-  useUploadDesktopImageMutation 
+  useUploadDesktopImageMutation
 } from '../../../store/API';
 
 const BannersUI = () => {
@@ -126,7 +126,7 @@ const BannersUI = () => {
 
       try {
         const result = await addBanner(formDataToSend).unwrap();
-        
+
         // Upload mobile image if provided
         if (mobileFile && result?.id) {
           try {
@@ -139,7 +139,7 @@ const BannersUI = () => {
             toast.warning("Banner yaradıldı, lakin mobil şəkil yüklənmədi: " + (mobileError.data?.message || mobileError.message));
           }
         }
-        
+
         toast.success("Banner uğurla əlavə edildi!");
         refetch();
         onClose();
@@ -286,7 +286,7 @@ const BannersUI = () => {
                   </svg>
                 </button>
 
-                {isDropdownOpen && ( 
+                {isDropdownOpen && (
                   <div className="absolute bg-gray-800 z-10 w-full mt-1 border border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {isCatsLoading ? (
                       <div className="px-4 py-3 text-gray-400 text-center">Kateqoriyalar yüklənir...</div>
@@ -556,26 +556,26 @@ const BannersUI = () => {
     const [mobileImagePreview, setMobileImagePreview] = useState(null);
     const [uploadMobileImage] = useUploadMobileImageMutation();
     const [uploadDesktopImage] = useUploadDesktopImageMutation();
-    
+
     // Initialize image previews from banner data
     useEffect(() => {
       if (banner) {
         if (banner.imageUrl && !file) {
-          setImagePreview(`https://smartteamazreal-001-site1.ktempurl.com/${banner.imageUrl}`);
+          setImagePreview(`http://mynera-001-site3.jtempurl.com/${banner.imageUrl}`);
         }
         if (banner.mobileImageUrl && !mobileFile) {
-          setMobileImagePreview(`https://smartteamazreal-001-site1.ktempurl.com/${banner.mobileImageUrl}`);
+          setMobileImagePreview(`http://mynera-001-site3.jtempurl.com/${banner.mobileImageUrl}`);
         }
       }
     }, [banner, file, mobileFile]);
     const [formData, setFormData] = useState({
       title: banner?.title || '',
-      titleVisible: banner?.titleVisible ,
+      titleVisible: banner?.titleVisible,
       description: banner?.description || '',
-      descriptionVisible: banner?.descriptionVisible ,
+      descriptionVisible: banner?.descriptionVisible,
       linkUrl: banner?.linkUrl || '',
       buttonText: banner?.buttonText || '',
-      buttonVisible: banner?.buttonVisible ,
+      buttonVisible: banner?.buttonVisible,
       type: banner?.type || 0,
       isActive: banner?.isActive ?? true,
       sortOrder: banner?.sortOrder || 0,
@@ -587,7 +587,7 @@ const BannersUI = () => {
 
 
       try {
-        
+
         const cleanFormData = {
           title: formData.title,
           titleVisible: formData.titleVisible,
@@ -602,7 +602,7 @@ const BannersUI = () => {
           startDate: formData.startDate,
           endDate: formData.endDate
         };
-      
+
         await updateBanner({
           id: banner.id,
           ...cleanFormData  // Spread the data at the same level as id
@@ -768,52 +768,52 @@ const BannersUI = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="editIsActive"
-              checked={formData.isActive}
-              onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-            />
-            <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-              Banner görünürlüyü
-            </label>
+              <input
+                type="checkbox"
+                id="editIsActive"
+                checked={formData.isActive}
+                onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
+                Banner görünürlüyü
+              </label>
             </div>
             <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="editIsActive"
-              checked={formData.buttonVisible}
-              onChange={(e) => setFormData(prev => ({ ...prev, buttonVisible: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-            />
-            <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-              Düymə görünürlüyü
-            </label>
+              <input
+                type="checkbox"
+                id="editIsActive"
+                checked={formData.buttonVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, buttonVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
+                Düymə görünürlüyü
+              </label>
             </div>
             <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="editIsActive"
-              checked={formData.titleVisible}
-              onChange={(e) => setFormData(prev => ({ ...prev, titleVisible: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-            />
-            <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-              Başlıq görünürlüyü
-            </label>
+              <input
+                type="checkbox"
+                id="editIsActive"
+                checked={formData.titleVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, titleVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
+                Başlıq görünürlüyü
+              </label>
             </div>
             <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="editIsActive"
-              checked={formData.descriptionVisible}
-              onChange={(e) => setFormData(prev => ({ ...prev, descriptionVisible: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-            />
-            <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-              Açıqlama görünürlüyü
-            </label>
+              <input
+                type="checkbox"
+                id="editIsActive"
+                checked={formData.descriptionVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, descriptionVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
+                Açıqlama görünürlüyü
+              </label>
             </div>
 
           </div>
@@ -847,7 +847,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={imagePreview || `https://smartteamazreal-001-site1.ktempurl.com/${banner?.imageUrl}`}
+                    src={imagePreview || `http://mynera-001-site3.jtempurl.com/${banner?.imageUrl}`}
                     alt="Desktop Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -925,7 +925,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={mobileImagePreview || `https://smartteamazreal-001-site1.ktempurl.com/${banner?.mobileImageUrl}`}
+                    src={mobileImagePreview || `http://mynera-001-site3.jtempurl.com/${banner?.mobileImageUrl}`}
                     alt="Mobile Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -1071,7 +1071,7 @@ const BannersUI = () => {
                       <div className="md:w-1/3 relative min-h-[180px] h-64 md:h-auto bg-gray-700">
                         <img
                           className="w-full h-full object-cover"
-                          src={`https://smartteamazreal-001-site1.ktempurl.com/${banner.imageUrl}`}
+                          src={`http://mynera-001-site3.jtempurl.com/${banner.imageUrl}`}
                           alt={banner.title}
                           onError={(e) => {
                             e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239CA3AF' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E";

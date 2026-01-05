@@ -6,7 +6,7 @@ import {
 export const API = createApi({
   reducerPath: 'API',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://smartteamazreal-001-site1.ktempurl.com',
+    baseUrl: 'http://mynera-001-site3.jtempurl.com',
     prepareHeaders: (headers, {
       endpoint,
       body
@@ -30,7 +30,7 @@ export const API = createApi({
         headers.set('Content-Type', 'application/json');
       }
 
-      const token = document.cookie.split('; ').find(row => row.startsWith('token=')) ?.split('=')[1]
+      const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1]
 
 
       if (token) {
@@ -1291,16 +1291,16 @@ export const API = createApi({
       queryFn: async (id, _api, _extraOptions, baseQuery) => {
         try {
           // Get token from cookies (same as your existing setup)
-          const token = document.cookie.split('; ').find(row => row.startsWith('token=')) ?.split('=')[1];
+          const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
 
           // Make the request
           const response = await fetch(
-            `https://smartteamazreal-001-site1.ktempurl.com/api/v1/Files/download/${id}`, {
-              method: 'GET',
-              headers: {
-                'Authorization': token ? `Bearer ${token}` : '',
-              },
-            }
+            `http://mynera-001-site3.jtempurl.com/api/v1/Files/download/${id}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': token ? `Bearer ${token}` : '',
+            },
+          }
           );
 
           // Check if response is ok

@@ -14,7 +14,7 @@ import UnauthorizedModal from './UnauthorizedModal';
 
 
 // ============= UNAUTHORIZED MODAL =============
- 
+
 
 // ============= MAIN COMPONENT =============
 const HomePageUI = ({
@@ -31,19 +31,19 @@ const HomePageUI = ({
   const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   // Dynamic translation states
   const [translatedProductName, setTranslatedProductName] = useState(product?.name || '');
   const [translatedProductDescription, setTranslatedProductDescription] = useState(product?.shortDescription || '');
- 
-  
+
+
   // Get favorite status for this product
   const { data: favoriteStatus } = useGetFavoriteStatusQuery({ productId: product.id });
   const [toggleFavorite, { isLoading: isTogglingFavorite }] = useToggleFavoriteMutation();
   const [localFavorite, setLocalFavorite] = useState(false);
 
   // Check authentication status on mount
-   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
     setIsAuthenticated(AuthUtils.isAuthenticated());
   }, []);
@@ -57,7 +57,7 @@ const HomePageUI = ({
       } else {
         setTranslatedProductName(product?.name || '');
       }
-      
+
       if (targetLang === 'en' && product?.shortDescription) {
         setTranslatedProductDescription(await translateDynamicField(product.shortDescription, targetLang));
       } else {
@@ -92,7 +92,7 @@ const HomePageUI = ({
         CartUtils.addItem(productData, 1);
         window.dispatchEvent(new Event("cartUpdated"));
       }
-      
+
       // Show success feedback
       setIsLoading(false);
       setShowSuccess(true);
@@ -102,7 +102,7 @@ const HomePageUI = ({
       }, 2000);
     } catch (error) {
       setIsLoading(false);
-      
+
       // Check for 401 unauthorized error (in case token expired)
       if (error?.status === 401 || error?.data?.status === 401) {
         setUnauthorizedAction('add items to cart');
@@ -119,17 +119,17 @@ const HomePageUI = ({
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Optimistic update
     const newFavoriteState = !localFavorite;
     setLocalFavorite(newFavoriteState);
-    
+
     try {
       await toggleFavorite({ productId: product.id }).unwrap();
     } catch (err) {
       // Revert on error
       setLocalFavorite(!newFavoriteState);
-      
+
       // Check for 401 unauthorized error
       if (err?.status === 401 || err?.data?.status === 401) {
         setUnauthorizedAction('add items to favorites');
@@ -153,7 +153,7 @@ const HomePageUI = ({
         </button>
       );
     }
-    
+
     if (showSuccess) {
       return (
         <button
@@ -179,12 +179,12 @@ const HomePageUI = ({
   if (deal) {
     return (
       <>
-       
-        
+
+
         <Link to={`/details/${product.id}`} className='bg-white p-1 border-1 flex flex-col justify-between border-gray-300 cursor-pointer rounded-lg relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400 '>
-          <img 
-            className='w-full rounded-lg p-3 aspect-square' 
-            src={`https://smartteamazreal-001-site1.ktempurl.com${url}`} 
+          <img
+            className='w-full rounded-lg p-3 aspect-square'
+            src={`http://mynera-001-site3.jtempurl.com${url}`}
             alt={product.name}
             onError={(e) => {
               e.target.src = '/Icons/logo.svg';
@@ -204,7 +204,7 @@ const HomePageUI = ({
           </div>
           <div className="flex gap-3 p-2">
             {renderButton()}
-        
+
             <button
               onClick={handleFavoriteClick}
               disabled={isTogglingFavorite}
@@ -223,23 +223,23 @@ const HomePageUI = ({
       </>
     );
   }
-  
+
   // ============= RENDER REGULAR PRODUCT CARD =============
   return (
     <>
       <UnauthorizedModal
-        isOpen={showUnauthorizedModal} 
+        isOpen={showUnauthorizedModal}
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
-      
+
       <Link
         to={`/details/${product.id}`}
         className="bg-white p-1 border-1 cursor-pointer border-gray-300 rounded-lg relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400 flex flex-col justify-between"
       >
         <img
           className="w-full rounded-lg p-3 aspect-square"
-          src={`https://smartteamazreal-001-site1.ktempurl.com${url}`}
+          src={`http://mynera-001-site3.jtempurl.com${url}`}
           alt={product.name}
           onError={(e) => {
             e.target.src = '/Icons/logo.svg';
@@ -254,7 +254,7 @@ const HomePageUI = ({
         </div>
         <div className="flex gap-3 p-2">
           {renderButton()}
-      
+
           <button
             onClick={handleFavoriteClick}
             disabled={isTogglingFavorite}

@@ -27,20 +27,20 @@ export function ProductCard({
 
   // Translate dynamic fields on language change
   useEffect(() => {
-  async function translateFields() {
-    const targetLang = i18n.language;
-    // Only translate AZ → EN
-    if (targetLang === "en") {
-      setName(await translateDynamicField(originalName, targetLang));
-      setDescription(await translateDynamicField(originalDescription, targetLang));
-    } else {
-      // AZ default
-      setName(originalName);
-      setDescription(originalDescription);
+    async function translateFields() {
+      const targetLang = i18n.language;
+      // Only translate AZ → EN
+      if (targetLang === "en") {
+        setName(await translateDynamicField(originalName, targetLang));
+        setDescription(await translateDynamicField(originalDescription, targetLang));
+      } else {
+        // AZ default
+        setName(originalName);
+        setDescription(originalDescription);
+      }
     }
-  }
-  translateFields();
-}, [i18n.language, originalName, originalDescription]);
+    translateFields();
+  }, [i18n.language, originalName, originalDescription]);
 
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export function ProductCard({
         <Link to={`/details/${id}`} className="block">
           <div className="aspect-square p-4 relative">
             <img
-              src={`https://smartteamazreal-001-site1.ktempurl.com${url}`}
+              src={`http://mynera-001-site3.jtempurl.com${url}`}
               alt={name || 'Product'}
               className="w-full h-full object-contain"
               onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
@@ -97,7 +97,7 @@ export function ProductCard({
         </Link>
 
         <div className="p-4 relative">
-          
+
 
           <Link to={`/details/${id}`} className="block mb-4">
             <div className='flex gap-2'>
@@ -110,9 +110,8 @@ export function ProductCard({
                 className=" top-4 right-4 p-1 lg:p-2 h-fit rounded-lg border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed z-10"
               >
                 <Heart
-                  className={`w-4 h-4 lg:w-5 lg:h-5 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${
-                    favoriteStatus?.isFavorite && 'fill-red-500'
-                  }`}
+                  className={`w-4 h-4 lg:w-5 lg:h-5 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${favoriteStatus?.isFavorite && 'fill-red-500'
+                    }`}
                 />
               </button>
             </div>
@@ -138,11 +137,10 @@ export function ProductCard({
           <button
             onClick={handleCartClick}
             disabled={isAddingToCart || justAdded}
-            className={`w-full cursor-pointer text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-              justAdded
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
-            }`}
+            className={`w-full cursor-pointer text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${justAdded
+              ? 'bg-green-500 hover:bg-green-600 text-white'
+              : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
+              }`}
           >
             {justAdded ? (
               <>
@@ -167,7 +165,7 @@ export function ProductCard({
       >
         <div className="flex-shrink-0 h-full w-full max-w-[150px] relative">
           <img
-            src={`https://smartteamazreal-001-site1.ktempurl.com${url}`}
+            src={`http://mynera-001-site3.jtempurl.com${url}`}
             alt={name || 'Product'}
             className="max-w-[150px] object-cover aspect-square w-full h-full rounded-lg"
             onError={(e) => {
@@ -207,9 +205,8 @@ export function ProductCard({
               className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Heart
-                className={`w-6 h-6 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${
-                  favoriteStatus?.isFavorite && 'fill-red-500'
-                }`}
+                className={`w-6 h-6 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${favoriteStatus?.isFavorite && 'fill-red-500'
+                  }`}
               />
             </button>
           </div>
@@ -217,11 +214,10 @@ export function ProductCard({
           <button
             onClick={handleCartClick}
             disabled={isAddingToCart || justAdded}
-            className={`h-fit self-end cursor-pointer w-[200px] text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-              justAdded
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
-            }`}
+            className={`h-fit self-end cursor-pointer w-[200px] text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${justAdded
+              ? 'bg-green-500 hover:bg-green-600 text-white'
+              : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
+              }`}
           >
             {justAdded ? (
               <>

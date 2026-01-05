@@ -9,7 +9,7 @@ const EditProduct = ({ setOpen, idPr }) => {
   const [deleteDetailImage] = useDeleteProductImageMutation();
   const { data: categories } = useGetCategoriesQuery();
   const [sortedCat, setSortedCat] = useState([]);
-  
+
   useEffect(() => {
     if (categories) {
       setSortedCat([...categories].sort((a, b) => a.name.localeCompare(b.name)));
@@ -33,7 +33,7 @@ const EditProduct = ({ setOpen, idPr }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [shouldUpdatePdf, setShouldUpdatePdf] = useState(false);
-  
+
   // Gallery/Detail images
   const [existingGalleryImages, setExistingGalleryImages] = useState([]);
   const [newGalleryFiles, setNewGalleryFiles] = useState([]);
@@ -64,17 +64,17 @@ const EditProduct = ({ setOpen, idPr }) => {
     if (edit && edit.id) {
       const pricesArray = edit.prices && edit.prices.length > 0
         ? edit.prices.map(p => ({
-            userRole: p.userRole,
-            price: p.price || 0,
-            discountedPrice: p.discountedPrice || 0,
-            discountPercentage: p.discountPercentage || 0
-          }))
+          userRole: p.userRole,
+          price: p.price || 0,
+          discountedPrice: p.discountedPrice || 0,
+          discountPercentage: p.discountPercentage || 0
+        }))
         : [
-            { userRole: 0, price: 0, discountedPrice: 0, discountPercentage: 0 },
-            { userRole: 1, price: 0, discountedPrice: 0, discountPercentage: 0 },
-            { userRole: 2, price: 0, discountedPrice: 0, discountPercentage: 0 },
-            { userRole: 3, price: 0, discountedPrice: 0, discountPercentage: 0 }
-          ];
+          { userRole: 0, price: 0, discountedPrice: 0, discountPercentage: 0 },
+          { userRole: 1, price: 0, discountedPrice: 0, discountPercentage: 0 },
+          { userRole: 2, price: 0, discountedPrice: 0, discountPercentage: 0 },
+          { userRole: 3, price: 0, discountedPrice: 0, discountPercentage: 0 }
+        ];
 
       setFormData({
         name: edit.name || '',
@@ -196,67 +196,67 @@ const EditProduct = ({ setOpen, idPr }) => {
   };
 
   const handleProductEdit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    if (imagesToDelete.length > 0) {
-      for (const image of imagesToDelete) {
-        try {
-          await deleteDetailImage({
-            id: image.id,
-          }).unwrap();
-        } catch (error) {
+    try {
+      if (imagesToDelete.length > 0) {
+        for (const image of imagesToDelete) {
+          try {
+            await deleteDetailImage({
+              id: image.id,
+            }).unwrap();
+          } catch (error) {
+          }
         }
       }
+
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        shortDescription: formData.shortDescription,
+        sku: formData.sku,
+        isActive: formData.isActive,
+        isHotDeal: formData.isHotDeal,
+        stockQuantity: formData.stockQuantity,
+        categoryId: formData.categoryId,
+        brandId: formData.brandId,
+        prices: formData.prices,
+      };
+
+      const formDataToSend = new FormData();
+      formDataToSend.append('productData', JSON.stringify(productData));
+
+      if (imageFile) {
+        formDataToSend.append('imageFile', imageFile);
+      }
+
+      if (shouldUpdatePdf && pdfFile) {
+        formDataToSend.append('pdfFile', pdfFile);
+      }
+
+      if (newGalleryFiles.length > 0) {
+        newGalleryFiles.forEach((file) => {
+          formDataToSend.append('detailImageFiles', file);
+        });
+      }
+
+      const result = await editProductWithImage({
+        id: idPr,
+        formData: formDataToSend,
+      }).unwrap();
+
+      setImageFile(null);
+      setPdfFile(null);
+      setShouldUpdatePdf(false);
+      setNewGalleryFiles([]);
+      setImagesToDelete([]);
+
+      toast.success('Məhsul uğurla yeniləndi');
+      setOpen();
+    } catch (error) {
+      console.error('Edit error:', error);
     }
-
-    const productData = {
-      name: formData.name,
-      description: formData.description ,
-      shortDescription: formData.shortDescription,
-      sku: formData.sku,
-      isActive: formData.isActive,
-      isHotDeal: formData.isHotDeal,
-      stockQuantity: formData.stockQuantity,
-      categoryId: formData.categoryId,
-      brandId: formData.brandId,
-      prices: formData.prices,
-    };
-
-    const formDataToSend = new FormData();
-    formDataToSend.append('productData', JSON.stringify(productData));
-
-    if (imageFile) {
-      formDataToSend.append('imageFile', imageFile);
-    }
-
-    if (shouldUpdatePdf && pdfFile) {
-      formDataToSend.append('pdfFile', pdfFile);
-    }
-
-    if (newGalleryFiles.length > 0) {
-      newGalleryFiles.forEach((file) => {
-        formDataToSend.append('detailImageFiles', file);
-      });
-    }
-
-    const result = await editProductWithImage({
-      id: idPr,
-      formData: formDataToSend,
-    }).unwrap();
-
-    setImageFile(null);
-    setPdfFile(null);
-    setShouldUpdatePdf(false);
-    setNewGalleryFiles([]);
-    setImagesToDelete([]);
-
-    toast.success('Məhsul uğurla yeniləndi');
-    setOpen();
-  } catch (error) {
-    console.error('Edit error:', error);
-  }
-};
+  };
 
 
   if (loading) {
@@ -281,7 +281,7 @@ const EditProduct = ({ setOpen, idPr }) => {
             {imagePreview ? (
               <div className="relative">
                 <img
-                  src={imageFile ? imagePreview : `https://smartteamazreal-001-site1.ktempurl.com${imagePreview}`}
+                  src={imageFile ? imagePreview : `http://mynera-001-site3.jtempurl.com${imagePreview}`}
                   alt="Product preview"
                   className="w-32 h-32 object-cover rounded-md border border-gray-600"
                 />
@@ -323,7 +323,7 @@ const EditProduct = ({ setOpen, idPr }) => {
           <div className="flex items-center gap-4">
             {edit?.pdfUrl && !pdfFile && (
               <a
-                href={`https://smartteamazreal-001-site1.ktempurl.com${edit.pdfUrl}`}
+                href={`http://mynera-001-site3.jtempurl.com${edit.pdfUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-indigo-400 hover:text-indigo-300 text-sm underline"
@@ -371,7 +371,7 @@ const EditProduct = ({ setOpen, idPr }) => {
                   return (
                     <div key={image.id} className="relative">
                       <img
-                        src={`https://smartteamazreal-001-site1.ktempurl.com${image.imageUrl}`}
+                        src={`http://mynera-001-site3.jtempurl.com${image.imageUrl}`}
                         alt={`Detail ${index + 1}`}
                         className="w-full h-32 object-cover rounded-md border border-gray-600"
                       />
@@ -383,7 +383,8 @@ const EditProduct = ({ setOpen, idPr }) => {
                         ×
                       </button>
                     </div>
-                )})}
+                  )
+                })}
               </div>
             </div>
           )}

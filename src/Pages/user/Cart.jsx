@@ -27,19 +27,19 @@ const CartUtils = {
   getCart() {
     try {
       const cart = localStorage.getItem(this.CART_KEY);
-      return cart ? JSON.parse(cart) : { 
-        items: [], 
-        totalPriceBeforeDiscount: 0, 
-        totalDiscount: 0, 
-        totalAmount: 0 
+      return cart ? JSON.parse(cart) : {
+        items: [],
+        totalPriceBeforeDiscount: 0,
+        totalDiscount: 0,
+        totalAmount: 0
       };
     } catch (error) {
       console.error('Error reading cart:', error);
-      return { 
-        items: [], 
-        totalPriceBeforeDiscount: 0, 
-        totalDiscount: 0, 
-        totalAmount: 0 
+      return {
+        items: [],
+        totalPriceBeforeDiscount: 0,
+        totalDiscount: 0,
+        totalAmount: 0
       };
     }
   },
@@ -49,7 +49,7 @@ const CartUtils = {
       cart.totalPriceBeforeDiscount = cart.totalPriceBeforeDiscount || 0;
       cart.totalDiscount = cart.totalDiscount || 0;
       cart.totalAmount = cart.totalAmount || 0;
-      
+
       localStorage.setItem(this.CART_KEY, JSON.stringify(cart));
       window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cart }));
     } catch (error) {
@@ -67,12 +67,12 @@ const CartUtils = {
   updateQuantity(itemId, quantity) {
     const cart = this.getCart();
     const item = cart.items.find(item => item.id === itemId);
-    
+
     if (!item) {
       console.warn(`Item with id ${itemId} not found`);
       return cart;
     }
-    
+
     if (quantity <= 0) {
       return this.removeItem(itemId);
     }
@@ -87,11 +87,11 @@ const CartUtils = {
   },
 
   clearCart() {
-    const emptyCart = { 
-      items: [], 
-      totalPriceBeforeDiscount: 0, 
-      totalDiscount: 0, 
-      totalAmount: 0 
+    const emptyCart = {
+      items: [],
+      totalPriceBeforeDiscount: 0,
+      totalDiscount: 0,
+      totalAmount: 0
     };
     localStorage.setItem(this.CART_KEY, JSON.stringify(emptyCart));
     window.dispatchEvent(new CustomEvent('cartUpdated', { detail: emptyCart }));
@@ -247,9 +247,9 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     onSubmit(formData);
   };
 
@@ -265,11 +265,11 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
       onClick={handleClose}
     >
-      <div 
+      <div
         className="bg-white rounded-lg max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
@@ -298,8 +298,8 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
           <div className="space-y-2">
             {cartItems?.items?.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
-                <img 
-                  src={`https://smartteamazreal-001-site1.ktempurl.com${item?.productImageUrl}`}
+                <img
+                  src={`http://mynera-001-site3.jtempurl.com${item?.productImageUrl}`}
                   alt={item?.productName}
                   className="w-12 h-12 object-contain rounded bg-gray-50 p-1"
                   onError={(e) => {
@@ -391,13 +391,12 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
           <button
             type="submit"
             disabled={isSubmitting || isSuccess}
-            className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-              isSuccess
+            className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${isSuccess
                 ? 'bg-green-500 text-white cursor-default'
                 : isSubmitting
-                ? 'bg-red-400 text-white cursor-not-allowed'
-                : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
-            }`}
+                  ? 'bg-red-400 text-white cursor-not-allowed'
+                  : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+              }`}
           >
             {isSubmitting ? (
               <>
@@ -425,22 +424,22 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 const Cart = () => {
   const { t, i18n } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [localCart, setLocalCart] = useState({ 
-    items: [], 
+  const [localCart, setLocalCart] = useState({
+    items: [],
     totalPriceBeforeDiscount: 0,
     totalDiscount: 0,
-    totalAmount: 0 
+    totalAmount: 0
   });
-  
+
   const [translatedCartItems, setTranslatedCartItems] = useState(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
   const [isOrderSuccess, setIsOrderSuccess] = useState(false);
-  
+
   const { data: cartItemsD, isLoading: apiLoading, isError } = useGetCartItemsQuery(undefined, {
     skip: !isAuthenticated
   });
-  
+
   const { data: me } = useGetMeQuery();
   const [updateCartItemQuantity] = useUpdateCartItemQuantityMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
@@ -455,7 +454,7 @@ const Cart = () => {
   useEffect(() => {
     const authStatus = AuthUtils.isAuthenticated();
     setIsAuthenticated(authStatus);
-    
+
     if (!authStatus) {
       setLocalCart(CartUtils.getCart());
     }
@@ -466,7 +465,7 @@ const Cart = () => {
       const handleCartUpdate = (e) => {
         setLocalCart(e.detail);
       };
-      
+
       window.addEventListener('cartUpdated', handleCartUpdate);
       return () => window.removeEventListener('cartUpdated', handleCartUpdate);
     }
@@ -475,36 +474,36 @@ const Cart = () => {
   const cartItems = isAuthenticated ? cartItemsD : localCart;
   const isLoading = isAuthenticated ? apiLoading : false;
 
-useEffect(() => {
-  async function translateCartItems() {
-    if (!cartItems?.items || cartItems.items.length === 0) {
-      setTranslatedCartItems({ items: [], totalPriceBeforeDiscount: 0, totalDiscount: 0, totalAmount: 0 });
-      return;
-    }
+  useEffect(() => {
+    async function translateCartItems() {
+      if (!cartItems?.items || cartItems.items.length === 0) {
+        setTranslatedCartItems({ items: [], totalPriceBeforeDiscount: 0, totalDiscount: 0, totalAmount: 0 });
+        return;
+      }
 
-    const targetLang = i18n.language;
-    if (targetLang === 'en') {
-      const translated = {
-        ...cartItems,
-        items: await Promise.all(
-          cartItems.items.map(async (item) => ({
-            ...item,
-            productName: await translateDynamicField(item.productName, targetLang),
-            productDescription: item.productDescription ? await translateDynamicField(item.productDescription, targetLang) : item.productDescription
-          }))
-        )
-      };
-      setTranslatedCartItems(translated);
-    } else {
-      setTranslatedCartItems(cartItems);
+      const targetLang = i18n.language;
+      if (targetLang === 'en') {
+        const translated = {
+          ...cartItems,
+          items: await Promise.all(
+            cartItems.items.map(async (item) => ({
+              ...item,
+              productName: await translateDynamicField(item.productName, targetLang),
+              productDescription: item.productDescription ? await translateDynamicField(item.productDescription, targetLang) : item.productDescription
+            }))
+          )
+        };
+        setTranslatedCartItems(translated);
+      } else {
+        setTranslatedCartItems(cartItems);
+      }
     }
-  }
-  translateCartItems();
-}, [i18n.language, cartItems]);
+    translateCartItems();
+  }, [i18n.language, cartItems]);
 
   const handleCheckoutSubmit = async (formData) => {
     setIsOrderSubmitting(true);
-    
+
     try {
       const orderPayload = {
         phoneNumber: "0506740649",
@@ -531,22 +530,22 @@ useEffect(() => {
 
       if (response.whatsAppUrl) {
         setIsOrderSuccess(true);
-        
+
         setTimeout(async () => {
           window.open(response.whatsAppUrl, "_blank");
-          
+
           if (isAuthenticated) {
             await removeCart().unwrap();
           } else {
             CartUtils.clearCart();
-            setLocalCart({ 
-              items: [], 
+            setLocalCart({
+              items: [],
               totalPriceBeforeDiscount: 0,
               totalDiscount: 0,
-              totalAmount: 0 
+              totalAmount: 0
             });
           }
-          
+
           setIsCheckoutModalOpen(false);
           setIsOrderSuccess(false);
         }, 1500);
@@ -560,7 +559,7 @@ useEffect(() => {
   const debouncedUpdate = useMemo(
     () => debounce(async (cartItemId, quantity) => {
       if (!isAuthenticated) return;
-      
+
       try {
         setUpdatingItems(prev => new Set(prev).add(cartItemId));
         await updateCartItemQuantity({ cartItemId, quantity }).unwrap();
@@ -634,14 +633,14 @@ useEffect(() => {
   const handleRemoveItem = async (id) => {
     try {
       setRemovingItems(prev => new Set(prev).add(id));
-      
+
       if (isAuthenticated) {
         await removeCartItem({ id }).unwrap();
       } else {
         const updatedCart = CartUtils.removeItem(id);
         setLocalCart(updatedCart);
       }
-      
+
     } catch (error) {
       console.error('Failed to remove cart item:', error);
     } finally {
@@ -656,19 +655,19 @@ useEffect(() => {
   const handleRemoveCart = async () => {
     try {
       setIsRemovingCart(true);
-      
+
       if (isAuthenticated) {
         await removeCart().unwrap();
       } else {
         CartUtils.clearCart();
-        setLocalCart({ 
-          items: [], 
+        setLocalCart({
+          items: [],
           totalPriceBeforeDiscount: 0,
           totalDiscount: 0,
-          totalAmount: 0 
+          totalAmount: 0
         });
       }
-      
+
     } catch (error) {
       console.error('Failed to remove cart:', error);
     } finally {
@@ -737,7 +736,7 @@ useEffect(() => {
                             <div className="w-30 h-30 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
                               <img
                                 className='w-full rounded-lg p-3 aspect-square'
-                                src={`https://smartteamazreal-001-site1.ktempurl.com${item?.productImageUrl}`}
+                                src={`http://mynera-001-site3.jtempurl.com${item?.productImageUrl}`}
                                 alt={item?.productName || 'Product'}
                                 onError={(e) => {
                                   e.target.src = "/Icons/logo.svg"
@@ -793,7 +792,7 @@ useEffect(() => {
                             <div className="w-30 h-30 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
                               <img
                                 className="w-full rounded-lg p-3 aspect-square"
-                                src={`https://smartteamazreal-001-site1.ktempurl.com${item?.productImageUrl}`}
+                                src={`http://mynera-001-site3.jtempurl.com${item?.productImageUrl}`}
                                 alt={item?.productName || "Product"}
                                 onError={(e) => {
                                   e.currentTarget.src = "/Icons/logo.svg";

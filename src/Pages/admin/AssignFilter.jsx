@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  ChevronDown, 
-  ChevronUp, 
-  Save, 
-  X, 
+import {
+  Plus,
+  Search,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+  Save,
+  X,
   Package,
   Tags,
   Loader2,
@@ -14,10 +14,10 @@ import {
   AlertCircle,
   Trash2
 } from 'lucide-react';
-import { 
-  useGetFiltersQuery, 
-  useAssignFilterMutation, 
-  useAssignFiltersBulkMutation, 
+import {
+  useGetFiltersQuery,
+  useAssignFilterMutation,
+  useAssignFiltersBulkMutation,
   useGetProductsQuery,
   useRemoveAllFiltersFromProductMutation,
   useRemoveCustomFilterFromProductMutation
@@ -33,7 +33,7 @@ const ProductFilterAssignment = () => {
   const [customValue, setCustomValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
-  const {data: products, isLoading: isProductLoading, refetch} = useGetProductsQuery()
+  const { data: products, isLoading: isProductLoading, refetch } = useGetProductsQuery()
   const [expandedSections, setExpandedSections] = useState({
     products: true,
     filters: true
@@ -78,7 +78,7 @@ const ProductFilterAssignment = () => {
       if (assignmentMode === 'single') {
         return [productId];
       }
-      return prev.includes(productId) 
+      return prev.includes(productId)
         ? prev.filter(id => id !== productId)
         : [...prev, productId];
     });
@@ -104,7 +104,7 @@ const ProductFilterAssignment = () => {
     }
 
     setLoading(true);
-    
+
     try {
       const assignmentData = {
         filterId: selectedFilter,
@@ -179,7 +179,7 @@ const ProductFilterAssignment = () => {
             <h1 className="text-4xl font-bold text-white mb-2">Məhsul Filtrinin Təyinatı</h1>
             <p className="text-gray-400 mt-1">Filtrləri məhsullara tək-tək və ya toplu şəkildə təyin et</p>
           </div>
-          <button 
+          <button
             onClick={openModal}
             className="px-6 py-3 bg-white cursor-pointer text-gray-900 font-semibold rounded-lg shadow-lg flex items-center gap-2 hover:bg-gray-100 transition-all duration-200"
           >
@@ -267,8 +267,8 @@ const ProductFilterAssignment = () => {
                       <tr key={product.id} className="hover:bg-gray-750 transition-colors">
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <img 
-                              src={`https://smartteamazreal-001-site1.ktempurl.com/${product.primaryImageUrl}`} 
+                            <img
+                              src={`http://mynera-001-site3.jtempurl.com/${product.primaryImageUrl}`}
                               alt={product.name}
                               className="w-12 h-12 rounded-lg object-cover bg-gray-600"
                               onError={(e) => {
@@ -285,29 +285,30 @@ const ProductFilterAssignment = () => {
                           <div className="flex flex-wrap gap-1">
                             {product.filters && product.filters.length > 0 ? (
                               product.filters.map((assignment, index) => {
-                                return(
-                                
-                                <span 
-                                  key={index}
-                                  className="px-2 py-1 bg-blue-600 text-white rounded-full text-xs flex items-center gap-1 group"
-                                  title={`${assignment.filterName}: ${assignment.value || assignment.optionName}`}
-                                >
-                                  {assignment.filterOptionDisplayName}
-                                  {assignment.value && (
-                                    <span className="text-blue-200">: {assignment.value}</span>
-                                  )}
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleRemoveCustomFilter(product.id, assignment.filterId, assignment.filterName);
-                                    }}
-                                    className="ml-1 hover:bg-blue-700 cursor-pointer rounded-full p-0.5 transition-colors"
-                                    title="Bu filtri sil"
+                                return (
+
+                                  <span
+                                    key={index}
+                                    className="px-2 py-1 bg-blue-600 text-white rounded-full text-xs flex items-center gap-1 group"
+                                    title={`${assignment.filterName}: ${assignment.value || assignment.optionName}`}
                                   >
-                                    <X className="w-3 h-3 cursor-pointer" />
-                                  </button>
-                                </span>
-                              )})
+                                    {assignment.filterOptionDisplayName}
+                                    {assignment.value && (
+                                      <span className="text-blue-200">: {assignment.value}</span>
+                                    )}
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemoveCustomFilter(product.id, assignment.filterId, assignment.filterName);
+                                      }}
+                                      className="ml-1 hover:bg-blue-700 cursor-pointer rounded-full p-0.5 transition-colors"
+                                      title="Bu filtri sil"
+                                    >
+                                      <X className="w-3 h-3 cursor-pointer" />
+                                    </button>
+                                  </span>
+                                )
+                              })
                             ) : (
                               <span className="text-gray-500 text-sm italic">Filtr təyin olunmayıb</span>
                             )}
@@ -361,7 +362,7 @@ const ProductFilterAssignment = () => {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-white">Filtrləri məhsullara təyin et</h2>
-                  <button 
+                  <button
                     onClick={closeModal}
                     className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                   >
@@ -374,21 +375,19 @@ const ProductFilterAssignment = () => {
                   <div className="flex gap-2 p-1 bg-gray-700 rounded-lg w-fit">
                     <button
                       onClick={() => setAssignmentMode('single')}
-                      className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${
-                        assignmentMode === 'single' 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${assignmentMode === 'single'
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-400 hover:text-white'
-                      }`}
+                        }`}
                     >
                       Tək məhsul
                     </button>
                     <button
                       onClick={() => setAssignmentMode('bulk')}
-                      className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${
-                        assignmentMode === 'bulk' 
-                          ? 'bg-blue-600 text-white' 
+                      className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${assignmentMode === 'bulk'
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-400 hover:text-white'
-                      }`}
+                        }`}
                     >
                       Toplu təyinat
                     </button>
@@ -407,8 +406,8 @@ const ProductFilterAssignment = () => {
                         onClick={() => toggleSection('products')}
                         className="p-1 hover:bg-gray-700 rounded transition-colors"
                       >
-                        {expandedSections.products ? 
-                          <ChevronUp className="w-4 h-4 text-gray-400" /> : 
+                        {expandedSections.products ?
+                          <ChevronUp className="w-4 h-4 text-gray-400" /> :
                           <ChevronDown className="w-4 h-4 text-gray-400" />
                         }
                       </button>
@@ -449,19 +448,18 @@ const ProductFilterAssignment = () => {
                             <div
                               key={product.id}
                               onClick={() => handleProductSelection(product.id)}
-                              className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                                selectedProducts.includes(product.id)
+                              className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${selectedProducts.includes(product.id)
                                   ? 'bg-blue-600 border-blue-500 text-white'
                                   : 'bg-gray-700 border-gray-600 hover:bg-gray-600'
-                              }`}
+                                }`}
                             >
                               <div className="flex-shrink-0 w-4">
                                 {selectedProducts.includes(product.id) && (
                                   <Check className="w-4 h-4 text-white" />
                                 )}
                               </div>
-                              <img 
-                                src={`https://smartteamazreal-001-site1.ktempurl.com/${product.primaryImageUrl}`} 
+                              <img
+                                src={`http://mynera-001-site3.jtempurl.com/${product.primaryImageUrl}`}
                                 alt={product.name}
                                 className="w-10 h-10 rounded-lg object-cover bg-gray-600"
                                 onError={(e) => {
@@ -560,16 +558,16 @@ const ProductFilterAssignment = () => {
                         </p>
                         <p className="text-white">
                           <span className="text-gray-400">Filtr:</span> {
-                            selectedFilter ? 
-                            filters?.find(f => f.id === selectedFilter)?.name || 'Naməlum' : 
-                            'Seçilməyib'
+                            selectedFilter ?
+                              filters?.find(f => f.id === selectedFilter)?.name || 'Naməlum' :
+                              'Seçilməyib'
                           }
                         </p>
                         <p className="text-white">
                           <span className="text-gray-400">Dəyər:</span> {
-                            customValue || 
-                            (selectedFilterOption ? 
-                              availableOptions.find(opt => opt.id === selectedFilterOption)?.displayName || 'Naməlum' : 
+                            customValue ||
+                            (selectedFilterOption ?
+                              availableOptions.find(opt => opt.id === selectedFilterOption)?.displayName || 'Naməlum' :
                               'Təyin edilməyib'
                             )
                           }

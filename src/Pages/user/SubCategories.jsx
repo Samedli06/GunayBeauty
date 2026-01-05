@@ -20,7 +20,7 @@ const SubCategoriesSkeleton = () => {
   return (
     <section className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        
+
         {/* Breadcrumb Skeleton */}
         <div className="hidden md:block mb-5">
           <div className="flex items-center space-x-2 animate-pulse">
@@ -29,12 +29,12 @@ const SubCategoriesSkeleton = () => {
             <div className="h-4 bg-gray-200 rounded w-24"></div>
           </div>
         </div>
-        
+
         {/* Page Title Skeleton */}
         <div className="mb-8 animate-pulse">
           <div className="h-8 sm:h-9 md:h-10 bg-gray-200 rounded w-48 sm:w-56 md:w-64"></div>
         </div>
-        
+
         {/* Categories Grid Skeleton */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(8)].map((_, index) => (
@@ -44,7 +44,7 @@ const SubCategoriesSkeleton = () => {
 
         {/* Similar Products Skeleton */}
         <SimilarProducts products={[]} isLoading={true} />
-        
+
       </div>
     </section>
   );
@@ -64,7 +64,7 @@ const CategoryCard = ({ title, imageSrc = null, slug, parentCategory }) => (
       <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-50 transition-colors">
         {imageSrc ? (
           <img
-            src={`https://smartteamazreal-001-site1.ktempurl.com/${imageSrc}`}
+            src={`http://mynera-001-site3.jtempurl.com/${imageSrc}`}
             alt={title}
             className="w-full h-full object-contain rounded-lg"
           />
@@ -134,18 +134,18 @@ const SubCategories = () => {
   return (
     <section className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        
+
         <div className=" md:block mb-5">
           <Breadcrumb />
         </div>
-        
+
         {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             {translatedSubs.name || name}
           </h1>
         </div>
-        
+
         {/* Categories Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {translatedSubs?.subCategories?.map((category, index) => (

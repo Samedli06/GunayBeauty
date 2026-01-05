@@ -7,13 +7,13 @@ import { useAddCategoryMutation, useDeleteCategoryMutation, useGetCategoriesQuer
 import EditCategoryUI from '../../components/admin/Category/EditCategory';
 
 const Category = () => {
-  const [modalType, setModalType] = useState(null); 
+  const [modalType, setModalType] = useState(null);
   const [edit, setEdit] = useState(null);
   const { data: categories, isLoading, error, refetch } = useGetCategoriesQuery();
   console.log(categories);
-  const { data: ParCat, isParCatLoading} = useGetParentCategoriesQuery();
+  const { data: ParCat, isParCatLoading } = useGetParentCategoriesQuery();
   console.log(ParCat);
-  const [expanded, setExpanded] = useState({}); 
+  const [expanded, setExpanded] = useState({});
 
   const [deleteCategory] = useDeleteCategoryMutation();
 
@@ -76,7 +76,7 @@ const Category = () => {
             <img
               className="w-10 h-10 rounded-full"
               src={
-                `https://smartteamazreal-001-site1.ktempurl.com${cat.imageUrl}` ||
+                `http://mynera-001-site3.jtempurl.com${cat.imageUrl}` ||
                 "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/85d1d12f-b0a5-49c0-bc81-6238cfc5d9ac/JORDAN+1+RETRO+HIGH+OG+%28PS%29.png"
               }
               alt=""
@@ -117,7 +117,7 @@ const Category = () => {
   };
 
   return (
-    <div className="p-6"> 
+    <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-white">Kateqoriyalar</h1>

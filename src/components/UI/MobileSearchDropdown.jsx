@@ -31,17 +31,17 @@ const ProductSkeletonMobile = () => (
   </div>
 );
 
-const MobileSearchDropdown = ({ 
-  searchQuery, 
-  searchResult, 
-  isSearching, 
+const MobileSearchDropdown = ({
+  searchQuery,
+  searchResult,
+  isSearching,
   onProductClick,
   onCategoryClick,
   onBrandClick,
   onViewAllProducts
 }) => {
   // Empty state - before typing
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   if (searchQuery.length === 0 || searchQuery.length === 1) {
     return (
       <div className="py-12 text-center">
@@ -163,8 +163,8 @@ const MobileSearchDropdown = ({
                 className="flex items-center gap-2 px-2.5 py-1.5 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-full cursor-pointer transition-colors border border-gray-200"
               >
                 {brand.logoUrl ? (
-                  <img 
-                    src={`https://smartteamazreal-001-site1.ktempurl.com${brand.logoUrl}`}
+                  <img
+                    src={`http://mynera-001-site3.jtempurl.com${brand.logoUrl}`}
                     alt={brand.name}
                     className="w-5 h-5 rounded-full object-cover"
                     onError={(e) => {
@@ -199,8 +199,8 @@ const MobileSearchDropdown = ({
                 className="bg-white rounded-lg border border-[#dee2e6] p-2 hover:shadow-md cursor-pointer transition-all active:scale-95"
               >
                 <div className="relative w-full aspect-square bg-white rounded-lg flex items-center justify-center mb-2 overflow-hidden">
-                  <img 
-                    src={`https://smartteamazreal-001-site1.ktempurl.com${product.primaryImageUrl}`}
+                  <img
+                    src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
                     alt={product.name}
                     className="w-full h-full object-contain"
                     onError={(e) => {
@@ -239,7 +239,7 @@ const MobileSearchDropdown = ({
               </div>
             ))}
           </div>
-          
+
           {searchResult.products.length > 6 && (
             <button
               onClick={onViewAllProducts}

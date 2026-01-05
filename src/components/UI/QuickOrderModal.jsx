@@ -4,7 +4,7 @@ import { useGetMeQuery, useQuickOrderMutation } from '../../store/API';
 import { useTranslation } from 'react-i18next';
 
 const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     customerName: '',
     phoneNumber: '0703569121',
@@ -14,8 +14,8 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
   const [createWPOrder, { isLoading: isOrderLoading }] = useQuickOrderMutation();
-  const {data: me} = useGetMeQuery()
-  
+  const { data: me } = useGetMeQuery()
+
 
   if (!isOpen) return null;
 
@@ -42,7 +42,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -50,21 +50,21 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
     try {
 
-        const orderPayload = {
-          productId: product.id,
-          quantity: quantity,
-          phoneNumber: "+9940706740649",
-          customerName: formData.customerName,
-          customerPhone: formData.customerPhone
-        }
+      const orderPayload = {
+        productId: product.id,
+        quantity: quantity,
+        phoneNumber: "+994123456789",
+        customerName: formData.customerName,
+        customerPhone: formData.customerPhone
+      }
 
       const response = await createWPOrder(orderPayload).unwrap();
       if (response.whatsAppUrl) {
-          window.open(response.whatsAppUrl, "_blank");
+        window.open(response.whatsAppUrl, "_blank");
       }
 
       setIsSuccess(true);
-      
+
       setTimeout(() => {
         setFormData({
           customerName: '',
@@ -98,11 +98,11 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 z-5000 flex items-center justify-center p-4"
         onClick={handleClose}
       >
-        <div 
+        <div
           className="bg-white rounded-lg max-w-md w-full shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
@@ -126,8 +126,8 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
           {/* Product Info */}
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center gap-4">
-              <img 
-                src={`https://smartteamazreal-001-site1.ktempurl.com${product?.imageUrl}`}
+              <img
+                src={`http://mynera-001-site3.jtempurl.com${product?.imageUrl}`}
                 alt={product?.name}
                 className="w-16 h-16 object-contain rounded-lg bg-white p-2"
                 onError={(e) => {
@@ -137,7 +137,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               <div className="flex-1">
                 <h4 className="font-medium text-gray-900 line-clamp-2">{product?.name}</h4>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-red-600 font-semibold">{product?.prices[me ? me?.role -1 : 0]?.discountedPrice} AZN</span>
+                  <span className="text-red-600 font-semibold">{product?.prices[me ? me?.role - 1 : 0]?.discountedPrice} AZN</span>
                   <span className="text-gray-500 text-sm">× {quantity}</span>
                 </div>
               </div>
@@ -163,7 +163,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
                 />
               </div>
 
-         
+
 
               <div>
                 <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-1">
@@ -193,7 +193,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 font-medium">{t('quickOrder.totalAmount')}</span>
                 <span className="text-2xl font-bold text-gray-900">
-                  {(product?.prices[me ? me?.role -1 : 0]?.discountedPrice * quantity).toFixed(2)} AZN
+                  {(product?.prices[me ? me?.role - 1 : 0]?.discountedPrice * quantity).toFixed(2)} AZN
                 </span>
               </div>
             </div>
@@ -202,13 +202,12 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
             <button
               type="submit"
               disabled={isSubmitting || isSuccess}
-              className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-                isSuccess
-                  ? 'bg-green-500 text-white cursor-default'
-                  : isSubmitting
+              className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${isSuccess
+                ? 'bg-green-500 text-white cursor-default'
+                : isSubmitting
                   ? 'bg-red-400 text-white cursor-not-allowed'
                   : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
-              }`}
+                }`}
             >
               {isSubmitting ? (
                 <>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Plus, 
-  Trash2, 
-  Settings, 
-  Package, 
+import {
+  ArrowLeft,
+  Edit,
+  Plus,
+  Trash2,
+  Settings,
+  Package,
   AlertCircle,
   CheckCircle,
   XCircle,
@@ -16,8 +16,8 @@ import {
   FileText,
   Download
 } from 'lucide-react';
-import { 
-  useGetProductQuery, 
+import {
+  useGetProductQuery,
   useGetProductSpecificationsQuery,
   useAddProductSpecificationsMutation,
   useUpdateProductSpecificationsMutation,
@@ -35,7 +35,7 @@ const ProductDetailPage = () => {
 
   // API hooks
   const { data: product, isLoading: productLoading } = useGetProductQuery(id);
-  
+
   const { data: specifications, isLoading: specsLoading, refetch: refetchSpecs } = useGetProductSpecificationsQuery(id);
   const [addSpecs, { isLoading: adding }] = useAddProductSpecificationsMutation();
   const [updateSpecs, { isLoading: updating }] = useUpdateProductSpecificationsMutation();
@@ -74,9 +74,9 @@ const ProductDetailPage = () => {
   };
 
   const removeSpecGroup = (groupIndex) => {
-    setSpecificationGroups(prev => 
-      prev.length > 1 
-        ? prev.filter((_, index) => index !== groupIndex) 
+    setSpecificationGroups(prev =>
+      prev.length > 1
+        ? prev.filter((_, index) => index !== groupIndex)
         : prev
     );
   };
@@ -89,8 +89,8 @@ const ProductDetailPage = () => {
   };
 
   const addItemToGroup = (groupIndex) => {
-    setSpecificationGroups(prev => 
-      prev.map((group, index) => 
+    setSpecificationGroups(prev =>
+      prev.map((group, index) =>
         index === groupIndex
           ? { ...group, items: [...group.items, { name: '', value: '', unit: '', type: 0 }] }
           : group
@@ -104,12 +104,12 @@ const ProductDetailPage = () => {
       prev.map((group, gIndex) =>
         gIndex === groupIndex
           ? {
-              ...group,
-              items:
-                group.items.length > 1
-                  ? group.items.filter((_, i) => i !== itemIndex)
-                  : group.items,
-            }
+            ...group,
+            items:
+              group.items.length > 1
+                ? group.items.filter((_, i) => i !== itemIndex)
+                : group.items,
+          }
           : group
       )
     );
@@ -124,8 +124,8 @@ const ProductDetailPage = () => {
 
   // Handle save specifications
   const handleSaveSpecs = async () => {
-    const isValid = specificationGroups.every(group => 
-      group.groupName.trim() !== '' && 
+    const isValid = specificationGroups.every(group =>
+      group.groupName.trim() !== '' &&
       group.items.every(item => item.name.trim() !== '' && item.value.trim() !== '')
     );
 
@@ -151,7 +151,7 @@ const ProductDetailPage = () => {
         }).unwrap();
         toast.success('Spesifikasiyalar uğurla əlavə olundu!');
       }
-      
+
       setEditingSpecs(false);
       refetchSpecs();
     } catch (error) {
@@ -160,25 +160,25 @@ const ProductDetailPage = () => {
   };
 
   const handleDeleteSpecs = async () => {
-      try {
-        await deleteSpecs({ id }).unwrap();
-        toast.success('Spesifikasiyalar silindi');
-        setEditingSpecs(false);
-        refetchSpecs();
-      } catch (error) {
-        toast.error('Spesifikasiyaları silmək mümkün olmadı');
-      }
+    try {
+      await deleteSpecs({ id }).unwrap();
+      toast.success('Spesifikasiyalar silindi');
+      setEditingSpecs(false);
+      refetchSpecs();
+    } catch (error) {
+      toast.error('Spesifikasiyaları silmək mümkün olmadı');
+    }
   };
 
   // Handle PDF deletion
   const handleDeletePdf = async (pdfId) => {
-      try {
-        await deleteProductPdf({ id: pdfId }).unwrap();
-        toast.success('PDF uğurla silindi');
-        refetchPdfs();
-      } catch (error) {
-        toast.error(error?.data?.message || 'PDF silinmədi');
-      }
+    try {
+      await deleteProductPdf({ id: pdfId }).unwrap();
+      toast.success('PDF uğurla silindi');
+      refetchPdfs();
+    } catch (error) {
+      toast.error(error?.data?.message || 'PDF silinmədi');
+    }
   };
 
   if (productLoading) {
@@ -209,7 +209,7 @@ const ProductDetailPage = () => {
             <ArrowLeft className="w-5 h-5" />
             Məhsullara qayıt
           </button>
-          
+
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-400">Məhsul ID: {product.id}</span>
           </div>
@@ -222,7 +222,7 @@ const ProductDetailPage = () => {
           {/* Product Image */}
           <div className="bg-white rounded-xl overflow-hidden">
             <img
-              src={`https://smartteamazreal-001-site1.ktempurl.com/${product.imageUrl}`}
+              src={`http://mynera-001-site3.jtempurl.com/${product.imageUrl}`}
               alt={product.name}
               className="w-full object-contain h-full max-h-[500px]"
               onError={(e) => {
@@ -254,7 +254,7 @@ const ProductDetailPage = () => {
                   {product.isActive ? 'Aktiv' : 'Deaktiv'}
                 </span>
               </div>
-              
+
               {product.isHotDeal && (
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-orange-400" />
@@ -270,7 +270,7 @@ const ProductDetailPage = () => {
                 Qiymətlər
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                
+
                 <div className='flex flex-col justify-between'>
                   <p className="text-gray-400 text-sm">Orjinal qiymət</p>
                   <p className="text-2xl font-bold text-green-400">{product?.prices[0].discountedPrice} AZN</p>
@@ -303,22 +303,21 @@ const ProductDetailPage = () => {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Vəziyyət</p>
-                  <p className={`font-medium ${
-                    product.stockQuantity === 0 ? 'text-red-400' :
+                  <p className={`font-medium ${product.stockQuantity === 0 ? 'text-red-400' :
                     product.stockQuantity <= 10 ? 'text-orange-400' : 'text-green-400'
-                  }`}>
+                    }`}>
                     {product.stockQuantity === 0 ? 'Stokda yoxdur' :
-                     product.stockQuantity <= 10 ? 'Az stok' : 'Stokda var'}
+                      product.stockQuantity <= 10 ? 'Az stok' : 'Stokda var'}
                   </p>
                 </div>
               </div>
             </div>
 
-            
 
-          
+
+
           </div>
-          
+
           {/* Product Details */}
           <div className="bg-gray-800 col-span-2 rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-3">Məhsul Məlumatları</h3>
@@ -352,7 +351,7 @@ const ProductDetailPage = () => {
                   <div key={image.id} className="relative group">
                     <div className="aspect-square bg-gray-700 rounded-lg overflow-hidden">
                       <img
-                        src={`https://smartteamazreal-001-site1.ktempurl.com/${image.imageUrl}`}
+                        src={`http://mynera-001-site3.jtempurl.com/${image.imageUrl}`}
                         alt={image.altText || `Product image ${index + 1}`}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         onError={(e) => {
@@ -392,49 +391,50 @@ const ProductDetailPage = () => {
             <div className="space-y-4">
               {productPdfs.map((pdf) => {
                 return (
-                <div key={pdf.id} className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-blue-600 rounded-lg p-3">
-                      <FileText className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">
-                        {pdf.originalFileName || pdf.filename}
-                      </h3>
-                      {pdf.description && (
-                        <p className="text-gray-400 text-sm mt-1">{pdf.description}</p>
-                      )}
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-                        <span>{(pdf.fileSize / 1024 / 1024).toFixed(2)} MB</span>
-                        <span>Yüklənmə sayı: {pdf.downloadCount}</span>
-                        {pdf.isActive ? (
-                          <span className="text-green-400">Aktiv</span>
-                        ) : (
-                          <span className="text-red-400">Deaktiv</span>
+                  <div key={pdf.id} className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-blue-600 rounded-lg p-3">
+                        <FileText className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-white font-medium">
+                          {pdf.originalFileName || pdf.filename}
+                        </h3>
+                        {pdf.description && (
+                          <p className="text-gray-400 text-sm mt-1">{pdf.description}</p>
                         )}
+                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                          <span>{(pdf.fileSize / 1024 / 1024).toFixed(2)} MB</span>
+                          <span>Yüklənmə sayı: {pdf.downloadCount}</span>
+                          {pdf.isActive ? (
+                            <span className="text-green-400">Aktiv</span>
+                          ) : (
+                            <span className="text-red-400">Deaktiv</span>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`http://mynera-001-site3.jtempurl.com/${pdf.filePath}`}
+                        download
+                        className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                        title="PDF yüklə"
+                      >
+                        <Download className="w-4 h-4" />
+                      </a>
+                      <button
+                        onClick={() => handleDeletePdf(pdf.id)}
+                        disabled={deletingPdf}
+                        className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                        title="PDF sil"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`https://smartteamazreal-001-site1.ktempurl.com/${pdf.filePath}`}
-                      download
-                      className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                      title="PDF yüklə"
-                    >
-                      <Download className="w-4 h-4" />
-                    </a>
-                    <button
-                      onClick={() => handleDeletePdf(pdf.id)}
-                      disabled={deletingPdf}
-                      className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
-                      title="PDF sil"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )})}
+                )
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
@@ -452,7 +452,7 @@ const ProductDetailPage = () => {
               <Settings className="w-6 h-6" />
               Məhsul Spesifikasiyaları
             </h2>
-            
+
             <div className="flex items-center gap-3">
               {!editingSpecs ? (
                 <>

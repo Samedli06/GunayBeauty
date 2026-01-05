@@ -3,16 +3,16 @@ import { useGetBrandsAdminQuery, useGetBrandsQuery } from '../../store/API';
 import { useTranslation } from 'react-i18next';
 
 const InfiniteBrandSlider = () => {
-    const { t } = useTranslation();
-    const { data: brands, isLoading: isBrandsLoading } = useGetBrandsAdminQuery();
+  const { t } = useTranslation();
+  const { data: brands, isLoading: isBrandsLoading } = useGetBrandsAdminQuery();
 
 
 
-    const brandsImg = brands?.map(brand => ({
-      src: `https://smartteamazreal-001-site1.ktempurl.com${brand?.logoUrl}`,
-      alt: brand?.name || "Brand",
-      slug: brand?.slug
-    })) || [];
+  const brandsImg = brands?.map(brand => ({
+    src: `http://mynera-001-site3.jtempurl.com${brand?.logoUrl}`,
+    alt: brand?.name || "Brand",
+    slug: brand?.slug
+  })) || [];
 
 
   const containerRef = useRef(null);
@@ -84,10 +84,10 @@ const InfiniteBrandSlider = () => {
   // Touch/Mouse start
   const handleStart = (e) => {
     if (!isMobile) return;
-    
+
     setIsDragging(true);
     setDragDistance(0);
-    
+
     const pageX = e.type === 'touchstart' ? e.touches[0].pageX : e.pageX;
     setStartX(pageX);
     setScrollLeft(containerRef.current.scrollLeft);
@@ -101,7 +101,7 @@ const InfiniteBrandSlider = () => {
     const pageX = e.type === 'touchmove' ? e.touches[0].pageX : e.pageX;
     const distance = pageX - startX;
     setDragDistance(Math.abs(distance));
-    
+
     const newScroll = scrollLeft - distance;
     const singleSetWidth = containerRef.current.scrollWidth / 3;
 

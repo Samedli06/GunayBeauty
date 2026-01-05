@@ -77,16 +77,16 @@ const Brands = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('All');
   const { data: brandsD, isLoading, error, refetch } = useGetBrandsAdminQuery();
-  
+
   // Dynamic translation states
   const [translatedBrands, setTranslatedBrands] = useState([]);
-  
+
 
   // Dynamic translation effect
   useEffect(() => {
     async function translateBrands() {
       if (!brandsD || brandsD.length === 0) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = await Promise.all(
@@ -107,13 +107,13 @@ const Brands = () => {
   const currentBrands = translatedBrands.length > 0 ? translatedBrands : brandsD;
   const brands = currentBrands?.map(brand => ({
     name: brand?.name || "Brand",
-    logo: brand?.logoUrl 
-      ? `https://smartteamazreal-001-site1.ktempurl.com${brand.logoUrl}` 
+    logo: brand?.logoUrl
+      ? `http://mynera-001-site3.jtempurl.com${brand.logoUrl}`
       : './Icons/banner-commercial.svg',
     products: brand?.productCount || 0,
     slug: brand?.slug
   })) || [];
-  
+
 
 
   const filteredBrands = brands.filter(brand => {
@@ -138,7 +138,7 @@ const Brands = () => {
             </div>
             <h3 className='text-xl font-semibold text-gray-900 mb-2'>{t('brandsSection.errorTitle')}</h3>
             <p className='text-[#505050] mb-4'>{t('brandsSection.errorMessage')}</p>
-            <button 
+            <button
               onClick={() => refetch()}
               className='bg-[#E60C03] text-white px-6 py-2 rounded-lg hover:bg-[#c00a02] transition-colors'
             >
@@ -170,7 +170,7 @@ const Brands = () => {
           </div>
         </div>
 
-        
+
 
         {/* Brands Count */}
         <div className='mb-6'>

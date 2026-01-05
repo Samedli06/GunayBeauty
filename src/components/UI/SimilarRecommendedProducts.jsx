@@ -31,7 +31,7 @@ const SkeletonProductCard = ({ isMobile = false }) => {
       <div className="py-4">
         <div className="h-48 bg-gray-200 rounded-lg mx-10"></div>
       </div>
-      
+
       <div className="flex justify-between">
         <div className="space-y-2 flex-1">
           <div className="h-4 bg-gray-200 rounded w-24"></div>
@@ -39,7 +39,7 @@ const SkeletonProductCard = ({ isMobile = false }) => {
         </div>
         <div className="w-9 h-9 bg-gray-200 rounded-lg"></div>
       </div>
-      
+
       <div className="w-full h-9 bg-gray-200 rounded-lg"></div>
     </div>
   );
@@ -49,9 +49,9 @@ const SkeletonProductCard = ({ isMobile = false }) => {
 
 // Desktop Product Card
 const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, onAddToCart, onUnauthorized }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
-  
+
   const { data: favoriteStatus } = useGetFavoriteStatusQuery({ productId: product.id });
   const [toggleFavorite, { isLoading: isTogglingFavorite }] = useToggleFavoriteMutation();
   const [localFavorite, setLocalFavorite] = useState(false);
@@ -65,15 +65,15 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const newFavoriteState = !localFavorite;
     setLocalFavorite(newFavoriteState);
-    
+
     try {
       await toggleFavorite({ productId: product.id }).unwrap();
     } catch (err) {
       setLocalFavorite(!newFavoriteState);
-      
+
       // Check for 401 Unauthorized error
       if (err?.status === 401 || err?.originalStatus === 401) {
         onUnauthorized('add items to favorites');
@@ -86,7 +86,7 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
 
   const renderButton = () => {
     const isThisProductLoading = isAddingToCart && loadingProductId === product.id;
-    
+
     if (isThisProductLoading) {
       return (
         <button
@@ -98,7 +98,7 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
         </button>
       );
     }
-    
+
     if (showSuccess === product.id) {
       return (
         <button
@@ -124,16 +124,16 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
   return (
     <Link to={`/details/${product?.id}`} className="bg-white rounded-lg p-4 border cursor-pointer border-[#DEE2E6] min-w-[200px] flex-shrink-0 space-y-3">
       <div className="py-4">
-        <img 
-          src={`https://smartteamazreal-001-site1.ktempurl.com${product.primaryImageUrl}`} 
+        <img
+          src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
           alt={product.name}
-          className="h-48 object-contain max-w-[300px] mx-10 rounded-lg" 
+          className="h-48 object-contain max-w-[300px] mx-10 rounded-lg"
           onError={(e) => {
             e.target.src = "/Icons/logo.svg";
           }}
         />
       </div>
-      
+
       <div className='flex justify-between'>
         <div>
           <h3 className="font-medium text-gray-700 mb-1">
@@ -141,19 +141,18 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
           </h3>
           <p className="text-lg font-semibold text-gray-900">{product.currentPrice} AZN</p>
         </div>
-        <button 
+        <button
           onClick={handleFavoriteClick}
           disabled={isTogglingFavorite}
           className="top-2 right-2 self-start cursor-pointer p-2 border border-[#DEE2E6] bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50"
         >
-          <Heart 
-            className={`w-5 h-5 transition-colors ${
-              localFavorite ? 'fill-red-500 text-red-500' : 'text-red-400'
-            }`}
+          <Heart
+            className={`w-5 h-5 transition-colors ${localFavorite ? 'fill-red-500 text-red-500' : 'text-red-400'
+              }`}
           />
         </button>
       </div>
-      
+
       {renderButton()}
     </Link>
   );
@@ -161,7 +160,7 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
 
 // Mobile Product Card
 const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, onAddToCart, onUnauthorized }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const { data: favoriteStatus } = useGetFavoriteStatusQuery({ productId: product.id });
   const [toggleFavorite, { isLoading: isTogglingFavorite }] = useToggleFavoriteMutation();
   const [localFavorite, setLocalFavorite] = useState(false);
@@ -175,15 +174,15 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const newFavoriteState = !localFavorite;
     setLocalFavorite(newFavoriteState);
-    
+
     try {
       await toggleFavorite({ productId: product.id }).unwrap();
     } catch (err) {
       setLocalFavorite(!newFavoriteState);
-      
+
       // Check for 401 Unauthorized error
       if (err?.status === 401 || err?.originalStatus === 401) {
         onUnauthorized('add items to favorites');
@@ -196,7 +195,7 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
 
   const renderButton = () => {
     const isThisProductLoading = isAddingToCart && loadingProductId === product.id;
-    
+
     if (isThisProductLoading) {
       return (
         <button
@@ -208,7 +207,7 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
         </button>
       );
     }
-    
+
     if (showSuccess === product.id) {
       return (
         <button
@@ -226,7 +225,7 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
         onClick={(e) => onAddToCart(e, product)}
         className="w-full cursor-pointer flex justify-center items-center text-xs bg-red-500 hover:bg-red-600 text-white py-1.5 px-3 rounded-md font-medium transition-colors duration-200"
       >
-       {t('addToCart')}
+        {t('addToCart')}
       </button>
     );
   };
@@ -235,7 +234,7 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
     <Link to={`/details/${product?.id}`} className="flex flex-col min-w-[70%] p-3 bg-white rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]">
       <div className="w-full h-32 mb-3">
         <img
-          src={`https://smartteamazreal-001-site1.ktempurl.com${product.primaryImageUrl}`}
+          src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
           alt={product.name}
           className="w-full h-full max-w-[300px] object-contain"
           onError={(e) => {
@@ -255,9 +254,8 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
           className="p-2 border border-[#DEE2E6] rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
         >
           <Heart
-            className={`w-4 h-4 transition-colors ${
-              localFavorite ? 'fill-red-500 text-red-500' : 'text-red-400'
-            }`}
+            className={`w-4 h-4 transition-colors ${localFavorite ? 'fill-red-500 text-red-500' : 'text-red-400'
+              }`}
           />
         </button>
       </div>
@@ -274,7 +272,7 @@ const SimilarProducts = ({ products, isLoading }) => {
   const [unauthorizedAction, setUnauthorizedAction] = useState('');
   const [addCartItem, { isLoading: isAddingToCart }] = useAddCartItemMutation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   useEffect(() => {
     setIsAuthenticated(AuthUtils.isAuthenticated());
   }, []);
@@ -283,27 +281,27 @@ const SimilarProducts = ({ products, isLoading }) => {
     e.preventDefault();
     e.stopPropagation();
     const productId = product.id
-    
-    setLoadingProductId(productId);
-    
-    try {
-       if (isAuthenticated) {
-          await addCartItem({ productId, quantity: 1 }).unwrap();
 
-       } else {
-         // Use localStorage for non-authenticated users
-         CartUtils.addItem(product, 1);
-         window.dispatchEvent(new Event("cartUpdated"));
-       }
+    setLoadingProductId(productId);
+
+    try {
+      if (isAuthenticated) {
+        await addCartItem({ productId, quantity: 1 }).unwrap();
+
+      } else {
+        // Use localStorage for non-authenticated users
+        CartUtils.addItem(product, 1);
+        window.dispatchEvent(new Event("cartUpdated"));
+      }
       setShowSuccess(productId);
-      
+
       setTimeout(() => {
         setShowSuccess(null);
         setLoadingProductId(null);
       }, 2000);
     } catch (err) {
       setLoadingProductId(null);
-      
+
       // Check for 401 Unauthorized error
       if (err?.status === 401 || err?.originalStatus === 401) {
         setUnauthorizedAction('add items to cart');
@@ -324,7 +322,7 @@ const SimilarProducts = ({ products, isLoading }) => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
       const scrollAmount = container.offsetWidth * 0.8;
-      
+
       if (direction === 'left') {
         container.scrollBy({
           left: -scrollAmount,
@@ -361,7 +359,7 @@ const SimilarProducts = ({ products, isLoading }) => {
               <div className="w-9 h-9 bg-gray-200 rounded-full animate-pulse"></div>
             </div>
           </div>
-          
+
           <div className="flex overflow-x-scroll gap-4 py-2">
             {[...Array(6)].map((_, index) => (
               <SkeletonProductCard key={index} />
@@ -379,7 +377,7 @@ const SimilarProducts = ({ products, isLoading }) => {
   return (
     <>
       <UnauthorizedModal
-        isOpen={showUnauthorizedModal} 
+        isOpen={showUnauthorizedModal}
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
@@ -390,7 +388,7 @@ const SimilarProducts = ({ products, isLoading }) => {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('similarProd')}</h2>
           <div className="overflow-x-scroll scrollbar-hide flex gap-3 rounded-lg p-3">
             {products.map((product) => (
-              <MobileProductCard 
+              <MobileProductCard
                 key={product.id}
                 product={product}
                 isAddingToCart={isAddingToCart}
@@ -409,13 +407,13 @@ const SimilarProducts = ({ products, isLoading }) => {
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-semibold text-gray-900">{t('similarProd')}</h2>
           <div className="flex space-x-2">
-            <button 
+            <button
               onClick={() => scroll('left')}
               className="p-2 cursor-pointer hover:bg-red-100 hover:border-red-300 border border-gray-300 rounded-full"
             >
               <ChevronLeft className="w-5 h-5 text-gray-600 hover:text-red-600" />
             </button>
-            <button 
+            <button
               onClick={() => scroll('right')}
               className="p-2 cursor-pointer hover:bg-red-100 hover:border-red-300 border border-gray-300 rounded-full"
             >
@@ -423,10 +421,10 @@ const SimilarProducts = ({ products, isLoading }) => {
             </button>
           </div>
         </div>
-        
+
         <div ref={scrollContainerRef} className="flex overflow-x-scroll gap-4 py-2">
           {products.map((product) => (
-            <ProductCard 
+            <ProductCard
               key={product.id}
               product={product}
               isAddingToCart={isAddingToCart}

@@ -22,7 +22,7 @@ const WishList = () => {
   const pageSize = 20;
   const [loadingProductId, setLoadingProductId] = useState(null);
   const [showSuccess, setShowSuccess] = useState(null);
-  
+
   // Dynamic translation states
   const [translatedFavorites, setTranslatedFavorites] = useState([]);
 
@@ -39,7 +39,7 @@ const WishList = () => {
   useEffect(() => {
     async function translateFavorites() {
       if (!favorites || favorites.length === 0) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = await Promise.all(
@@ -48,8 +48,8 @@ const WishList = () => {
             product: {
               ...favorite.product,
               name: await translateDynamicField(favorite.product.name, targetLang),
-              shortDescription: favorite.product.shortDescription ? 
-                await translateDynamicField(favorite.product.shortDescription, targetLang) : 
+              shortDescription: favorite.product.shortDescription ?
+                await translateDynamicField(favorite.product.shortDescription, targetLang) :
                 favorite.product.shortDescription
             }
           }))
@@ -96,12 +96,12 @@ const WishList = () => {
   };
 
   const handleClearAll = async () => {
-      try {
-        await clearFavorites().unwrap();
-      } catch (err) {
-        toast.error(t('failedToClearFavorites'));
-        console.error('Clear favorites error:', err);
-      }
+    try {
+      await clearFavorites().unwrap();
+    } catch (err) {
+      toast.error(t('failedToClearFavorites'));
+      console.error('Clear favorites error:', err);
+    }
   };
 
   const renderButton = (productId) => {
@@ -202,7 +202,7 @@ const WishList = () => {
                   >
                     <img
                       className="w-full rounded-lg p-3 aspect-square"
-                      src={`https://smartteamazreal-001-site1.ktempurl.com${item.product.primaryImageUrl}`}
+                      src={`http://mynera-001-site3.jtempurl.com${item.product.primaryImageUrl}`}
                       alt={item.product.name || 'Product'}
                       onError={(e) => {
                         e.target.src = '/Icons/logo.svg';
