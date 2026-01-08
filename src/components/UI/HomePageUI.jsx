@@ -21,7 +21,7 @@ const HomePageUI = ({
   deal,
   product,
   url,
-  handleAddToCart, // API add to cart function (for authenticated users)
+  handleAddToCart,
   showUnauthorizedModal,
   setShowUnauthorizedModal,
   unauthorizedAction,
@@ -107,7 +107,6 @@ const HomePageUI = ({
       if (error?.status === 401 || error?.data?.status === 401) {
         setUnauthorizedAction('add items to cart');
         setShowUnauthorizedModal(true);
-        // Update auth state
         setIsAuthenticated(false);
       } else {
         toast.error(t('oCart') || 'Error adding to cart');
@@ -144,10 +143,7 @@ const HomePageUI = ({
   const renderButton = () => {
     if (isLoading) {
       return (
-        <button
-          disabled
-          className="w-full cursor-not-allowed flex justify-center items-center text-sm lg:text-md bg-red-400 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200"
-        >
+        <button disabled className="w-full cursor-not-allowed flex justify-center items-center text-xs lg:text-sm bg-[#9E2A2B] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
           {t('adding')}
         </button>
@@ -156,10 +152,7 @@ const HomePageUI = ({
 
     if (showSuccess) {
       return (
-        <button
-          disabled
-          className="w-full cursor-default flex justify-center items-center text-sm lg:text-md bg-green-500 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200"
-        >
+        <button disabled className="w-full cursor-default flex justify-center items-center text-xs lg:text-sm bg-[#4A041D] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Check className="w-4 h-4 mr-2" />
           {t('addedToCart')}
         </button>
@@ -169,62 +162,13 @@ const HomePageUI = ({
     return (
       <button
         onClick={(e) => onAddToCart(e, product)}
-        className="w-full cursor-pointer flex justify-center items-center text-sm lg:text-md bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200"
+        className="w-full cursor-pointer flex justify-center items-center text-xs lg:text-sm bg-[#4A041D] hover:bg-[#9E2A2B] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-300"
       >
         {t('addToCart')}
       </button>
     );
   };
 
-  if (deal) {
-    return (
-      <>
-
-
-        <Link to={`/details/${product.id}`} className='bg-white p-1 border-1 flex flex-col justify-between border-gray-300 cursor-pointer rounded-lg relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400 '>
-          <img
-            className='w-full rounded-lg p-3 aspect-square'
-            src={`http://mynera-001-site3.jtempurl.com${url}`}
-            alt={product.name}
-            onError={(e) => {
-              e.target.src = '/Icons/logo.svg';
-            }}
-          />
-          <div className='font-semibold p-2 inter flex flex-col justify-between h-full'>
-            <div className="flex flex-nowrap gap-2 items-center overflow-hidden">
-              <h1 className="line-through truncate">{product.originalPrice} AZN</h1>
-              <h1 className="text-[#FF4B43] truncate">{product.currentPrice} AZN</h1>
-            </div>
-
-            <p className='font-medium mb-3 whitespace-normal'>{translatedProductName}</p>
-            <p className='text-gray-600 font-normal whitespace-normal [@media(min-width:450px)]:break-words line-clamp-3'>{translatedProductDescription}</p>
-          </div>
-          <div className='absolute top-2 left-2 lg:top-3 lg:right-3 p-6 w-0 h-0 flex justify-center items-center rounded-[50%] bg-[#FF4B43] text-white inter'>
-            <p className='text-xs text-center font-semibold lg:text-sm'>{product.discountPercentage}%</p>
-          </div>
-          <div className="flex gap-3 p-2">
-            {renderButton()}
-
-            <button
-              onClick={handleFavoriteClick}
-              disabled={isTogglingFavorite}
-              className="p-3 group rounded-lg absolute right-3 top-3 border-[#DEE2E7] cursor-pointer shadow-sm transition-colors disabled:opacity-50"
-            >
-              <Heart
-                className={`
-                  w-4 h-4 lg:w-5 lg:h-5 transition-colors
-                  ${localFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}
-                  group-hover:fill-red-500 group-hover:text-red-500
-                `}
-              />
-            </button>
-          </div>
-        </Link>
-      </>
-    );
-  }
-
-  // ============= RENDER REGULAR PRODUCT CARD =============
   return (
     <>
       <UnauthorizedModal
@@ -235,39 +179,58 @@ const HomePageUI = ({
 
       <Link
         to={`/details/${product.id}`}
-        className="bg-white p-1 border-1 cursor-pointer border-gray-300 rounded-lg relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400 flex flex-col justify-between"
+        className="group flex flex-col justify-between h-full bg-transparent p-2 relative transition-transform duration-300"
       >
-        <img
-          className="w-full rounded-lg p-3 aspect-square"
-          src={`http://mynera-001-site3.jtempurl.com${url}`}
-          alt={product.name}
-          onError={(e) => {
-            e.target.src = '/Icons/logo.svg';
-          }}
-        />
-        <div className="font-semibold p-2 inter">
-          <h1 className="text-lg">{product.currentPrice} AZN</h1>
-          <p className="font-medium whitespace-normal mb-3">{translatedProductName}</p>
-          <p className="text-gray-600 font-normal whitespace-normal [@media(min-width:450px)]:break-words line-clamp-3">
-            {translatedProductDescription}
-          </p>
-        </div>
-        <div className="flex gap-3 p-2">
-          {renderButton()}
 
+        {/* Image Container */}
+        <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-white">
+          {/* Discount Badge */}
+          {product.discountPercentage > 0 && (
+            <div className='absolute top-2 left-2 z-10 bg-[#9E2A2B] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider'>
+              -{product.discountPercentage}%
+            </div>
+          )}
+
+          {/* Wishlist Button */}
           <button
             onClick={handleFavoriteClick}
             disabled={isTogglingFavorite}
-            className="p-2 group rounded-lg absolute right-3 top-3 border-[#DEE2E7] cursor-pointer shadow-sm transition-colors disabled:opacity-50"
+            className="absolute top-2 right-2 z-10 p-2 hover:scale-110 transition-transform"
           >
             <Heart
-              className={`
-                w-4 h-4 lg:w-5 lg:h-5 transition-colors
-                ${localFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}
-                group-hover:fill-red-500 group-hover:text-red-500
-              `}
+              className={`w-5 h-5 transition-colors ${localFavorite ? 'fill-[#9E2A2B] text-[#9E2A2B]' : 'text-[#4A041D]'}`}
             />
           </button>
+
+          <img
+            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-in-out"
+            src={`http://mynera-001-site3.jtempurl.com${url}`}
+            alt={product.name}
+            onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="flex flex-col flex-1 items-center text-center gap-1 mb-4">
+          {/* Brand (if applicable, or Category) - Placeholder */}
+          <p className="text-[#9E2A2B] text-[10px] font-bold uppercase tracking-widest">GunayBeauty</p>
+
+          <h3 className="font-serif text-[#4A041D] text-lg leading-tight line-clamp-2 min-h-[48px] px-1">
+            {translatedProductName}
+          </h3>
+
+          {/* Price */}
+          <div className="flex items-center gap-2 mt-1">
+            {product.originalPrice > product.currentPrice && (
+              <span className="text-gray-400 text-sm line-through decoration-[#9E2A2B] decoration-1">{product.originalPrice} AZN</span>
+            )}
+            <span className="text-[#4A041D] font-bold text-lg">{product.currentPrice} AZN</span>
+          </div>
+        </div>
+
+        {/* Action */}
+        <div className="">
+          {renderButton()}
         </div>
       </Link>
     </>

@@ -9,7 +9,7 @@ const Footer = () => {
     const [selected, setSelected] = useState(i18next.language || 'en');
     const dropdownRef = useRef(null);
     const { t } = useTranslation();
-    
+
     const languages = [
         {
             name: "English",
@@ -32,7 +32,7 @@ const Footer = () => {
         };
 
         i18next.on('languageChanged', handleLanguageChange);
-        
+
         return () => {
             i18next.off('languageChanged', handleLanguageChange);
         };
@@ -65,124 +65,92 @@ const Footer = () => {
     const otherLanguage = languages.find(lang => lang.value !== selected) || languages[1];
 
     return (
-        <>
-            <footer className='p-10 inter pb-0 '>
-                <div className='bg-white flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-start'>
-                    <div>
-                        <img 
-                          className='w-[160px]' 
-                          src="./Icons/logo.svg" 
-                          alt="" 
-                          style={{
-                            imageRendering: '-webkit-optimize-contrast',
-                            WebkitTransform: 'translateZ(0)',
-                            transform: 'translateZ(0)',
-                            backfaceVisibility: 'hidden',
-                            WebkitBackfaceVisibility: 'hidden'
-                          }}
-                        />
-                        <p className='text-lg mt-5 text-gray-600'>{t("footer.desc1")} </p>
-                        <p className='text-lg text-gray-600'>{t("footer.desc2")}  </p>
-                        <p className='text-lg mb-5 text-gray-600'>{t("footer.desc3")}</p>
-                        <div className='flex gap-3'>
-                            <a href="https://www.tiktok.com/@smartteam.az" target="_blank" rel="noopener noreferrer">
-                               <img className='w-7 h-7' src="/Icons/tiktok.svg" alt="" />
+        <footer className="bg-[#4A041D] text-white pt-16 pb-8 font-sans">
+            <div className="max-w-[1440px] mx-auto px-4 lg:px-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start">
+                    {/* Brand Column - Left Aligned */}
+                    <div className="flex flex-col items-start">
+                        <Link to='/'>
+                            <h2 className="font-serif text-2xl text-[#C5A059] tracking-widest font-bold uppercase mb-6">
+                                Gunay Beauty Store
+                            </h2>
+                        </Link>
+                        <p className="text-[#FDFBF8]/80 text-sm leading-relaxed mb-6 max-w-xs">
+                            Discover your signature scent and embrace your beauty with our luxury collection.
+                        </p>
+                        <div className="flex gap-4">
+                            <a href="https://www.tiktok.com/@smartteam.az" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
+                                <img className="w-6 h-6 invert" src="/Icons/tiktok.svg" alt="TikTok" />
                             </a>
-                            <a href="https://www.instagram.com/smart_team.az" target="_blank" rel="noopener noreferrer">
-                                <img className='w-7 h-7' src="/Icons/instagram.svg" alt="" />
+                            <a href="https://www.instagram.com/smart_team.az" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
+                                <img className="w-6 h-6 invert" src="/Icons/instagram.svg" alt="Instagram" />
                             </a>
                         </div>
                     </div>
-                    
-                    <div className='flex justify-between  mt-15 lg:hidden'>
-                        <div>
-                            <h1 className='font-semibold text-xl text-[#1C1C1C]'>{t("footer.mainPages")}</h1>
-                            <div className='text-[#8B96A5] flex flex-col gap-1 mt-3'>
-                                <Link to='/'>{t("footer.home")}</Link>
-                                <Link to='/about'>{t("footer.about")}</Link>
-                                <Link to='/download'>{t("footer.download")}</Link>
-                                <Link to='/contact'>{t("footer.contact")}</Link>
-                                <Link to='/brands'>{t("admin.brands")}</Link>
+
+                    {/* Links Column - Centered */}
+                    <div className="flex flex-col items-center md:items-center">
+                        <h4 className="font-serif text-lg text-[#C5A059] mb-6">{t("footer.mainPages")}</h4>
+                        <div className="flex flex-col gap-3 items-center">
+                            <Link to='/' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.home")}</Link>
+                            <Link to='/about' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.about")}</Link>
+                            <Link to='/contact' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.contact")}</Link>
+                            <Link to='/brands' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("admin.brands")}</Link>
+                            <Link to='/login' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.login")}</Link>
+                        </div>
+                    </div>
+
+                    {/* Contact Column - Right Aligned (on Desktop) */}
+                    <div className="flex flex-col items-start md:items-end">
+                        <h4 className="font-serif text-lg text-[#C5A059] mb-6">{t("footer.contactUs")}</h4>
+                        <div className="flex flex-col gap-4 md:items-end">
+                            <div className="flex items-center gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse">
+                                <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-phone.svg" alt="" />
+                                <span>+994 70 202 75 19</span>
                             </div>
-                        </div>
-                        <div>
-                            <h1 className='font-semibold text-xl text-[#1C1C1C]'>{t("footer.auth")}</h1>
-                            <div className='text-[#8B96A5] flex flex-col gap-1 mt-3'>
-                                <Link to='/login'>{t("footer.login")}</Link>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='hidden lg:block'>
-                        <h1 className='font-semibold text-xl text-[#1C1C1C]'>{t("footer.mainPages")}</h1>
-                        <div className='text-[#8B96A5] flex flex-col gap-1 mt-3'>
-                            <Link to='/'>{t("footer.home")}</Link>
-                            <Link to='/about'>{t("footer.about")}</Link>
-                            <Link to='/download'>{t("footer.download")}</Link>
-                            <Link to='/contact'>{t("footer.contact")}</Link>
-                            <Link to='/brands'>{t("admin.brands")}</Link>
-                        </div>
-                    </div>
-
-                    <div className='hidden lg:block'>
-                        <h1 className='font-semibold text-xl text-[#1C1C1C]'>{t("footer.auth")}</h1>
-                        <div className='text-[#8B96A5] flex flex-col gap-1 mt-3'>
-                            <Link to="/login">{t("footer.login")}</Link >
-                        </div>
-                    </div>
-
-                    <div className='mt-15 lg:mt-0 flex flex-col gap-2'>
-                        <h1 className='font-semibold text-xl text-[#1C1C1C]'>{t("footer.contactUs")}</h1>
-
-                        <div className='flex gap-2'>
-                            <img className='w-[23px]' src="./Icons/footer-phone.svg" alt="" />
-                            <p className='font-semibold text-md text-[#1C1C1C]'>+994 55 674 06 49</p>
-                        </div>
-                        <div className='flex gap-2'>
-                            <img className='w-[25px]' src="./Icons/footer-location.svg" alt="" />
-                            <p>{t("footer.address1")}</p>
-                        </div>
-                        <div className='flex gap-2 items-start'>
-                            <img className='w-[25px] whitespace-normal' src="./Icons/footer-location.svg" alt="" />
-                            <div className='flex flex-col'>
-                                <p>{t("footer.address2")}</p>
-                                <p>{t("footer.address3")}</p>
+                            <div className="flex items-start gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse text-right">
+                                <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-location.svg" alt="" />
+                                <div>
+                                    <p>28 may, Rəşid behbudov 66</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </footer>
 
-            <div className='mt-4 border-t-1 border-[#DCDCDC] p-4 pl-10 lg:flex lg:px-30 lg:justify-between lg:border-[#DEE2E7] lg:bg-[#EFF2F4] lg:mt-8'>
-                <p>&#169; {new Date().getFullYear()} smartteam.az</p>
-                <div className='cursor-pointer relative'>
-                    <div 
-                        onClick={() => setOpen(prev => !prev)} 
-                        className='hidden lg:flex gap-1 items-center hover:opacity-80 transition-opacity'
-                    >
-                        <img src={currentLanguage.flag} alt="" className="w-5 h-4" />
-                        <p>{currentLanguage.name}</p>
-                        <img 
-                            src="./Icons/arrow-up.svg" 
-                            alt="" 
-                            className={`transition-transform duration-200 ${open ? '' : 'rotate-180'}`}
-                        />
-                    </div>
-                    
-                    {open && (
-                        <div 
-                            ref={dropdownRef} 
-                            className="absolute flex items-center bottom-full gap-2 mb-1 right-0 bg-white border-[1.5px] border-black rounded-sm px-3 py-2 min-w-max z-10 cursor-pointer hover:bg-gray-50 transition-colors"
-                            onClick={() => handleLanguageChange(otherLanguage.value)}
+                {/* Bottom Bar */}
+                <div className="border-t border-[#FDFBF8]/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-[#FDFBF8]/40 text-xs">© {new Date().getFullYear()} Gunay Beauty Store. All rights reserved.</p>
+
+                    {/* Language Switcher */}
+                    <div className="relative cursor-pointer" ref={dropdownRef}>
+                        <div
+                            onClick={() => setOpen(!open)}
+                            className="flex items-center gap-2 text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors"
                         >
-                            <img src={otherLanguage.flag} alt={`${otherLanguage.name} flag`} className="w-5 h-4" />
-                            <span className="text-gray-700 inter text-sm lg:text-base">{otherLanguage.name}</span>
+                            <img src={currentLanguage.flag} alt="" className="w-4 h-3 rounded-[2px]" />
+                            <span className="uppercase">{currentLanguage.value}</span>
                         </div>
-                    )}
+
+                        {open && (
+                            <div className="absolute bottom-full right-0 mb-2 bg-white text-[#4A041D] rounded shadow-lg overflow-hidden min-w-[120px]">
+                                {languages.map(lang => (
+                                    <div
+                                        key={lang.value}
+                                        onClick={() => handleLanguageChange(lang.value)}
+                                        className="px-4 py-2 hover:bg-gray-100 flex items-center gap-2 cursor-pointer text-sm"
+                                    >
+                                        <img src={lang.flag} alt="" className="w-4 h-3 rounded-[2px]" />
+                                        <span>{lang.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </>
-    )
-}
+        </footer>
+    );
+};
 
 export default Footer

@@ -1,43 +1,91 @@
 @import "tailwindcss";
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* GunayBeauty Design System - Charlotte Tilbury Inspired Theme */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
+
+:root {
+  /* Charlotte Tilbury Inspired Palette - Refined */
+  --color-primary: #4A041D;
+  /* Night Crimson */
+  --color-gold: #C5A059;
+  /* Champagne Gold */
+  --color-secondary: #FDFBF8;
+  /* Warm Cream */
+  --color-text: #2D2D2D;
+  /* Soft Black */
+  --color-accent: #9E2A2B;
+  /* Lighter Burgundy */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Montserrat', sans-serif;
 }
 
-.helveticaNow {
-  font-family: 'helveticaNow', sans-serif;
+/* Typography Utilities */
+.font-serif {
+  font-family: var(--font-serif);
 }
 
-/* Allow text selection by default */
-* {
-  user-select: auto;
+.font-sans {
+  font-family: var(--font-sans);
 }
 
-/* Disable text selection only for specific interactive elements */
-button, img, svg, .select-none {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+/* Color Utilities */
+.text-maroon {
+  color: var(--color-primary);
 }
 
-.inter {
-  font-family: 'inter', sans-serif;
+.bg-maroon {
+  background-color: var(--color-primary);
 }
 
-.montserrat {
-  font-family: 'montserrat', sans-serif;
+.text-gold {
+  color: var(--color-gold);
 }
 
-button {
-  cursor: pointer;
+.bg-gold {
+  background-color: var(--color-gold);
 }
 
-@font-face {
-  font-family: 'helveticaNow';
-  src: url('/font/helvetica-now-text-medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
+.bg-cream {
+  background-color: var(--color-secondary);
+}
+
+/* Base Styles */
+body {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
+/* Luxury Button Styles */
+.btn-luxury {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 12px 24px;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-primary);
+}
+
+.btn-luxury:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 
@@ -257,4 +305,63 @@ img {
   transform: translateZ(0);
   shape-rendering: geometricPrecision;
   image-rendering: -webkit-optimize-contrast;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
 }

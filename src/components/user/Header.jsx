@@ -23,13 +23,13 @@ const Header = () => {
   const navigate = useNavigate();
   const [burgerVi, setBurgerVi] = useState(false);
   const [open, setOpen] = useState(false);
-  
+
   // Initialize language from cookie or default to 'en'
   const [selected, setSelected] = useState(() => {
     const savedLang = getCookie('language');
     return savedLang || i18next.language || 'en';
   });
-  
+
   const { t } = useTranslation();
   const { searchOpen, setSearchOpen } = useContext(SearchContext);
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,12 +46,12 @@ const Header = () => {
   const { data: favoritesCount } = useGetFavoritesCountQuery(undefined, {
     skip: !hasToken,
   });
-  
+
   const [cartCount, setCartCount] = useState(() => {
     const localCart = JSON.parse(localStorage.getItem("ecommerce_cart")) || { items: [] };
     return localCart.items.length;
   });
-  
+
   // ✅ handle both cases safely
   useEffect(() => {
     if (hasToken && cartCountData !== undefined) {
@@ -79,11 +79,11 @@ const Header = () => {
       window.removeEventListener("storage", updateCartCount);
     };
   }, []);
-  
+
   const { data: me, isLoading: isMeLoading } = useGetMeQuery();
 
 
-  
+
   const [searchWidth, setSearchWidth] = useState(0);
   const searchRef = useRef(null);
 
@@ -216,7 +216,7 @@ const Header = () => {
   const handleProductClick = (e, productId) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     navigate(`/details/${productId}`);
     setTimeout(() => {
       setSearchOpen(false);
@@ -241,55 +241,58 @@ const Header = () => {
     navigate(`/products/brand/${brandSlug}`);
     setSearchOpen(false);
     setSearchQuery('');
-    
+
     setTimeout(() => {
       navigate(`/products?search=${query}`);
     }, 0);
   };
 
   return (
-    <header className='pt-[59px] lg:pt-[84px]'>
-      <UnauthorizedModal 
-        isOpen={showUnauthorizedModal} 
+    <header className='pt-[95px] lg:pt-[115px]'>
+      <UnauthorizedModal
+        isOpen={showUnauthorizedModal}
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
-      <Burger burgerV={burgerVi} setBurgerV={setBurgerVi}/>
-      <nav className=''>
-        <div className='flex justify-between lg:justify-around fixed top-0 z-50 bg-white w-full lg:items-center p-3 px-6 items-center'>
-          <Link to='/' className='flex lg:flex-1 cursor-pointer lg:justify-center gap-2'>
-        <img src="/Icons/logo.svg" alt="" className='w-[70%] md:w-[80%]' />
-          </Link>
+      <Burger burgerV={burgerVi} setBurgerV={setBurgerVi} />
 
-          {/* Desktop Search */}
-          <div className='hidden lg:flex-4 mr-20 lg:mr-0 lg:px-10 lg:block relative' ref={searchDropdownRef}>
-            <div className=" self-center mx-auto">
-              <div ref={searchRef} className="flex pl-2 rounded-lg items-center overflow-hidden shadow-sm hover:shadow-md border-1 border-[#dee2e6] bg-white">
-                <Search className='p-[3px]'/>
+      <nav className='fixed top-0 z-50 w-full bg-[#4A041D] shadow-md transition-all duration-300 border-b border-[#C5A059]/30'>
+        {/* Main Header Container */}
+        <div className='max-w-[1440px] mx-auto px-4 lg:px-8 py-3 lg:py-4 relative flex items-center justify-between'>
+
+          {/* Left: Mobile Menu & Search (Desktop) */}
+          <div className='flex items-center flex-1 gap-6'>
+            <img
+              onClick={() => setBurgerVi(true)}
+              className='md:hidden cursor-pointer w-6 h-6 invert'
+              src="/Icons/burger.svg"
+              alt="Menu"
+            />
+
+            {/* Desktop Search - Refined */}
+            <div className='hidden lg:block relative' ref={searchDropdownRef}>
+              <div className={`flex items-center border-b border-[#C5A059]/50 hover:border-[#C5A059] transition-all duration-300 w-48`}>
+                <Search className='text-[#C5A059] w-4 h-4 mb-2' />
                 <input
                   type="text"
-                  placeholder={t("searchProducts")}
+                  placeholder={t("search")}
                   value={searchQuery}
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 py-2 px-3 w-full text-base border-none outline-none placeholder-gray-400"
+                  className="w-full bg-transparent border-none outline-none px-3 pb-2 text-white placeholder-white/60 font-sans text-sm tracking-wide"
                 />
                 {searchQuery && (
-                  <button 
-                    onClick={handleClearSearch}
-                    className="flex items-center pr-3 hover:opacity-70 transition-opacity"
-                  >
-                    <X className="w-5 h-5 text-gray-400" />
+                  <button onClick={handleClearSearch} className="mb-2">
+                    <X className="w-3 h-3 text-[#C5A059]" />
                   </button>
                 )}
               </div>
 
-              {/* Desktop Search Dropdown */}
               {searchOpen && (
-                <div 
-                  style={{ width: searchWidth }} 
-                  className="search-results-container absolute top-full mt-2 bg-white border border-[#dee2e6] rounded-lg shadow-lg z-50 overflow-hidden max-w-[95vw]"
+                <div
+                  style={{ width: searchWidth || '100%' }}
+                  className="absolute top-full left-0 mt-2 bg-white border border-[#F3E7E1] rounded-sm shadow-xl z-50 overflow-hidden min-w-[300px]"
                 >
                   <SearchDropdown
                     searchQuery={searchQuery}
@@ -308,164 +311,84 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Profile / Favorites / Cart */}
-          <div className='flex gap-5 items-start lg:gap-5 lg:flex-1 '>
-            <div className='lg:hidden relative' ref={mobileSearchDropdownRef}>
-              <button 
-                className='p-2 hover:bg-gray-100 rounded-lg transition-colors'
-              >
-              </button>
+          {/* Center: Logo */}
+          <div className='flex-1 flex justify-center items-center z-10 min-w-max'>
+            <Link to='/' className='block no-underline'>
+              <span className="font-serif text-2xl lg:text-3xl text-[#C5A059] tracking-[0.15em] font-bold uppercase whitespace-nowrap hover:text-white transition-colors duration-300">
+                Gunay Beauty Store
+              </span>
+            </Link>
+          </div>
+
+          {/* Right: Icons */}
+          <div className='flex-1 flex justify-end items-center gap-5 lg:gap-8'>
+            {/* Language Switcher */}
+            <div className="relative hidden lg:block text-[#C5A059] font-serif cursor-pointer" ref={dropdownRef}>
+              <div onClick={() => setOpen(!open)} className="flex items-center gap-1 hover:text-white transition-colors">
+                <span className="text-xs uppercase tracking-[0.15em]">{selected}</span>
+              </div>
+              {open && (
+                <div className="absolute top-full right-0 mt-3 bg-[#4A041D] border border-[#C5A059] py-1 min-w-[100px] z-50">
+                  {languages.map((lang) => (
+                    <div key={lang.value} onClick={() => handleSelect(lang.value)} className="px-4 py-2 hover:bg-[#C5A059] hover:text-[#4A041D] text-[#C5A059] text-xs cursor-pointer font-serif uppercase tracking-wider transition-colors">
+                      {lang.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div
-              onClick={() => {hasToken ? navigate('/favorites') : handleFavoriteClick()}}
-              className='flex flex-col items-center justify-center cursor-pointer hover:opacity-80 transition-opacity duration-200 relative'
+              onClick={() => { hasToken ? navigate('/favorites') : handleFavoriteClick() }}
+              className="cursor-pointer relative group"
             >
-              <div className="relative">
-                <img className='w-7' src="/Icons/favorites.svg" alt="Favorites" />
-                {favoritesCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#E60C03] text-white text-[10px] 
-                                   rounded-full min-w-[18px] h-[18px] flex items-center justify-center 
-                                   font-semibold px-1">
-                    {favoritesCount > 99 ? '99+' : favoritesCount}
-                  </span>
-                )}
-              </div>
-              <p className='text-gray-500 text-md hidden lg:block whitespace-nowrap'>
-                {t('favorites')}
-              </p>
+              <img className='w-5 h-5 lg:w-6 lg:h-6 brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity' src="/Icons/favorites.svg" alt="Favorites" />
+              {favoritesCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#C5A059] text-[#4A041D] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {favoritesCount}
+                </span>
+              )}
             </div>
 
-            <Link
-              to={'/cart'}
-              className='flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity duration-200 relative'
-            >
-              <div className="relative">
-                <img className='w-7' src="/Icons/cart.svg" alt="Cart" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#E60C03] text-white text-[10px] 
-                                   rounded-full min-w-[18px] h-[18px] flex items-center justify-center 
-                                   font-semibold px-1">
-                    {cartCount > 99 ? '99+' : cartCount}
-                  </span>
-                )}
-              </div>
-              <p className='text-gray-500 text-md hidden lg:block whitespace-nowrap'>
-                {t('myCart')}
-              </p>
-            </Link>
-            
-            <Link
-              to={hasToken ? "/profile" : "/login"}
-              className='flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity duration-200'
-            >
-              {isMeLoading ? (
-                <div className='flex flex-col items-center gap-1'>
-                  <div className='w-7 h-7 rounded-full bg-gray-200 animate-pulse'></div>
-                  <div className='w-16 h-3 bg-gray-200 rounded hidden lg:block animate-pulse'></div>
-                </div>
-              ) : hasToken ? (
-                <div className='flex flex-col items-center gap-1'>
-                  <FaUserCircle color='#64748b' size={28} />
-                  <p className='text-gray-600 text-sm font-medium hidden lg:block whitespace-nowrap max-w-[100px] truncate'>
-                    {me?.fullName}
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <img className='w-7' src="/Icons/profile.svg" alt="Profile" />
-                  <p className='text-gray-500 hidden lg:block text-md whitespace-nowrap'>
-                    {t('login')}
-                  </p>
-                </>
+            <Link to='/cart' className="cursor-pointer relative group">
+              <img className='w-5 h-5 lg:w-6 lg:h-6 brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity' src="/Icons/cart.svg" alt="Cart" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#C5A059] text-[#4A041D] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartCount}
+                </span>
               )}
             </Link>
 
-            <img
-              onClick={() => setBurgerVi(true)}
-              className='md:hidden cursor-pointer'
-              src="/Icons/burger.svg"
-              alt="Menu"
-            />
+            <Link to={hasToken ? "/profile" : "/login"} className="cursor-pointer hidden lg:block group">
+              {hasToken ? (
+                <div className="flex items-center gap-2">
+                  <span className="font-serif text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Account</span>
+                </div>
+              ) : (
+                <span className="font-serif text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Log In</span>
+              )}
+            </Link>
+          </div>
+        </div>
+
+        {/* Desktop Navigation - Slim Secondary Bar */}
+        <div className="hidden lg:flex justify-center bg-[#43041A] py-3 border-t border-[#C5A059]/10">
+          <div className="flex items-center gap-12">
+            <Link to='/products' className="text-white/90 hover:text-[#C5A059] font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-[#C5A059] after:transition-all after:duration-300 hover:after:w-full">
+              {t('SHOP ALL')}
+            </Link>
+            <Link to='/products/hot-deals' className="text-[#C5A059] hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-bold transition-colors shadow-glow">
+              {t('Darlings Favourites')}
+            </Link>
+            <Link to='/brands' className="text-white/90 hover:text-[#C5A059] font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-[#C5A059] after:transition-all after:duration-300 hover:after:w-full">
+              {t('Brands')}
+            </Link>
+            <Link to='/about' className="text-white/90 hover:text-[#C5A059] font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-[#C5A059] after:transition-all after:duration-300 hover:after:w-full">
+              {t('About Us')}
+            </Link>
           </div>
         </div>
       </nav>
-
-      {/* Bottom Menu */}
-      <div className="hidden md:block w-full bg-white border-gray-200 px-2 py-4">
-        <div className="flex items-center justify-between max-w-[85vw] mx-auto">
-          <div className="flex items-center space-x-8">
-            {/* Navigation Links */}
-            <nav className="flex items-center space-x-6 lg:space-x-8">
-              <Link to='/products' className="text-gray-700 inter text-sm lg:text-base hover:text-gray-900 transition-colors duration-200">
-                {t('products')}
-              </Link>
-
-              <Link to='/brands' className="text-gray-700 inter text-sm lg:text-base hover:text-gray-900 transition-colors duration-200">
-                {t('brands')}
-              </Link>
-                          
-              <Link to='/about' className="text-gray-700 inter text-sm lg:text-base hover:text-gray-900 transition-colors duration-200">
-                {t('aboutPage')}
-              </Link>
-                          
-              <Link to='/download' className="text-gray-700 inter text-sm lg:text-base hover:text-gray-900 transition-colors duration-200">
-                {t('downloadPage')}
-              </Link>
-                          
-              <Link to='/contact' className="text-gray-700 inter text-sm lg:text-base hover:text-gray-900 transition-colors duration-200">
-                {t('contactPage')}
-              </Link>
-
-              
-            </nav>
-          </div>
-
-          {/* Language & Phone */}
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center justify-center p-2">
-              <div className="relative" ref={dropdownRef}>
-                <div
-                  onClick={() => setOpen(prev => !prev)}
-                  className="flex items-center space-x-1 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-                >
-                  <span className="text-gray-700 inter text-sm lg:text-base">{langName[selected]}</span>
-                  <svg 
-                    className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
-                  >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </div>
-
-                {open && (
-                  <div className="absolute top-full mt-1 right-0 bg-white border-[1px] border-black rounded-sm py-1 whitespace-nowrap z-10 shadow-lg">
-                    {languages.map((language) => (
-                      <div
-                        key={language.value}
-                        onClick={() => handleSelect(language.value)}
-                        className={`px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-150 text-sm lg:text-base ${
-                          selected === language.value ? 'bg-gray-50 font-medium' : ''
-                        }`}
-                      >
-                        {language.name}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="items-center space-x-2 cursor-pointer [@media(max-width:870px)]:hidden flex hover:opacity-80 transition-opacity duration-200">
-              <img src="/Icons/phone.svg" alt="phone" className="w-4 h-4" />
-              <span className="text-gray-700 inter text-sm lg:text-base">
-                +994 070 674 06 49
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
     </header>
   )
 }
