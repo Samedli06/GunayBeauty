@@ -125,7 +125,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
     }
     // If it's an existing image URL from the server
     else if (imagePreview) {
-      return `http://mynera-001-site3.jtempurl.com/${imagePreview}`;
+      return `https://gunaybeauty-001-site1.ltempurl.com/${imagePreview}`;
     }
 
     return null;

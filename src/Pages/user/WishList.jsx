@@ -202,7 +202,7 @@ const WishList = () => {
                   >
                     <img
                       className="w-full rounded-lg p-3 aspect-square"
-                      src={`http://mynera-001-site3.jtempurl.com${item.product.primaryImageUrl}`}
+                      src={`https://gunaybeauty-001-site1.ltempurl.com${item.product.primaryImageUrl}`}
                       alt={item.product.name || 'Product'}
                       onError={(e) => {
                         e.target.src = '/Icons/logo.svg';

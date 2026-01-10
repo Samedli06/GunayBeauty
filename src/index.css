@@ -3,6 +3,16 @@
 /* GunayBeauty Design System - Charlotte Tilbury Inspired Theme */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
 
+@font-face {
+  font-family: 'Gateway Signature';
+  src: url('/fonts/RusticRoadway.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
 :root {
   /* Charlotte Tilbury Inspired Palette - Refined */
   --color-primary: #4A041D;
@@ -17,6 +27,8 @@
   /* Lighter Burgundy */
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Montserrat', sans-serif;
+
+  --font-signature: 'Gateway Signature', cursive;
 }
 
 /* Typography Utilities */
@@ -26,6 +38,14 @@
 
 .font-sans {
   font-family: var(--font-sans);
+}
+
+.font-signature {
+  font-family: var(--font-signature);
+}
+
+.font-allura {
+  font-family: 'Allura', cursive;
 }
 
 /* Color Utilities */
@@ -64,7 +84,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   color: var(--color-primary);
   letter-spacing: 0.02em;
   font-weight: 600;
@@ -276,6 +296,7 @@ input[type=number]::-webkit-outer-spin-button {
 /* For Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 
@@ -364,4 +385,131 @@ img {
 
 .delay-300 {
   animation-delay: 300ms;
+}
+
+/* Banner Animations */
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-ken-burns {
+  animation: kenBurns 10s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.6s ease-out forwards;
+}
+/* Luxury Redesign Utilities */
+:root {
+  --luxury-burgundy: #4A041D;
+  --luxury-red-dark: #720026;
+  --luxury-red-light: #9E2A2B;
+  --luxury-gold: #C5A059;
+  --premium-bg: linear-gradient(135deg, #FDFBF8 0%, #FFFFFF 100%);
+  --soft-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  --hover-shadow: 0 15px 45px rgba(0,0,0,0.1);
+}
+
+.bg-premium-gradient {
+  background: var(--premium-bg);
+}
+
+.font-premium {
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.luxury-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--soft-shadow);
+  border: 1px solid rgba(0,0,0,0.03);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.luxury-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--hover-shadow);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.luxury-button {
+  background: linear-gradient(135deg, var(--luxury-burgundy) 0%, var(--luxury-red-light) 100%);
+  color: white;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.luxury-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(158, 42, 43, 0.3);
+  filter: brightness(1.1);
+}
+
+.luxury-button:active {
+  transform: scale(0.98);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.perfume-image-shadow {
+  filter: drop-shadow(0 10px 15px rgba(74, 4, 29, 0.15));
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.group:hover .perfume-image-shadow {
+  transform: scale(1.08) rotate(2deg);
 }

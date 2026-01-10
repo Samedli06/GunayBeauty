@@ -314,7 +314,7 @@ const Header = () => {
           {/* Center: Logo */}
           <div className='flex-1 flex justify-center items-center z-10 min-w-max'>
             <Link to='/' className='block no-underline'>
-              <span className="font-serif text-2xl lg:text-3xl text-[#C5A059] tracking-[0.15em] font-bold uppercase whitespace-nowrap hover:text-white transition-colors duration-300">
+              <span className="font-gateway text-xl lg:text-4xl text-[#C5A059] whitespace-nowrap hover:text-white transition-colors duration-300">
                 Gunay Beauty Store
               </span>
             </Link>
@@ -323,14 +323,14 @@ const Header = () => {
           {/* Right: Icons */}
           <div className='flex-1 flex justify-end items-center gap-5 lg:gap-8'>
             {/* Language Switcher */}
-            <div className="relative hidden lg:block text-[#C5A059] font-serif cursor-pointer" ref={dropdownRef}>
+            <div className="relative hidden lg:block text-[#C5A059] font-sans cursor-pointer" ref={dropdownRef}>
               <div onClick={() => setOpen(!open)} className="flex items-center gap-1 hover:text-white transition-colors">
                 <span className="text-xs uppercase tracking-[0.15em]">{selected}</span>
               </div>
               {open && (
                 <div className="absolute top-full right-0 mt-3 bg-[#4A041D] border border-[#C5A059] py-1 min-w-[100px] z-50">
                   {languages.map((lang) => (
-                    <div key={lang.value} onClick={() => handleSelect(lang.value)} className="px-4 py-2 hover:bg-[#C5A059] hover:text-[#4A041D] text-[#C5A059] text-xs cursor-pointer font-serif uppercase tracking-wider transition-colors">
+                    <div key={lang.value} onClick={() => handleSelect(lang.value)} className="px-4 py-2 hover:bg-[#C5A059] hover:text-[#4A041D] text-[#C5A059] text-xs cursor-pointer font-sans uppercase tracking-wider transition-colors">
                       {lang.name}
                     </div>
                   ))}
@@ -362,10 +362,10 @@ const Header = () => {
             <Link to={hasToken ? "/profile" : "/login"} className="cursor-pointer hidden lg:block group">
               {hasToken ? (
                 <div className="flex items-center gap-2">
-                  <span className="font-serif text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Account</span>
+                  <span className="font-sans text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Account</span>
                 </div>
               ) : (
-                <span className="font-serif text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Log In</span>
+                <span className="font-sans text-[#C5A059] text-xs uppercase tracking-wider group-hover:text-white transition-colors">Log In</span>
               )}
             </Link>
           </div>

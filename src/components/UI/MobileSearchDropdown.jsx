@@ -164,7 +164,7 @@ const MobileSearchDropdown = ({
               >
                 {brand.logoUrl ? (
                   <img
-                    src={`http://mynera-001-site3.jtempurl.com${brand.logoUrl}`}
+                    src={`https://gunaybeauty-001-site1.ltempurl.com${brand.logoUrl}`}
                     alt={brand.name}
                     className="w-5 h-5 rounded-full object-cover"
                     onError={(e) => {
@@ -200,7 +200,7 @@ const MobileSearchDropdown = ({
               >
                 <div className="relative w-full aspect-square bg-white rounded-lg flex items-center justify-center mb-2 overflow-hidden">
                   <img
-                    src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
+                    src={`https://gunaybeauty-001-site1.ltempurl.com${product.primaryImageUrl}`}
                     alt={product.name}
                     className="w-full h-full object-contain"
                     onError={(e) => {

@@ -8,9 +8,9 @@ import { ProductCard } from '../../products/ProductCard';
 import { Pagination } from '../../products/Pagination';
 import CartUtils from '../../components/UI/CartUtils';
 import AuthUtils from '../../components/UI/AuthUtils';
-import { 
-  useAddCartItemMutation, 
-  useGetCategoriesQuery, 
+import {
+  useAddCartItemMutation,
+  useGetCategoriesQuery,
   useToggleFavoriteMutation,
   useGetFavoritesQuery,
   useSearchProductsPageQuery,
@@ -25,6 +25,7 @@ import { useParams, useSearchParams, useLocation } from 'react-router';
 import UnauthorizedModal from '../../components/UI/UnauthorizedModal';
 import SEO from '../../components/SEO/SEO';
 import { useTranslation } from 'react-i18next';
+import ProductBanner from '../../components/UI/ProductBanner';
 
 const ProductCardSkeleton = React.memo(({ col }) => (
   <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${col ? '' : 'flex'}`}>
@@ -55,7 +56,7 @@ const CustomDropdown = React.memo(({ value, onChange, options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const selectedOption = useMemo(() => 
+  const selectedOption = useMemo(() =>
     options.find(opt => opt.value === value) || options[0],
     [options, value]
   );
@@ -94,11 +95,10 @@ const CustomDropdown = React.memo(({ value, onChange, options }) => {
               key={option.value}
               type="button"
               onClick={() => handleSelect(option.value)}
-              className={`w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors ${
-                value === option.value
-                  ? 'bg-gray-50 text-gray-900 font-medium'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors ${value === option.value
+                ? 'bg-gray-50 text-gray-900 font-medium'
+                : 'text-gray-700 hover:bg-gray-50'
+                }`}
             >
               <span>{option.label}</span>
               {value === option.value && <Check className="w-4 h-4 text-gray-900" />}
@@ -115,19 +115,19 @@ function Products() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const locationPath = location.pathname;
-  const {t} = useTranslation();
-  
+  const { t } = useTranslation();
+
   // Get parent category info from navigation state
   const parentCategoryInfo = location.state || null;
 
   const [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false);
   const [unauthorizedAction, setUnauthorizedAction] = useState('');
-  
+
   // Get search query from URL params
   const searchQuery = searchParams.get('search');
   const categoryParam = searchParams.get('category');
   const brandParam = searchParams.get('brand');
-  
+
   // Extract brand slug if this is a brand route - memoize this
   const { isBrandRoute, brandSlug, isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, isBrandParam, isSpecialSlug } = useMemo(() => {
     const pathParts = locationPath.split('/');
@@ -140,10 +140,10 @@ function Products() {
     const isCategoryParam = !!categoryParam;
     const isBrandParam = !!brandParam;
     const isSpecialSlug = isHotDeals || isRecommended || isBrand || isSearch || isCategoryParam || isBrandParam;
-    
+
     return { isBrandRoute, brandSlug, isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, isBrandParam, isSpecialSlug };
   }, [locationPath, slug, searchQuery, categoryParam, brandParam]);
-  
+
   const categoryName = useMemo(() => {
     if (isHotDeals) return t('productsPage.hotDeals');
     if (isRecommended) return t('productsPage.recommended');
@@ -153,14 +153,14 @@ function Products() {
     return slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || t('allProducts');
   }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug, t]);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [template, setTemplate] = useState(isMobile ? "cols" : "rows");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); 
+  const [itemsPerPage] = useState(10);
 
   // Query for search results
   const { data: searchResults, isLoading: isSearchLoading } = useSearchProductsPageQuery(
-    { 
+    {
       searchTerm: searchQuery,
       page: currentPage,
       pageSize: 10
@@ -190,7 +190,7 @@ function Products() {
       limit: 10,
       page: currentPage,
       pageSize: 10
-    }, 
+    },
     { skip: !isRecommended }
   );
 
@@ -199,7 +199,7 @@ function Products() {
       brandSlug: brandSlug,
       page: currentPage,
       pageSize: 10
-    }, 
+    },
     { skip: !isBrand }
   );
 
@@ -210,14 +210,14 @@ function Products() {
 
   const { data: categories } = useGetCategoriesQuery();
   const { data: favorites } = useGetFavoritesQuery();
-  
+
   const [products, setProducts] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(null);
   const [filtersApplied, setFiltersApplied] = useState(false);
   const [activeFilters, setActiveFilters] = useState([]);
-  
+
   const [addCartItem] = useAddCartItemMutation();
   const [toggleFavorite] = useToggleFavoriteMutation();
   const [addingIds, setAddingIds] = useState(new Set());
@@ -228,25 +228,25 @@ function Products() {
     { value: null, label: t('sortBy') },
     { value: 'price_asc', label: t('priceLowToHigh') },
     { value: 'price_desc', label: t('priceHighToLow') },
-    { value: 'name_asc' , label: t('nameAToZ') },
+    { value: 'name_asc', label: t('nameAToZ') },
     { value: 'name_desc', label: t('nameZToA') }
   ], [t]);
 
   const categoryId = useMemo(() => {
     if (!slug || !categories || isSpecialSlug) return null;
-     
-    const category = categories.find(cat => 
+
+    const category = categories.find(cat =>
       cat.slug.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase()
     );
 
-    return category?.id ;
+    return category?.id;
   }, [slug, categories, isSpecialSlug]);
 
   const prevDataRef = useRef({});
-  
+
   useEffect(() => {
-    if (filtersApplied) return; 
-    
+    if (filtersApplied) return;
+
     let newProducts = null;
     let newTotalItems = 0;
     let dataKey = '';
@@ -279,7 +279,7 @@ function Products() {
 
     // Only update if data actually changed
     if (newProducts && (
-      prevDataRef.current.key !== dataKey || 
+      prevDataRef.current.key !== dataKey ||
       prevDataRef.current.products !== newProducts ||
       prevDataRef.current.totalItems !== newTotalItems
     )) {
@@ -288,17 +288,17 @@ function Products() {
       setTotalItems(newTotalItems);
     }
   }, [
-    searchResults, 
-    productDefault, 
-    hotDeals, 
-    recommended, 
+    searchResults,
+    productDefault,
+    hotDeals,
+    recommended,
     brandProducts,
     allProductsData,
-    filtersApplied, 
+    filtersApplied,
     isSearch,
-    isHotDeals, 
-    isRecommended, 
-    isBrand, 
+    isHotDeals,
+    isRecommended,
+    isBrand,
     isSpecialSlug,
     slug
   ]);
@@ -350,12 +350,12 @@ function Products() {
     searchResults,
     productDefault,
     allProductsData,
-    hotDeals, 
-    recommended, 
-    brandProducts, 
+    hotDeals,
+    recommended,
+    brandProducts,
     isSearch,
-    isHotDeals, 
-    isRecommended, 
+    isHotDeals,
+    isRecommended,
     isBrand,
     slug
   ]);
@@ -397,7 +397,7 @@ function Products() {
     if (!id) return;
 
     try {
-      await toggleFavorite({productId: id}).unwrap();
+      await toggleFavorite({ productId: id }).unwrap();
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
@@ -432,7 +432,7 @@ function Products() {
 
   // Determine loading state based on slug type - memoized
   const shouldShowLoading = useMemo(() => {
-    return isLoading || 
+    return isLoading ||
       (isSearch && isSearchLoading && !filtersApplied) ||
       (isHotDeals && isHotDealsLoading && !filtersApplied) ||
       (isRecommended && isRecommendedLoading && !filtersApplied) ||
@@ -489,13 +489,13 @@ function Products() {
         image="/Icons/logo.png"
         type="website"
       />
-      <UnauthorizedModal 
-        isOpen={showUnauthorizedModal} 
+      <UnauthorizedModal
+        isOpen={showUnauthorizedModal}
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
 
-      <div className="min-h-screen bg-[#f7fafc] inter">
+      <div className="min-h-screen bg-[#f7fafc]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className='lg:hidden px-4 py-4 border-y-1 border-[#dee2e6] bg-white'>
           <div className='mb-4'><SearchUI /></div>
           <Breadcrumb categoryData={parentCategoryInfo ? {
@@ -505,62 +505,68 @@ function Products() {
             categorySlug: slug
           } : null} />
         </div>
-        
+
         <div className='lg:hidden bg-white px-4 py-4'>
-          <h1 className="text-2xl font-medium text-gray-900">
+          <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {categoryName} ({totalItems || 0})
           </h1>
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-          <div className='hidden lg:block lg:pl-4'><Breadcrumb categoryData={parentCategoryInfo ? {
+          {/* Banner Section */}
+          <ProductBanner />
+
+          <div className='hidden lg:block lg:mb-4'><Breadcrumb categoryData={parentCategoryInfo ? {
             parentCategoryName: parentCategoryInfo.parentCategoryName,
             parentCategorySlug: parentCategoryInfo.parentCategorySlug,
             categoryName: categoryName,
             categorySlug: slug
           } : null} /></div>
-          
-          <div className="lg:flex lg:gap-8 lg:mt-5">
-            <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
-              <FilterSidebar 
+
+          {/* Desktop Filters as Cards */}
+          <div className="hidden lg:block mb-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>Filters</h2>
+              <FilterSidebar
                 onFilterResults={handleFilterResults}
                 onLoadingChange={setIsLoading}
                 currentSort={sortBy}
                 currentPage={currentPage}
                 isHotDeals={isHotDeals ? true : false}
                 isRecommended={isRecommended ? true : false}
-                isBrand={isBrand ? brandSlug : ''} 
-                isSearch={isSearch ? searchQuery : ''} 
+                isBrand={isBrand ? brandSlug : ''}
+                isSearch={isSearch ? searchQuery : ''}
                 setCurrentPage={setCurrentPage}
                 pageSize={itemsPerPage}
                 forcedCategoryId={categoryId}
                 showCategory={isSpecialSlug || !slug}
               />
             </div>
+          </div>
 
-            <div className="flex-1"> 
-              <MobileFilterButtons 
-                onFilterResults={handleFilterResults}
-                onLoadingChange={setIsLoading}
-                currentSort={sortBy}
-                onSortChange={handleSortChange}
-                currentPage={currentPage}
-                pageSize={itemsPerPage}
-                forcedCategoryId={categoryId}
-              />
-              
-              <div className="hidden lg:flex items-center justify-between bg-white p-3 rounded-lg border-[#dee2e6] border-1">
-                {shouldShowLoading ? (
-                  <>
-                    <div className="h-5 bg-gray-200 rounded animate-pulse w-48" />
-                    <div className="flex items-center space-x-4">
-                      <div className="h-10 bg-gray-200 rounded animate-pulse w-32" />
-                      <div className="h-10 bg-gray-200 rounded animate-pulse w-20" />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                   <span className="text-sm text-gray-600">
+          <div className="flex-1">
+            <MobileFilterButtons
+              onFilterResults={handleFilterResults}
+              onLoadingChange={setIsLoading}
+              currentSort={sortBy}
+              onSortChange={handleSortChange}
+              currentPage={currentPage}
+              pageSize={itemsPerPage}
+              forcedCategoryId={categoryId}
+            />
+
+            <div className="hidden lg:flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+              {shouldShowLoading ? (
+                <>
+                  <div className="h-5 bg-gray-200 rounded animate-pulse w-48" />
+                  <div className="flex items-center space-x-4">
+                    <div className="h-10 bg-gray-200 rounded animate-pulse w-32" />
+                    <div className="h-10 bg-gray-200 rounded animate-pulse w-20" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                     {t('itemsFoundPr', { count: totalItems || 0 })}
 
                     {categoryName && (
@@ -569,86 +575,85 @@ function Products() {
                   </span>
 
 
-                    <div className="hidden lg:flex items-center space-x-4">
-                      <CustomDropdown
-                        value={sortBy}
-                        onChange={handleSortChange}
-                        options={sortOptions}
-                      />
-                      <div className="flex border border-gray-300 rounded-md overflow-hidden">
-                        <button 
-                          onClick={() => {
-                            if (!isMobile) {
-                              setTemplate("cols");
-                            }
-                          }} 
-                          className={`p-2 ${template === "cols" ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} cursor-pointer`}
-                        >
-                          <Grid className="w-4 h-4" />
-                        </button>
+                  <div className="hidden lg:flex items-center space-x-4">
+                    <CustomDropdown
+                      value={sortBy}
+                      onChange={handleSortChange}
+                      options={sortOptions}
+                    />
+                    <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => {
+                          if (!isMobile) {
+                            setTemplate("cols");
+                          }
+                        }}
+                        className={`p-2 transition-colors ${template === "cols" ? 'bg-gray-900 text-white' : 'bg-white text-gray-900 hover:bg-gray-50'} cursor-pointer`}
+                      >
+                        <Grid className="w-4 h-4" />
+                      </button>
 
-                        <button 
-                          onClick={() => {
-                            if (!isMobile) {
-                              setTemplate("rows");
-                            }
-                          }} 
-                          className={`p-2 ${template === "cols" ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'} cursor-pointer`}
-                        >
-                          <List className="w-4 h-4" />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => {
+                          if (!isMobile) {
+                            setTemplate("rows");
+                          }
+                        }}
+                        className={`p-2 transition-colors ${template === "cols" ? 'bg-white text-gray-900 hover:bg-gray-50' : 'bg-gray-900 text-white'} cursor-pointer`}
+                      >
+                        <List className="w-4 h-4" />
+                      </button>
                     </div>
-                  </>
-                )}
-              </div>
-
-              <div className={`mt-4 ${template === "cols" ? 'grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6' : 'flex flex-col gap-4'}`}>
-                {shouldShowLoading ? (
-                  skeletonArray.map((_, index) => (
-                    <ProductCardSkeleton key={index} col={template === "cols"} />
-                  ))
-                ) : products?.length > 0 ? (
-                  products.map((item) => {
-                    const cardInfo = {
-                      url: item.primaryImageUrl,
-                      name: item.name,
-                      priceOriginal: item?.originalPrice,
-                      price: item?.currentPrice,
-                      id: item.id,
-                      description: item.shortDescription
-                    };
-                    return (
-                      <ProductCard 
-                        key={item.id} 
-                        col={template === "cols"} 
-                        info={cardInfo}
-                        productData={item}
-                        handleAddToCart={handleAddToCart}
-                        isAddingToCart={addingIds.has(item.id)}
-                        toggleFavorite={handleToggleFavorite}
-                        isFavorite={isProductFavorited(item.id)}
-                      />
-                    );
-                  })
-                ) : (
-                  <div className="col-span-full text-center py-12">
-                    <p className="text-gray-500 text-lg">{t('productsPage.noProductsFound')}</p>
-                    <p className="text-gray-400 text-sm mt-2">
-                      {isSearch ? t('productsPage.tryDifferentKeywords') : t('productsPage.tryAdjustingFilters')}
-                    </p>
                   </div>
-                )}
-              </div>
-
-              {!shouldShowLoading && totalPages > 1 && (
-                <Pagination 
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
+                </>
               )}
             </div>
+
+            <div className={`mt-6 ${template === "cols" ? 'grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6' : 'flex flex-col gap-6'}`}>
+              {shouldShowLoading ? (
+                skeletonArray.map((_, index) => (
+                  <ProductCardSkeleton key={index} col={template === "cols"} />
+                ))
+              ) : products?.length > 0 ? (
+                products.map((item) => {
+                  const cardInfo = {
+                    url: item.primaryImageUrl,
+                    name: item.name,
+                    priceOriginal: item?.originalPrice,
+                    price: item?.currentPrice,
+                    id: item.id,
+                    description: item.shortDescription
+                  };
+                  return (
+                    <ProductCard
+                      key={item.id}
+                      col={template === "cols"}
+                      info={cardInfo}
+                      productData={item}
+                      handleAddToCart={handleAddToCart}
+                      isAddingToCart={addingIds.has(item.id)}
+                      toggleFavorite={handleToggleFavorite}
+                      isFavorite={isProductFavorited(item.id)}
+                    />
+                  );
+                })
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-gray-500 text-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('productsPage.noProductsFound')}</p>
+                  <p className="text-gray-400 text-sm mt-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    {isSearch ? t('productsPage.tryDifferentKeywords') : t('productsPage.tryAdjustingFilters')}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {!shouldShowLoading && totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
       </div>

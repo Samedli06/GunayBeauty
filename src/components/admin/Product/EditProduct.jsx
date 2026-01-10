@@ -281,7 +281,7 @@ const EditProduct = ({ setOpen, idPr }) => {
             {imagePreview ? (
               <div className="relative">
                 <img
-                  src={imageFile ? imagePreview : `http://mynera-001-site3.jtempurl.com${imagePreview}`}
+                  src={imageFile ? imagePreview : `https://gunaybeauty-001-site1.ltempurl.com${imagePreview}`}
                   alt="Product preview"
                   className="w-32 h-32 object-cover rounded-md border border-gray-600"
                 />
@@ -323,7 +323,7 @@ const EditProduct = ({ setOpen, idPr }) => {
           <div className="flex items-center gap-4">
             {edit?.pdfUrl && !pdfFile && (
               <a
-                href={`http://mynera-001-site3.jtempurl.com${edit.pdfUrl}`}
+                href={`https://gunaybeauty-001-site1.ltempurl.com${edit.pdfUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-indigo-400 hover:text-indigo-300 text-sm underline"
@@ -371,7 +371,7 @@ const EditProduct = ({ setOpen, idPr }) => {
                   return (
                     <div key={image.id} className="relative">
                       <img
-                        src={`http://mynera-001-site3.jtempurl.com${image.imageUrl}`}
+                        src={`https://gunaybeauty-001-site1.ltempurl.com${image.imageUrl}`}
                         alt={`Detail ${index + 1}`}
                         className="w-full h-32 object-cover rounded-md border border-gray-600"
                       />

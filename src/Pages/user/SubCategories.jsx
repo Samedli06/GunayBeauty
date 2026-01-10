@@ -64,7 +64,7 @@ const CategoryCard = ({ title, imageSrc = null, slug, parentCategory }) => (
       <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-50 transition-colors">
         {imageSrc ? (
           <img
-            src={`http://mynera-001-site3.jtempurl.com/${imageSrc}`}
+            src={`https://gunaybeauty-001-site1.ltempurl.com/${imageSrc}`}
             alt={title}
             className="w-full h-full object-contain rounded-lg"
           />

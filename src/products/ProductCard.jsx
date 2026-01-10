@@ -73,11 +73,11 @@ export function ProductCard({
   if (col) {
     // Column layout (grid view)
     return (
-      <div className="bg-white rounded-xl shadow-sm border flex flex-col justify-between border-gray-200 overflow-hidden relative">
+      <div className="bg-white rounded-2xl overflow-hidden relative group hover:scale-[1.02] transition-all duration-300">
         <Link to={`/details/${id}`} className="block">
-          <div className="aspect-square p-4 relative">
+          <div className="aspect-square p-4 relative bg-gray-50">
             <img
-              src={`http://mynera-001-site3.jtempurl.com${url}`}
+              src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
               alt={name || 'Product'}
               className="w-full h-full object-contain"
               onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
@@ -100,35 +100,34 @@ export function ProductCard({
 
 
           <Link to={`/details/${id}`} className="block mb-4">
-            <div className='flex gap-2'>
-              <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px]">
+            <div className='flex gap-2 items-start'>
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px] flex-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {name}
               </h3>
               <button
                 onClick={handleFavoriteClick}
                 disabled={isTogglingFavorite}
-                className=" top-4 right-4 p-1 lg:p-2 h-fit rounded-lg border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                className="p-2 h-fit rounded-full bg-gray-50 hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 hover:scale-110"
               >
                 <Heart
-                  className={`w-4 h-4 lg:w-5 lg:h-5 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${favoriteStatus?.isFavorite && 'fill-red-500'
-                    }`}
+                  className={`w-5 h-5 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`}
                 />
               </button>
             </div>
             {description && (
-              <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {description}
               </p>
             )}
 
             <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <p className="text-xl font-bold text-[#E60C03]">{price} ₼</p>
+              <p className="text-xl font-bold text-[#E60C03]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
               {hasDiscount && (
-                <p className="text-sm text-gray-400 line-through">{priceOriginal} ₼</p>
+                <p className="text-sm text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
               )}
             </div>
             {hasDiscount && (
-              <p className="text-xs text-green-600 font-medium mt-1">
+              <p className="text-xs text-green-600 font-medium mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
               </p>
             )}
@@ -137,9 +136,9 @@ export function ProductCard({
           <button
             onClick={handleCartClick}
             disabled={isAddingToCart || justAdded}
-            className={`w-full cursor-pointer text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${justAdded
-              ? 'bg-green-500 hover:bg-green-600 text-white'
-              : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
+            className={`w-full cursor-pointer text-sm lg:text-md py-3 px-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] ${justAdded
+              ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30'
+              : 'bg-gradient-to-r from-[#E60C03] to-[#C50A02] hover:from-[#FF0D04] hover:to-[#E60C03] disabled:from-red-300 disabled:to-red-300 disabled:cursor-not-allowed text-white shadow-lg shadow-red-500/30'
               }`}
           >
             {justAdded ? (
@@ -161,17 +160,17 @@ export function ProductCard({
     return (
       <Link
         to={`/details/${id}`}
-        className="border border-[#dbdbdb] rounded-xl p-4 bg-white flex items-center gap-6 relative"
+        className="rounded-2xl p-4 bg-white flex items-center gap-6 relative group hover:scale-[1.01] transition-all duration-300"
       >
-        <div className="flex-shrink-0 h-full w-full max-w-[150px] relative">
+        <div className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-gray-50 rounded-xl overflow-hidden">
           <img
-            src={`http://mynera-001-site3.jtempurl.com${url}`}
+            src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
             alt={name || 'Product'}
-            className="max-w-[150px] object-cover aspect-square w-full h-full rounded-lg"
+            className="max-w-[150px] object-cover aspect-square w-full h-full"
             onError={(e) => {
               e.currentTarget.src = "/Icons/logo.svg";
               e.currentTarget.className =
-                "object-contain aspect-square w-full h-full rounded-lg";
+                "object-contain aspect-square w-full h-full";
             }}
           />
 
@@ -190,23 +189,22 @@ export function ProductCard({
         <div className="flex flex-col flex-1 space-y-4">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h2 className="text-2xl font-semibold">{name}</h2>
+              <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Montserrat, sans-serif' }}>{name}</h2>
               {description && (
-                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{description}</p>
+                <p className="text-sm text-gray-600 mt-1 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>{description}</p>
               )}
               <div className="flex items-center gap-3 mt-3 flex-wrap">
-                <p className="text-2xl font-bold text-[#E60C03]">{price} ₼</p>
+                <p className="text-2xl font-bold text-[#E60C03]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
               </div>
             </div>
 
             <button
               onClick={handleFavoriteClick}
               disabled={isTogglingFavorite}
-              className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-full bg-gray-50 hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110"
             >
               <Heart
-                className={`w-6 h-6 transition-colors text-red-500 hover:fill-red-400 cursor-pointer ${favoriteStatus?.isFavorite && 'fill-red-500'
-                  }`}
+                className={`w-6 h-6 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`}
               />
             </button>
           </div>
@@ -214,9 +212,9 @@ export function ProductCard({
           <button
             onClick={handleCartClick}
             disabled={isAddingToCart || justAdded}
-            className={`h-fit self-end cursor-pointer w-[200px] text-sm lg:text-md py-3 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${justAdded
-              ? 'bg-green-500 hover:bg-green-600 text-white'
-              : 'bg-[#E60C03] hover:bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed text-white'
+            className={`h-fit self-end cursor-pointer w-[200px] text-sm lg:text-md py-3 px-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] ${justAdded
+              ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30'
+              : 'bg-gradient-to-r from-[#E60C03] to-[#C50A02] hover:from-[#FF0D04] hover:to-[#E60C03] disabled:from-red-300 disabled:to-red-300 disabled:cursor-not-allowed text-white shadow-lg shadow-red-500/30'
               }`}
           >
             {justAdded ? (

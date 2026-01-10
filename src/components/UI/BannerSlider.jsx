@@ -76,12 +76,13 @@ const BannerSlider = () => {
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {(translatedBanners.length > 0 ? translatedBanners : bannersD)?.map((banner, index) => {
+            const isActive = index === currentSlide;
             return (
-              <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full   relative">
+              <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full relative group">
                 {/* Desktop Image */}
                 <img
-                  className="hidden md:block  w-full h-full object-cover md:rounded-lg  lg:p-2"
-                  src={`http://mynera-001-site3.jtempurl.com${banner.imageUrl}`}
+                  className={`hidden md:block w-full h-full object-cover md:rounded-lg lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
+                  src={`https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';
@@ -91,10 +92,10 @@ const BannerSlider = () => {
 
                 {/* Mobile Image */}
                 <img
-                  className="block md:hidden w-full  md:rounded-lg  md:h-[40vh] lg:p-2"
+                  className={`block md:hidden w-full md:rounded-lg md:h-[40vh] lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
                   src={banner.mobileImageUrl
-                    ? `http://mynera-001-site3.jtempurl.com${banner.mobileImageUrl}`
-                    : `http://mynera-001-site3.jtempurl.com${banner.imageUrl}`}
+                    ? `https://gunaybeauty-001-site1.ltempurl.com${banner.mobileImageUrl}`
+                    : `https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';
@@ -102,21 +103,11 @@ const BannerSlider = () => {
                   }}
                 />
 
-                <div className="absolute top-[13%] left-[8%] lg:left-[100px] lg:top-[13%] flex flex-col gap-9 max-w-[80%]">
+                <div className="absolute top-[13%] left-[8%] lg:left-[100px] lg:top-[17%] flex flex-col gap-9 max-w-[80%]">
                   <div className='flex flex-col gap-5'>
-                    <h1 className={`inter ${banner.titleVisible && 'block'} text-xl lg:text-3xl lg:hidden font-medium`}>
+                    <h1 className={`${banner.titleVisible ? 'block' : 'hidden'} text-xl lg:text-5xl font-bold font-sans text-[#4A041D] ${isActive ? 'animate-slide-in-right' : 'opacity-0'}`}>
                       {banner.title
-                        .split(" ") // ✅ split string into words
-                        .map((word, index) => (
-                          <React.Fragment key={index}>
-                            {word}{" "}
-                            {(index + 1) % 3 === 0 && <br />}
-                          </React.Fragment>
-                        ))}
-                    </h1>
-                    <h1 className={`hidden lg:${banner.titleVisible && 'block'} text-3xl font-semibold inter`}>
-                      {banner.title
-                        .split(" ") // ✅ split string into words
+                        .split(" ")
                         .map((word, index) => (
                           <React.Fragment key={index}>
                             {word}{" "}
@@ -125,27 +116,30 @@ const BannerSlider = () => {
                         ))}
                     </h1>
 
-                    <p className={`hidden md:${banner.descriptionVisible && 'block'}  text-xl inter`}>
+                    <p className={`${banner.descriptionVisible ? 'block' : 'hidden'} text-lg lg:text-xl font-sans text-[#4A041D]/80 italic max-w-lg ${isActive ? 'animate-slide-in-right delay-200' : 'opacity-0'}`}>
                       {banner.description
                         .split(" ")
                         .map((word, index) => (
                           <React.Fragment key={index}>
                             {word}{" "}
-                            {(index + 1) % 5 === 0 && <br />}
+                            {(index + 1) % 7 === 0 && <br />}
                           </React.Fragment>
                         ))}
                     </p>
                   </div>
-                  {banner.buttonText &&
+                </div>
 
+                {/* Centered Bottom Button - Hover Triggered */}
+                {banner.buttonText && banner.buttonVisible && (
+                  <div className={`absolute bottom-[25%] left-1/2 -translate-x-1/2 transition-all duration-500 transform ${isActive ? 'opacity-0 group-hover:opacity-100 group-hover:-translate-y-4' : 'opacity-0'}`}>
                     <Link
                       to={`${banner.linkUrl}`}
-                      className={`px-7 py-3 lg:py-3 rounded-lg ${!banner.buttonVisible && 'hidden'}  text-sm inter lg:text-lg bg-gradient-to-b from-[#FD1206] to-[#DD1205] transition text-white font-medium w-fit hover:shadow-lg transform hover:scale-105`}
+                      className="px-10 py-4 rounded-full font-sans text-sm lg:text-base bg-[#4A041D] hover:bg-[#9E2A2B] text-white font-bold tracking-[0.2em] uppercase transition-all shadow-xl hover:shadow-[#4A041D]/40 border border-[#C5A059]/30"
                     >
                       {banner.buttonText}
                     </Link>
-                  }
-                </div>
+                  </div>
+                )}
               </div>
             )
           })}

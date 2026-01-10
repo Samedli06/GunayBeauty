@@ -4,47 +4,47 @@ import { useFilterProductsMutation, useGetCategoriesQuery, useGetCategoryFilters
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../i18n';
 
-export const FilterSidebar = React.memo(({ 
-  onFilterResults, 
-  onLoadingChange, 
-  currentSort, 
-  currentPage, 
-  isHotDeals, 
-  isRecommended, 
-  isBrand, 
-  isSearch,      
-  setCurrentPage, 
-  pageSize, 
-  forcedCategoryId = null, 
-  showCategory = false 
+export const FilterSidebar = React.memo(({
+  onFilterResults,
+  onLoadingChange,
+  currentSort,
+  currentPage,
+  isHotDeals,
+  isRecommended,
+  isBrand,
+  isSearch,
+  setCurrentPage,
+  pageSize,
+  forcedCategoryId = null,
+  showCategory = false
 }) => {
-  const { t,i18n } = useTranslation();
-  
+  const { t, i18n } = useTranslation();
+
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState({});
-  
+
   // Dynamic translation states
   const [translatedCategories, setTranslatedCategories] = useState([]);
   const [translatedParentCat, setTranslatedParentCat] = useState([]);
   const [translatedCustomFilters, setTranslatedCustomFilters] = useState([]);
-  
+
   const { data: categories, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: ParentCat, isLoading: isParentCatLoading } = useGetParentCategoriesQuery();
   const { data: customFilters, isLoading: isCustomLoading } = useGetFiltersQuery();
   const [filterProducts, { isLoading: isFiltering }] = useFilterProductsMutation();
-  
+
   const hasFiltersApplied = useRef(false);
   const debounceTimer = useRef(null);
   const isInitialMount = useRef(true);
 
   // Use forcedCategoryId if provided, otherwise use selected category
   const activeCategoryId = forcedCategoryId || (selectedCategories.length > 0 ? selectedCategories[0] : null);
-  
+
   const { data: categoryFilters, isLoading: isCategoryFiltersLoading } = useGetCategoryFiltersQuery(
-    activeCategoryId, 
+    activeCategoryId,
     { skip: !activeCategoryId }
   );
 
@@ -63,7 +63,7 @@ export const FilterSidebar = React.memo(({
           );
           setTranslatedCategories(translated);
         }
-        
+
         // Translate parent categories
         if (ParentCat) {
           const translated = await Promise.all(
@@ -74,7 +74,7 @@ export const FilterSidebar = React.memo(({
           );
           setTranslatedParentCat(translated);
         }
-        
+
         // Translate custom filters
         if (customFilters) {
           const translated = await Promise.all(
@@ -108,7 +108,7 @@ export const FilterSidebar = React.memo(({
   // Memoize buildActiveFilters function - don't include it in dependencies
   const buildActiveFilters = useCallback(() => {
     const activeFilters = [];
-    
+
     // Add category filters only if shown
     if (showCategory && selectedCategories.length > 0 && (translatedCategories.length > 0 ? translatedCategories : categories)) {
       const categoriesToUse = translatedCategories.length > 0 ? translatedCategories : categories;
@@ -125,7 +125,7 @@ export const FilterSidebar = React.memo(({
         }
       });
     }
-  
+
     // Add custom filter selections
     const filtersToUse = translatedCustomFilters.length > 0 ? translatedCustomFilters : customFilters;
     if (filtersToUse) {
@@ -150,15 +150,15 @@ export const FilterSidebar = React.memo(({
         }
       });
     }
-  
+
     // Add price range filter
     if (minPrice || maxPrice) {
-      const priceLabel = minPrice && maxPrice 
+      const priceLabel = minPrice && maxPrice
         ? `Price: $${minPrice} - $${maxPrice}`
-        : minPrice 
+        : minPrice
           ? `Price: $${minPrice}+`
           : `Price: up to $${maxPrice}`;
-      
+
       activeFilters.push({
         id: 'price-range',
         key: 'price-range',
@@ -168,7 +168,7 @@ export const FilterSidebar = React.memo(({
         maxPrice
       });
     }
-  
+
     return activeFilters;
   }, [showCategory, selectedCategories, categories, customFilters, selectedFilters, minPrice, maxPrice]);
 
@@ -187,7 +187,7 @@ export const FilterSidebar = React.memo(({
           };
         }
       });
-      
+
       if (Object.keys(initialFilters).length > 0) {
         setSelectedFilters(prev => ({
           ...prev,
@@ -222,7 +222,7 @@ export const FilterSidebar = React.memo(({
 
     setSelectedFilters(prev => {
       const updatedFilters = { ...prev };
-      
+
       if (!updatedFilters[filterId]) {
         updatedFilters[filterId] = {
           filterId: filterId,
@@ -249,7 +249,7 @@ export const FilterSidebar = React.memo(({
 
   const buildFilterCriteria = useCallback(() => {
     const criteria = [];
-    
+
     Object.values(selectedFilters).forEach(filter => {
       if (filter.filterOptionIds.length > 0 || filter.customValue || filter.minValue > 0 || filter.maxValue > 0) {
         criteria.push({
@@ -261,17 +261,17 @@ export const FilterSidebar = React.memo(({
         });
       }
     });
-    
+
     return criteria;
   }, [selectedFilters]);
 
   const hasActiveFilters = useCallback(() => {
     const hasCategories = showCategory && selectedCategories.length > 0;
     const hasPrice = minPrice || maxPrice;
-    const hasCustomFilters = Object.values(selectedFilters).some(filter => 
-      filter.filterOptionIds?.length > 0 || 
-      filter.customValue || 
-      filter.minValue > 0 || 
+    const hasCustomFilters = Object.values(selectedFilters).some(filter =>
+      filter.filterOptionIds?.length > 0 ||
+      filter.customValue ||
+      filter.minValue > 0 ||
       filter.maxValue > 0
     );
     const hasForcedCategory = !!forcedCategoryId;
@@ -293,7 +293,7 @@ export const FilterSidebar = React.memo(({
 
     debounceTimer.current = setTimeout(async () => {
       const hasActiveFiltersApplied = hasActiveFilters();
-      
+
       if (!hasActiveFiltersApplied) {
         hasFiltersApplied.current = false;
         if (onFilterResults) {
@@ -301,7 +301,7 @@ export const FilterSidebar = React.memo(({
         }
         return;
       }
-    
+
       hasFiltersApplied.current = true;
 
       const filterCriteria = buildFilterCriteria();
@@ -320,11 +320,11 @@ export const FilterSidebar = React.memo(({
         page: 1,
         pageSize: pageSize || 20
       };
-    
+
       if (onLoadingChange) {
-        onLoadingChange(true); 
+        onLoadingChange(true);
       }
-    
+
       try {
         const result = await filterProducts(filterPayload).unwrap();
 
@@ -341,7 +341,7 @@ export const FilterSidebar = React.memo(({
         }
       }
     }, 300);
-  
+
     return () => {
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
@@ -372,11 +372,11 @@ export const FilterSidebar = React.memo(({
         page: currentPage,
         pageSize: pageSize || 20
       };
-    
+
       if (onLoadingChange) {
-        onLoadingChange(true); 
+        onLoadingChange(true);
       }
-    
+
       try {
         const result = await filterProducts(filterPayload).unwrap();
 
@@ -409,7 +409,7 @@ export const FilterSidebar = React.memo(({
 
   if (isCategoriesLoading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-transparent rounded-lg p-4">
         <div className="animate-pulse space-y-4">
           <div className="h-5 bg-gray-200 rounded w-1/2" />
           <div className="space-y-2">
@@ -423,43 +423,37 @@ export const FilterSidebar = React.memo(({
   }
 
   return (
-    <div className="rounded-lg bg-white border border-gray-200">
+    <div className="rounded-lg bg-transparent" style={{ fontFamily: 'Montserrat, sans-serif' }}>
       {showCategory && (
         <>
-          <hr className="mx-4 border-[#dee2e6]" />
-          
-          <details open>
-            <summary className="w-full flex items-center justify-between p-4 text-left cursor-pointer">
-              <span className="font-medium text-gray-900">{t('filters.category')}</span>
-              <ChevronDown className="chevron w-4 h-4 text-gray-500 transition-transform duration-200" />
-            </summary>
-            <div className="px-4 pb-4 space-y-2">
+          <div className="mb-6">
+            <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('filters.category')}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)
-                ?.slice(0, showAllCategories ? (translatedParentCat.length > 0 ? translatedParentCat : ParentCat).length : 5)
+                ?.slice(0, showAllCategories ? (translatedParentCat.length > 0 ? translatedParentCat : ParentCat).length : 6)
                 .map(item => (
-                  <label key={item.id} className="flex items-center space-x-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                  <label key={item.id} className="flex items-center space-x-2 cursor-pointer p-3 rounded-lg border border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200">
+                    <input
+                      type="checkbox"
                       className="w-4 h-4 text-red-500 cursor-pointer border-gray-300 rounded focus:ring-red-500"
                       checked={selectedCategories.includes(item.id)}
                       onChange={() => handleCategoryChange(item.id)}
                     />
-                    <span className="text-sm text-gray-700">{item.name}</span>
+                    <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{item.name}</span>
                   </label>
                 ))}
-
-              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.length > 5 && (
-                <button
-                  onClick={toggleShowAll}
-                  className="text-sm text-red-500 hover:text-red-600 font-medium"
-                >
-                  {showAllCategories ? t('filters.seeLess') : t('filters.seeAll')}
-                </button>
-              )}
             </div>
-          </details>
 
-          <hr className="mx-4 border-[#dee2e6]" />
+            {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.length > 6 && (
+              <button
+                onClick={toggleShowAll}
+                className="text-sm text-red-500 hover:text-red-600 font-medium mt-3"
+                style={{ fontFamily: 'Montserrat, sans-serif' }}
+              >
+                {showAllCategories ? t('filters.seeLess') : t('filters.seeAll')}
+              </button>
+            )}
+          </div>
         </>
       )}
 
@@ -474,64 +468,59 @@ export const FilterSidebar = React.memo(({
           </div>
         </div>
       ) : (
-        filtersToShow?.map(filter => {
-          return (
-            <details key={filter.id} open>
-              <summary className="w-full flex items-center justify-between p-4 text-left cursor-pointer">
-                <span className="font-medium text-gray-900">{filter.name}</span>
-                <ChevronDown className="chevron w-4 h-4 text-gray-500 transition-transform duration-200" />
-              </summary>
-              <div className="px-4 pb-4 space-y-2">
-                {filter.options?.map(option => (
-                  <label key={option.id} className="flex items-center space-x-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      className="w-4 h-4 text-red-500 cursor-pointer border-gray-300 rounded focus:ring-red-500"
-                      checked={selectedFilters[filter.id]?.filterOptionIds?.includes(option.id) || false}
-                      onChange={(e) => {
-                        handleFilterChange(e.target.checked, filter.id, option.id);
-                      }}
-                    />
-                    <span className="text-sm text-gray-700">{option.displayName || option.label}</span>
-                  </label>
-                ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtersToShow?.map(filter => {
+            return (
+              <div key={filter.id} className="">
+                <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{filter.name}</h3>
+                <div className="space-y-2">
+                  {filter.options?.map(option => (
+                    <label key={option.id} className="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 text-red-500 cursor-pointer border-gray-300 rounded focus:ring-red-500"
+                        checked={selectedFilters[filter.id]?.filterOptionIds?.includes(option.id) || false}
+                        onChange={(e) => {
+                          handleFilterChange(e.target.checked, filter.id, option.id);
+                        }}
+                      />
+                      <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{option.displayName || option.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-              <hr className="mx-4 border-[#dee2e6]" />
-            </details>
-          );
-        })
+            );
+          })}
+        </div>
       )}
 
-      <details open>
-        <summary className="w-full flex items-center justify-between p-4 text-left cursor-pointer">
-          <span className="font-medium text-gray-900">{t('priceRange')}</span>
-          <ChevronDown className="chevron w-4 h-4 text-gray-500 transition-transform duration-200" />
-        </summary>
-        <div className="px-4 pb-4 space-y-3">
-          <div className="flex items-center space-x-2">
-              <input
-                type="number"
-                placeholder={t('productsPage.min')}
-                value={minPrice}
-                onChange={handleMinPriceChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
-                min="0"
-              />
-              <span className="text-gray-500">-</span>
-              <input
-                type="number"
-                placeholder={t('productsPage.max')}
-                value={maxPrice}
-                onChange={handleMaxPriceChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
-                min="0"
-              />
-          </div>
+      <div className="mt-6">
+        <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('priceRange')}</h3>
+        <div className="flex items-center space-x-3">
+          <input
+            type="number"
+            placeholder={t('productsPage.min')}
+            value={minPrice}
+            onChange={handleMinPriceChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
+            min="0"
+          />
+          <span className="text-gray-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>-</span>
+          <input
+            type="number"
+            placeholder={t('productsPage.max')}
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
+            min="0"
+          />
         </div>
-      </details>
+      </div>
 
       {(isFiltering || isFiltersLoading) && (
-        <div className="px-4 py-2 text-sm text-gray-500 flex items-center space-x-2">
+        <div className="mt-4 text-sm text-gray-500 flex items-center space-x-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
           <span>{isFiltering ? t('productsPage.filtering') : t('productsPage.loadingFilters')}</span>
         </div>

@@ -127,7 +127,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center gap-4">
               <img
-                src={`http://mynera-001-site3.jtempurl.com${product?.imageUrl}`}
+                src={`https://gunaybeauty-001-site1.ltempurl.com${product?.imageUrl}`}
                 alt={product?.name}
                 className="w-16 h-16 object-contain rounded-lg bg-white p-2"
                 onError={(e) => {

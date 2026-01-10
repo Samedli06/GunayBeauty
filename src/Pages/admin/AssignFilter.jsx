@@ -268,7 +268,7 @@ const ProductFilterAssignment = () => {
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
                             <img
-                              src={`http://mynera-001-site3.jtempurl.com/${product.primaryImageUrl}`}
+                              src={`https://gunaybeauty-001-site1.ltempurl.com/${product.primaryImageUrl}`}
                               alt={product.name}
                               className="w-12 h-12 rounded-lg object-cover bg-gray-600"
                               onError={(e) => {
@@ -459,7 +459,7 @@ const ProductFilterAssignment = () => {
                                 )}
                               </div>
                               <img
-                                src={`http://mynera-001-site3.jtempurl.com/${product.primaryImageUrl}`}
+                                src={`https://gunaybeauty-001-site1.ltempurl.com/${product.primaryImageUrl}`}
                                 alt={product.name}
                                 className="w-10 h-10 rounded-lg object-cover bg-gray-600"
                                 onError={(e) => {

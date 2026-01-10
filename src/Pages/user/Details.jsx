@@ -360,7 +360,7 @@ function Details() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://mynera-001-site3.jtempurl.com/api/v1/product-pdfs/download/product/${product.id}`, {
+      const response = await fetch(`https://gunaybeauty-001-site1.ltempurl.com/api/v1/product-pdfs/download/product/${product.id}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',
@@ -569,11 +569,11 @@ function Details() {
 
   // Prepare product data for SEO
   const productImageUrl = product?.imageUrl
-    ? `http://mynera-001-site3.jtempurl.com${product.imageUrl}`
+    ? `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}`
     : '/Icons/logo.svg';
 
   const productImages = product?.images
-    ? product.images.map(img => `http://mynera-001-site3.jtempurl.com${img.imageUrl}`)
+    ? product.images.map(img => `https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`)
     : [];
 
   const productForSEO = product ? {
@@ -647,7 +647,7 @@ function Details() {
           {/* Image Display */}
           <div className="w-full h-full flex items-center justify-center p-8">
             <img
-              src={`http://mynera-001-site3.jtempurl.com${modalSlideIndex === 0
+              src={`https://gunaybeauty-001-site1.ltempurl.com${modalSlideIndex === 0
                 ? product?.imageUrl
                 : product?.images?.[modalSlideIndex - 1]?.imageUrl
                 }`}
@@ -724,7 +724,7 @@ function Details() {
                     <img
                       onClick={() => openDetail(0)} // main image = index 0
                       className='w-full rounded-lg p-3 aspect-square cursor-pointer'
-                      src={`http://mynera-001-site3.jtempurl.com${product?.imageUrl}`}
+                      src={`https://gunaybeauty-001-site1.ltempurl.com${product?.imageUrl}`}
                       alt={product?.name || 'Product'}
                       onError={(e) => { e.target.src = "/Icons/logo.svg" }}
                     />
@@ -735,7 +735,7 @@ function Details() {
                       <img
                         onClick={() => openDetail(index + 1)} // shift by +1 to match modal logic
                         className='w-full rounded-lg p-3 aspect-square cursor-pointer'
-                        src={`http://mynera-001-site3.jtempurl.com${item?.imageUrl}`}
+                        src={`https://gunaybeauty-001-site1.ltempurl.com${item?.imageUrl}`}
                         alt={item?.name || 'Product'}
                         onError={(e) => { e.target.src = "/Icons/logo.svg" }}
                       />
@@ -821,7 +821,7 @@ function Details() {
                     onClick={() => swiperRef?.slideTo(index + 1)}
                   >
                     <img
-                      src={`http://mynera-001-site3.jtempurl.com${item?.imageUrl}`}
+                      src={`https://gunaybeauty-001-site1.ltempurl.com${item?.imageUrl}`}
                       alt={`${product.name} ${index + 1 + 1}`}
                       className="w-full aspect-square h-full object-contain"
                       onError={(e) => {
@@ -923,8 +923,8 @@ function Details() {
                   <img
                     src={
                       hovered
-                        ? `http://mynera-001-site3.jtempurl.com${hovered}`
-                        : `http://mynera-001-site3.jtempurl.com${product.imageUrl}`
+                        ? `https://gunaybeauty-001-site1.ltempurl.com${hovered}`
+                        : `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}`
                     }
                     alt={product.name}
                     className="h-80 object-contain rounded-lg transition-opacity duration-300 ease-in-out"
@@ -947,7 +947,7 @@ function Details() {
                         }`}
                     >
                       <img
-                        src={`http://mynera-001-site3.jtempurl.com${item.imageUrl}`}
+                        src={`https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}`}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-contain transition-transform duration-200 hover:scale-105"
                         onError={(e) => {

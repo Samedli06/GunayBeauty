@@ -117,7 +117,7 @@ const SearchDropdown = ({
       <div className="p-4 max-h-[70vh] overflow-y-auto">
         {/* Categories Loading */}
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Grid className="w-4 h-4" />
             CATEGORIES
           </h3>
@@ -130,7 +130,7 @@ const SearchDropdown = ({
 
         {/* Brands Loading */}
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Tag className="w-4 h-4" />
             BRANDS
           </h3>
@@ -143,7 +143,7 @@ const SearchDropdown = ({
 
         {/* Products Loading */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Package className="w-4 h-4" />
             PRODUCTS
           </h3>
@@ -180,7 +180,7 @@ const SearchDropdown = ({
       {/* Categories Section */}
       {hasCategories && (
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Grid className="w-4 h-4" />
             CATEGORIES ({currentSearchResult.categories.length})
           </h3>
@@ -209,7 +209,7 @@ const SearchDropdown = ({
       {/* Brands Section */}
       {hasBrands && (
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Tag className="w-4 h-4" />
             {t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
           </h3>
@@ -222,7 +222,7 @@ const SearchDropdown = ({
               >
                 {brand.logoUrl ? (
                   <img
-                    src={`http://mynera-001-site3.jtempurl.com${brand.logoUrl}`}
+                    src={`https://gunaybeauty-001-site1.ltempurl.com${brand.logoUrl}`}
                     alt={brand.name}
                     className="w-6 h-6 rounded-full object-cover"
                     onError={(e) => {
@@ -244,7 +244,7 @@ const SearchDropdown = ({
       {/* Products Section */}
       {hasProducts && (
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
             <Package className="w-4 h-4" />
             PRODUCTS ({currentSearchResult.products.length})
           </h3>
@@ -258,7 +258,7 @@ const SearchDropdown = ({
               >
                 <div className="relative w-full aspect-square bg-white rounded-lg flex items-center justify-center mb-3 overflow-hidden">
                   <img
-                    src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
+                    src={`https://gunaybeauty-001-site1.ltempurl.com${product.primaryImageUrl}`}
                     alt={product.name}
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
@@ -277,7 +277,7 @@ const SearchDropdown = ({
                   )}
                 </div>
                 <div>
-                  <h4 className="text-gray-800 font-medium text-sm mb-1 line-clamp-2 min-h-[40px]">
+                  <h4 className="text-gray-800 font-medium text-sm mb-1 line-clamp-2 min-h-[40px] font-sans">
                     {product.name}
                   </h4>
                   <p className="text-gray-400 text-xs mb-2 truncate">

@@ -561,10 +561,10 @@ const BannersUI = () => {
     useEffect(() => {
       if (banner) {
         if (banner.imageUrl && !file) {
-          setImagePreview(`http://mynera-001-site3.jtempurl.com/${banner.imageUrl}`);
+          setImagePreview(`https://gunaybeauty-001-site1.ltempurl.com/${banner.imageUrl}`);
         }
         if (banner.mobileImageUrl && !mobileFile) {
-          setMobileImagePreview(`http://mynera-001-site3.jtempurl.com/${banner.mobileImageUrl}`);
+          setMobileImagePreview(`https://gunaybeauty-001-site1.ltempurl.com/${banner.mobileImageUrl}`);
         }
       }
     }, [banner, file, mobileFile]);
@@ -847,7 +847,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={imagePreview || `http://mynera-001-site3.jtempurl.com/${banner?.imageUrl}`}
+                    src={imagePreview || `https://gunaybeauty-001-site1.ltempurl.com/${banner?.imageUrl}`}
                     alt="Desktop Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -925,7 +925,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={mobileImagePreview || `http://mynera-001-site3.jtempurl.com/${banner?.mobileImageUrl}`}
+                    src={mobileImagePreview || `https://gunaybeauty-001-site1.ltempurl.com/${banner?.mobileImageUrl}`}
                     alt="Mobile Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -1071,7 +1071,7 @@ const BannersUI = () => {
                       <div className="md:w-1/3 relative min-h-[180px] h-64 md:h-auto bg-gray-700">
                         <img
                           className="w-full h-full object-cover"
-                          src={`http://mynera-001-site3.jtempurl.com/${banner.imageUrl}`}
+                          src={`https://gunaybeauty-001-site1.ltempurl.com/${banner.imageUrl}`}
                           alt={banner.title}
                           onError={(e) => {
                             e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239CA3AF' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E";

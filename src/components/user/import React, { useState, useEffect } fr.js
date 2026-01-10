@@ -79,7 +79,7 @@ const BannerSlider = () => {
               <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full   relative">
                 <img
                   className="w-full object-cover md:rounded-lg lg:h-full  h-[26vh] md:h-[40vh] lg:p-2"
-                  src={`http://mynera-001-site3.jtempurl.com${banner.imageUrl}`}
+                  src={`https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';

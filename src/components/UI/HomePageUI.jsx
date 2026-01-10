@@ -183,7 +183,7 @@ const HomePageUI = ({
       >
 
         {/* Image Container */}
-        <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-white">
+        <div className="relative aspect-[3/4] mb-4 overflow-hidden ">
           {/* Discount Badge */}
           {product.discountPercentage > 0 && (
             <div className='absolute top-2 left-2 z-10 bg-[#9E2A2B] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider'>
@@ -204,7 +204,7 @@ const HomePageUI = ({
 
           <img
             className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-in-out"
-            src={`http://mynera-001-site3.jtempurl.com${url}`}
+            src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
             alt={product.name}
             onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
           />
@@ -215,7 +215,7 @@ const HomePageUI = ({
           {/* Brand (if applicable, or Category) - Placeholder */}
           <p className="text-[#9E2A2B] text-[10px] font-bold uppercase tracking-widest">GunayBeauty</p>
 
-          <h3 className="font-serif text-[#4A041D] text-lg leading-tight line-clamp-2 min-h-[48px] px-1">
+          <h3 className="font-sans text-[#4A041D] text-lg leading-tight line-clamp-2 min-h-[48px] px-1">
             {translatedProductName}
           </h3>
 

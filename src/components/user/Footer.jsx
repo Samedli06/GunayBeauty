@@ -71,7 +71,7 @@ const Footer = () => {
                     {/* Brand Column - Left Aligned */}
                     <div className="flex flex-col items-start">
                         <Link to='/'>
-                            <h2 className="font-serif text-2xl text-[#C5A059] tracking-widest font-bold uppercase mb-6">
+                            <h2 className="font-sans text-2xl text-[#C5A059] tracking-widest font-bold uppercase mb-6">
                                 Gunay Beauty Store
                             </h2>
                         </Link>
@@ -90,7 +90,7 @@ const Footer = () => {
 
                     {/* Links Column - Centered */}
                     <div className="flex flex-col items-center md:items-center">
-                        <h4 className="font-serif text-lg text-[#C5A059] mb-6">{t("footer.mainPages")}</h4>
+                        <h4 className="font-sans text-lg text-[#C5A059] mb-6">{t("footer.mainPages")}</h4>
                         <div className="flex flex-col gap-3 items-center">
                             <Link to='/' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.home")}</Link>
                             <Link to='/about' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.about")}</Link>
@@ -102,7 +102,7 @@ const Footer = () => {
 
                     {/* Contact Column - Right Aligned (on Desktop) */}
                     <div className="flex flex-col items-start md:items-end">
-                        <h4 className="font-serif text-lg text-[#C5A059] mb-6">{t("footer.contactUs")}</h4>
+                        <h4 className="font-sans text-lg text-[#C5A059] mb-6">{t("footer.contactUs")}</h4>
                         <div className="flex flex-col gap-4 md:items-end">
                             <div className="flex items-center gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse">
                                 <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-phone.svg" alt="" />

@@ -125,7 +125,7 @@ const ProductCard = ({ product, isAddingToCart, loadingProductId, showSuccess, o
     <Link to={`/details/${product?.id}`} className="bg-white rounded-lg p-4 border cursor-pointer border-[#DEE2E6] min-w-[200px] flex-shrink-0 space-y-3">
       <div className="py-4">
         <img
-          src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
+          src={`https://gunaybeauty-001-site1.ltempurl.com${product.primaryImageUrl}`}
           alt={product.name}
           className="h-48 object-contain max-w-[300px] mx-10 rounded-lg"
           onError={(e) => {
@@ -234,7 +234,7 @@ const MobileProductCard = ({ product, isAddingToCart, loadingProductId, showSucc
     <Link to={`/details/${product?.id}`} className="flex flex-col min-w-[70%] p-3 bg-white rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]">
       <div className="w-full h-32 mb-3">
         <img
-          src={`http://mynera-001-site3.jtempurl.com${product.primaryImageUrl}`}
+          src={`https://gunaybeauty-001-site1.ltempurl.com${product.primaryImageUrl}`}
           alt={product.name}
           className="w-full h-full max-w-[300px] object-contain"
           onError={(e) => {

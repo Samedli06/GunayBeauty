@@ -11,6 +11,9 @@ import InfiniteBrandSlider from '../UI/BrandSlider'
 import { useTranslation } from 'react-i18next'
 import { translateDynamicField } from '../../i18n'
 import SEO from '../SEO/SEO'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import FlowingMenu from '../UI/FlowingMenu'
 
 // Skeleton Components
 const CategorySkeleton = () => (
@@ -59,6 +62,14 @@ const Home = () => {
   const { data: recommended, isLoading: isRecommendedLoading } = useGetRecommendedQuery({ limit: 18 });
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic',
+    });
+  }, []);
 
   // Dynamic translation states
   const [translatedParentCategories, setTranslatedParentCategories] = useState([]);
@@ -270,38 +281,48 @@ const Home = () => {
         </section>
 
         {/* 2. Shop by Category - Visual Tiles */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-16 lg:mt-24'>
+        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-16 lg:mt-24' data-aos="fade-up">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-serif text-[#4A041D] mb-3">{t('Shop by Category')}</h2>
-            <p className="text-[#9E2A2B] font-serif italic text-lg">{t('Discover your beauty implementation')}</p>
+            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('Shop by Category')}</h2>
+            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Discover your beauty implementation')}</p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 lg:gap-10">
-            {(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 6).map((item) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            {(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 4).map((item) => (
               <Link
                 key={item.id}
                 to={`/categories/${item.slug}`}
-                className="group flex flex-col items-center gap-4 cursor-pointer"
+                className="group flex flex-col gap-4 cursor-pointer"
               >
-                <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-2 border-[#C5A059] p-1 group-hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center relative">
-                    {/* Placeholder for category image if not available, using icon for now */}
-                    <img className="w-12 h-12 lg:w-16 lg:h-16 object-contain opacity-80 group-hover:opacity-100 transition-opacity" src={getCategoryIcon(item.slug)} alt={item.name} />
+                <div className="aspect-[4/5] overflow-hidden bg-white border border-[#F3E7E1] rounded-sm group-hover:shadow-lg transition-all duration-500">
+                  <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                    <img
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                      src={item.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}` : getCategoryIcon(item.slug)}
+                      alt={item.name}
+                      onError={(e) => {
+                        e.target.src = getCategoryIcon(item.slug);
+                        e.target.className = "w-12 h-12 lg:w-16 lg:h-16 object-contain opacity-20 grayscale";
+                      }}
+                    />
                   </div>
                 </div>
-                <span className="text-[#4A041D] font-sans text-sm font-medium tracking-widest uppercase border-b border-transparent group-hover:border-[#9E2A2B] transition-all">
-                  {item.name}
-                </span>
+                <div className="flex flex-col items-center">
+                  <span className="text-[#4A041D] font-sans text-xs lg:text-sm font-bold tracking-[0.2em] uppercase group-hover:text-[#9E2A2B] transition-colors text-center px-2">
+                    {item.name}
+                  </span>
+                  <div className="w-6 h-[2px] bg-[#C5A059] mt-3 group-hover:w-12 transition-all duration-300"></div>
+                </div>
               </Link>
             ))}
           </div>
         </section>
 
         {/* 3. Darlings' Favourites (Hot Deals) */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32'>
+        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
-              <h2 className='text-2xl lg:text-3xl font-serif text-[#4A041D]'>{t('Darlings Favourites')}</h2>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Darlings Favourites')}</h2>
               <p className="text-[#9E2A2B] font-sans text-xs tracking-widest uppercase mt-1">Exclusive Offers</p>
             </div>
             <Link to='/products/hot-deals' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
@@ -335,19 +356,37 @@ const Home = () => {
           </div>
         </section>
 
+        {/* New Flowing Menu Section */}
+        <section className='mt-20 lg:mt-32' data-aos="fade-up">
+          <div className="text-center mb-12 px-4">
+            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('The Beauty Diaries')}</h2>
+            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Editorial curation of our finest collections')}</p>
+          </div>
+
+          <div className="relative border-y border-[#F3E7E1]">
+            <FlowingMenu
+              items={(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 8).map(item => ({
+                link: `/categories/${item.slug}`,
+                text: item.name,
+                image: item.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}` : getCategoryIcon(item.slug)
+              }))}
+            />
+          </div>
+        </section>
+
         {/* 4. Brand Magic (Slider) */}
-        <section className="bg-[#F3E7E1] py-16 mt-20 lg:mt-32">
+        <section className="bg-[#F3E7E1] py-16 mt-20 lg:mt-32" data-aos="fade-up">
           <div className='max-w-[1440px] mx-auto px-4 lg:px-12'>
-            <h2 className="text-center text-2xl lg:text-3xl font-serif text-[#4A041D] mb-10">{t('Our Luxury Partners')}</h2>
+            <h2 className="text-center text-2xl lg:text-3xl font-sans text-[#4A041D] mb-10">{t('Our Luxury Partners')}</h2>
             <InfiniteBrandSlider />
           </div>
         </section>
 
         {/* 5. Recommended For You */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32'>
+        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
-              <h2 className='text-2xl lg:text-3xl font-serif text-[#4A041D]'>{t('Chosen For You')}</h2>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Chosen For You')}</h2>
               <p className="text-[#9E2A2B] font-sans text-xs tracking-widest uppercase mt-1">New Arrivals & Best Sellers</p>
             </div>
             <Link to='/products/recommended' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
