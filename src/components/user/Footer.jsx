@@ -65,7 +65,7 @@ const Footer = () => {
     const otherLanguage = languages.find(lang => lang.value !== selected) || languages[1];
 
     return (
-        <footer className="bg-[#4A041D] text-white pt-16 pb-8 font-sans">
+        <footer className="bg-[#4A041D] text-white pt-16 pb-24 lg:pb-8 font-sans">
             <div className="max-w-[1440px] mx-auto px-4 lg:px-12">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start">
                     {/* Brand Column - Left Aligned */}

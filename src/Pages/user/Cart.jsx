@@ -5,7 +5,7 @@ import { useGetCartItemsQuery, useUpdateCartItemQuantityMutation, useRemoveCartI
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../../i18n';
-import SearchUI from '../../components/UI/SearchUI'
+
 import { Breadcrumb } from '../../products/Breadcrumb'
 
 const AuthUtils = {
@@ -276,10 +276,10 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <ShoppingBag className="w-5 h-5 text-red-600" />
+            <div className="p-2 bg-gray-50 rounded-lg">
+              <ShoppingBag className="w-5 h-5 text-[#4A041D]" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900">{t('checkout') || 'Checkout'}</h3>
+            <h3 className="text-xl font-semibold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('checkout') || 'Checkout'}</h3>
           </div>
           <button
             onClick={handleClose}
@@ -338,7 +338,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 onChange={handleInputChange}
                 disabled={isSubmitting || isSuccess}
                 placeholder="Enter your full name"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -354,7 +354,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 onChange={handleInputChange}
                 disabled={isSubmitting || isSuccess}
                 placeholder="+994 XX XXX XX XX"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -373,7 +373,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 <span>{(cartItems?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
               </div>
               {(cartItems?.totalDiscount || 0) > 0 && (
-                <div className="flex items-center justify-between text-sm text-red-500">
+                <div className="flex items-center justify-between text-sm text-[#C5A059]">
                   <span>{t('discount') || 'Discount'}:</span>
                   <span>- {(cartItems?.totalDiscount || 0).toFixed(2)} AZN</span>
                 </div>
@@ -392,10 +392,10 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             type="submit"
             disabled={isSubmitting || isSuccess}
             className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${isSuccess
-                ? 'bg-green-500 text-white cursor-default'
-                : isSubmitting
-                  ? 'bg-red-400 text-white cursor-not-allowed'
-                  : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+              ? 'bg-green-500 text-white cursor-default'
+              : isSubmitting
+                ? 'bg-[#4A041D] opacity-70 text-white cursor-not-allowed'
+                : 'bg-[#4A041D] hover:bg-[#6D082D] text-white cursor-pointer shadow-md'
               }`}
           >
             {isSubmitting ? (
@@ -687,28 +687,25 @@ const Cart = () => {
   }
 
   return (
-    <section className="inter bg-[#f7fafc] whitepsace-nowrap">
-      <div className="lg:hidden px-4 pl-7 py-4 border-y bg-white lg:border-transparent border-[#dee2e6]">
-        <div className="mb-4 lg:hidden">
-          <SearchUI />
-        </div>
+    <section className="bg-[#FCFCFC] min-h-[80vh] font-sans pb-12" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="lg:hidden px-4 md:px-8 py-4 bg-white shadow-sm mb-4">
         <Breadcrumb />
       </div>
 
-      <div className="min-h-[80vh] lg:max-w-[90vw] lg:mx-auto border border-[#dee2e6] lg:border-0">
+      <div className="min-h-[80vh] lg:max-w-[90vw] lg:mx-auto border-none lg:border-0">
         <div className='p-4 pl-7 pb-0 hidden lg:block'>
           <Breadcrumb />
         </div>
 
-        <div className="p-4 pl-7 text-xl font-semibold bg-white lg:bg-transparent border-b lg:border-0 border-[#dee2e6] mb-3">
+        <div className="p-4 md:px-8 text-2xl font-bold bg-transparent border-none mb-6 text-[#4A041D]">
           {isLoading ? (
-            <div className="h-7 bg-gray-300 rounded w-40 animate-pulse"></div>
+            <div className="h-8 bg-gray-200 rounded w-48 animate-pulse"></div>
           ) : (
-            <h1>{t('myCart')} ({(translatedCartItems || cartItems)?.items?.length || 0})</h1>
+            <h1>{t('myCart')} <span className="text-gray-400 font-normal text-lg">({(translatedCartItems || cartItems)?.items?.length || 0} {t('items')})</span></h1>
           )}
         </div>
 
-        <div className="bg-white lg:bg-transparent rounded-lg flex flex-col lg:flex-row lg:gap-4 shadow-sm lg:shadow-none p-4 space-y-4">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 px-4 md:px-8">
           {isLoading ? (
             <>
               <EmptyCartSkeleton />
@@ -716,7 +713,7 @@ const Cart = () => {
             </>
           ) : (
             <>
-              <div className='flex-5 flex gap-5 p-4 flex-col bg-white lg:rounded-lg'>
+              <div className='flex-5 flex gap-5 p-4 flex-col bg-white lg:rounded-2xl shadow-sm'>
                 {(translatedCartItems || cartItems)?.items?.length === 0 ? (
                   <div className="text-center py-12">
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('yourCartIsEmpty')}</h3>
@@ -729,13 +726,13 @@ const Cart = () => {
                     const isItemRemoving = removingItems.has(item.id);
 
                     return (
-                      <div key={item.id}>
+                      <div key={item.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300 mb-4">
                         {/* Mobile View */}
-                        <div className="space-y-4 lg:hidden">
-                          <div className="flex items-start rounded-lg">
-                            <div className="w-30 h-30 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
+                        <div className="lg:hidden space-y-4">
+                          <div className="flex gap-4">
+                            <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center">
                               <img
-                                className='w-full rounded-lg p-3 aspect-square'
+                                className='w-full h-full object-contain'
                                 src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
                                 alt={item?.productName || 'Product'}
                                 onError={(e) => {
@@ -744,109 +741,117 @@ const Cart = () => {
                               />
                             </div>
 
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-lg text-gray-900 mb-1">
-                                {item.productName}
-                              </h3>
+                            <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
+                              <div>
+                                <h3 className="font-semibold text-base text-[#4A041D] line-clamp-2 leading-tight mb-1">
+                                  {item.productName}
+                                </h3>
+                              </div>
+                              <div className="flex justify-between items-end">
+                                <span className="font-bold text-lg text-[#C5A059]">
+                                  {(item.unitPrice * effectiveQuantity).toFixed(2)} ₼
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                            <div className="flex items-center bg-gray-50 rounded-lg p-1">
+                              <button
+                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                                onClick={() => handleDecrement(item)}
+                                disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span className={`w-8 text-center font-medium text-gray-900 ${isItemUpdating ? 'opacity-50' : ''}`}>
+                                {effectiveQuantity}
+                              </span>
+                              <button
+                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                                onClick={() => handleIncrement(item)}
+                                disabled={isItemUpdating || isItemRemoving}
+                              >
+                                <Plus size={14} />
+                              </button>
                             </div>
 
                             <button
                               onClick={() => handleRemoveItem(item.id)}
-                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                              className="p-2 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50 hover:bg-red-50 rounded-lg"
                               disabled={isItemRemoving || isItemUpdating}
+                              title={t('remove')}
                             >
-                              <Trash2 size={24} />
+                              <Trash2 size={18} />
                             </button>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center border border-gray-300 rounded-lg">
-                              <button
-                                className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50"
-                                onClick={() => handleDecrement(item)}
-                                disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
-                              >
-                                <Minus size={16} />
-                              </button>
-                              <span className={`px-4 py-2 border-x border-[#dee2e6] text-center ${isItemUpdating ? 'opacity-50' : ''}`}>
-                                {effectiveQuantity}
-                              </span>
-                              <button
-                                className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50"
-                                onClick={() => handleIncrement(item)}
-                                disabled={isItemUpdating || isItemRemoving}
-                              >
-                                <Plus size={16} />
-                              </button>
-                            </div>
-
-                            <div className="text-xl font-semibold text-gray-900">
-                              {(item.unitPrice * effectiveQuantity).toFixed(2)} AZN
-                            </div>
                           </div>
                         </div>
 
                         {/* Desktop View */}
-                        <div className='hidden lg:flex gap-4'>
-                          <div className='flex-1 flex'>
-                            <div className="w-30 h-30 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
-                              <img
-                                className="w-full rounded-lg p-3 aspect-square"
-                                src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
-                                alt={item?.productName || "Product"}
-                                onError={(e) => {
-                                  e.currentTarget.src = "/Icons/logo.svg";
-                                }}
-                              />
-                            </div>
+                        <div className='hidden lg:flex items-center gap-6'>
+                          <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center border border-gray-100">
+                            <img
+                              className="w-full h-full object-contain"
+                              src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
+                              alt={item?.productName || "Product"}
+                              onError={(e) => {
+                                e.currentTarget.src = "/Icons/logo.svg";
+                              }}
+                            />
+                          </div>
 
-                            <div>
-                              <div className="flex-1">
-                                <h3 className="font-semibold text-lg text-gray-900 mb-1">
-                                  {item.productName}
-                                </h3>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-lg text-[#4A041D] mb-1 line-clamp-1">
+                              {item.productName}
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {item.productSku && `SKU: ${item.productSku}`}
+                            </p>
+                          </div>
+
+                          {/* Quantity */}
+                          <div className="flex items-center bg-gray-50 rounded-lg p-1 mx-8">
+                            <button
+                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                              onClick={() => handleDecrement(item)}
+                              disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className={`w-12 text-center font-medium text-gray-900 ${isItemUpdating ? 'opacity-50' : ''}`}>
+                              {effectiveQuantity}
+                            </span>
+                            <button
+                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                              onClick={() => handleIncrement(item)}
+                              disabled={isItemUpdating || isItemRemoving}
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
+
+                          {/* Price */}
+                          <div className="w-32 text-right">
+                            <div className="text-xl font-bold text-[#C5A059]">
+                              {(item.unitPrice * effectiveQuantity).toFixed(2)} ₼
+                            </div>
+                            {effectiveQuantity > 1 && (
+                              <div className="text-xs text-gray-400 mt-1">
+                                {item.unitPrice.toFixed(2)} ₼ / pc
                               </div>
-
-                              <button
-                                className='px-3 p-1 mt-7 shadow-md bg-white hover:bg-gray-100 cursor-pointer text-red-500 rounded-lg border-1 border-[#dee2e6] disabled:opacity-50 disabled:cursor-not-allowed'
-                                onClick={() => handleRemoveItem(item.id)}
-                                disabled={isItemRemoving || isItemUpdating}
-                              >
-                                {isItemRemoving ? t('removing') : t('remove')}
-                              </button>
-                            </div>
+                            )}
                           </div>
 
-                          <div className="flex flex-col items-end justify-around px-4">
-                            <div className="text-lg font-semibold text-gray-900">
-                              {(item.unitPrice * effectiveQuantity).toFixed(2)} AZN
-                            </div>
-
-                            <div className="flex items-center border border-gray-300 rounded-lg">
-                              <button
-                                className="p-2 hover:bg-gray-100 h-full cursor-pointer transition-colors disabled:opacity-50"
-                                onClick={() => handleDecrement(item)}
-                                disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
-                              >
-                                <Minus size={16} />
-                              </button>
-                              <span className={`px-4 py-2 border-x border-[#dee2e6] text-center ${isItemUpdating ? 'opacity-50' : ''}`}>
-                                {effectiveQuantity}
-                              </span>
-                              <button
-                                className="p-2 h-full hover:bg-gray-100 cursor-pointer transition-colors disabled:opacity-50"
-                                onClick={() => handleIncrement(item)}
-                                disabled={isItemUpdating || isItemRemoving}
-                              >
-                                <Plus size={16} />
-                              </button>
-                            </div>
-                          </div>
+                          {/* Remove */}
+                          <button
+                            className='p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-4 disabled:opacity-50'
+                            onClick={() => handleRemoveItem(item.id)}
+                            disabled={isItemRemoving || isItemUpdating}
+                            title={t('remove')}
+                          >
+                            {(isItemRemoving) ? <Loader2 size={20} className="animate-spin" /> : <Trash2 size={20} />}
+                          </button>
                         </div>
-
-                        {index < ((translatedCartItems || cartItems)?.items?.length - 1) && (
-                          <hr className="mx-2 border-[#dee2e6] my-4" />
-                        )}
                       </div>
                     )
                   })
@@ -872,17 +877,19 @@ const Cart = () => {
                 )}
               </div>
 
-              <div className='lg:bg-white lg:p-5 lg:shadow-sm py-1 lg:h-fit flex-2 lg:rounded-lg'>
-                <div className="border-t lg:border-none border-gray-200 pt-4 space-y-3">
-                  <div className="flex justify-between text-gray-600 text-lg">
+              <div className='bg-white p-6 shadow-sm rounded-2xl h-fit border border-gray-100'>
+                <div className="border-b border-gray-100 pb-6 space-y-4">
+                  <div className="flex justify-between text-gray-600 text-base font-medium">
                     <span>{t('subtotal')}:</span>
                     <span>{((translatedCartItems || cartItems)?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
                   </div>
-                  <div className="flex justify-between text-red-500 text-lg">
-                    <span>{t('discount')}:</span>
-                    <span>- {((translatedCartItems || cartItems)?.totalDiscount || 0).toFixed(2)} AZN</span>
-                  </div>
-                  <div className="flex justify-between text-lg mb-7 font-bold text-gray-900 pt-2 border-t border-gray-200">
+                  {((translatedCartItems || cartItems)?.totalDiscount || 0) > 0 && (
+                    <div className="flex justify-between text-[#C5A059] text-base font-medium">
+                      <span>{t('discount')}:</span>
+                      <span>- {((translatedCartItems || cartItems)?.totalDiscount || 0).toFixed(2)} AZN</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-xl font-bold text-[#4A041D] pt-4">
                     <span>{t('total')}:</span>
                     <span>{((translatedCartItems || cartItems)?.totalAmount || 0).toFixed(2)} AZN</span>
                   </div>
@@ -890,7 +897,7 @@ const Cart = () => {
 
                 <button
                   onClick={() => !me ? setIsCheckoutModalOpen(true) : handleCheckoutSubmit()}
-                  className="w-full cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full mt-6 cursor-pointer bg-[#4A041D] hover:bg-[#6D082D] text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
                   disabled={!(translatedCartItems || cartItems)?.items?.length}
                 >
                   <ShoppingCart size={20} />

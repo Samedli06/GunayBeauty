@@ -1,6 +1,6 @@
 import React, { act, useEffect, useRef, useState } from 'react'
 import MyMap from '../UI/googleMaps'
-import SearchUI from '../UI/SearchUI'
+
 import HomePageUI from '../UI/HomePageUI'
 import { Link } from 'react-router'
 import BannerSlider from '../UI/BannerSlider'
@@ -276,7 +276,7 @@ const Home = () => {
       <main className='bg-[#FDFBF8] pb-20'>
 
         {/* 1. Hero Section - Full Width */}
-        <section className='w-full h-[45vh] lg:h-[70vh] relative'>
+        <section className='w-full  lg:h-[70vh] relative'>
           <BannerSlider />
         </section>
 

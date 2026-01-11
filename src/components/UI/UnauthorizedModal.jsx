@@ -5,52 +5,51 @@ import { useNavigate } from 'react-router';
 
 const UnauthorizedModal = ({ isOpen, onClose, action }) => {
   const navigate = useNavigate();
-  const {t} = useTranslation()
-  
+  const { t } = useTranslation()
+
   if (!isOpen) return null;
-  
+
   return (
-    <div 
-      className={`fixed inset-0 bg-white/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
-        isOpen ? 'opacity-100' : 'opacity-0'
-      }`}
-      onClick={onClose}
-    >
-      <div 
-        className={`bg-white rounded-lg max-w-md w-full p-6 shadow-xl transform transition-all duration-300 ${
-          isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+    <div
+      className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'
         }`}
+      onClick={onClose}
+      style={{ fontFamily: 'Montserrat, sans-serif' }}
+    >
+      <div
+        className={`bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl transform transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-            <LogIn className="h-6 w-6 text-red-600" />
+          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-[#4A041D]/5 mb-6">
+            <LogIn className="h-8 w-8 text-[#4A041D]" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-xl font-bold text-[#4A041D] mb-3">
             {t('signInRequired')}
           </h3>
-          <p className="text-sm whitespace-normal text-gray-600 mb-6">
+          <p className="text-sm whitespace-normal text-gray-600 mb-8 leading-relaxed">
             {t('signInRequiredMessage')}
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <button
               onClick={() => navigate('/login')}
-              className="flex-1 bg-red-500  hover:bg-red-600 text-white py-2.5 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
+              className="flex-1 bg-[#4A041D] hover:bg-[#6D082D] text-white py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
-              <LogIn className="w-4 h-4" />
+              <LogIn className="w-5 h-5" />
               {t('signIn')}
             </button>
             <button
               onClick={() => navigate('/register')}
-              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-2.5 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
+              className="flex-1 bg-white border border-[#4A041D]/20 hover:border-[#4A041D] text-[#4A041D] py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all hover:bg-[#4A041D]/5"
             >
-              <UserPlus className="w-4 h-4" />
+              <UserPlus className="w-5 h-5" />
               {t('signUp')}
             </button>
           </div>
           <button
             onClick={onClose}
-            className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="mt-6 text-sm text-gray-400 hover:text-[#C5A059] transition-colors font-medium"
           >
             {t('continueBrowsing')}
           </button>

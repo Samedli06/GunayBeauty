@@ -10,12 +10,6 @@ import AuthUtils from './AuthUtils';
 import UnauthorizedModal from './UnauthorizedModal';
 
 
-
-
-
-// ============= UNAUTHORIZED MODAL =============
-
-
 // ============= MAIN COMPONENT =============
 const HomePageUI = ({
   deal,
@@ -74,7 +68,6 @@ const HomePageUI = ({
     }
   }, [favoriteStatus]);
 
-  // ============= ADD TO CART HANDLER =============
   const onAddToCart = async (e, productData) => {
     e.preventDefault();
     e.stopPropagation();
@@ -179,31 +172,22 @@ const HomePageUI = ({
 
       <Link
         to={`/details/${product.id}`}
-        className="group flex flex-col justify-between h-full bg-transparent p-2 relative transition-transform duration-300"
+        className="group flex flex-col h-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
       >
 
-        {/* Image Container */}
-        <div className="relative aspect-[3/4] mb-4 overflow-hidden ">
+        {/* Image Container - Added padding to match ProductCard style */}
+        <div className="relative  p-4 overflow-hidden flex items-center justify-center">
           {/* Discount Badge */}
           {product.discountPercentage > 0 && (
-            <div className='absolute top-2 left-2 z-10 bg-[#9E2A2B] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider'>
+            <div className='absolute top-2 left-2 z-10 bg-[#9E2A2B] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full'>
               -{product.discountPercentage}%
             </div>
           )}
 
-          {/* Wishlist Button */}
-          <button
-            onClick={handleFavoriteClick}
-            disabled={isTogglingFavorite}
-            className="absolute top-2 right-2 z-10 p-2 hover:scale-110 transition-transform"
-          >
-            <Heart
-              className={`w-5 h-5 transition-colors ${localFavorite ? 'fill-[#9E2A2B] text-[#9E2A2B]' : 'text-[#4A041D]'}`}
-            />
-          </button>
+
 
           <img
-            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700 ease-in-out"
+            className="w-full aspect-square h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
             src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
             alt={product.name}
             onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
@@ -211,27 +195,24 @@ const HomePageUI = ({
         </div>
 
         {/* Content */}
-        <div className="flex flex-col flex-1 items-center text-center gap-1 mb-4">
-          {/* Brand (if applicable, or Category) - Placeholder */}
-          <p className="text-[#9E2A2B] text-[10px] font-bold uppercase tracking-widest">GunayBeauty</p>
+        <div className="flex flex-col flex-1 px-4 pb-4 items-center text-center">
 
-          <h3 className="font-sans text-[#4A041D] text-lg leading-tight line-clamp-2 min-h-[48px] px-1">
+          {/* Brand/Category Placeholder */}
+          <p className="text-[#9E2A2B] text-[10px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
+
+          <h3 className="font-sans text-[#4A041D] text-lg leading-tight line-clamp-2 h-[3rem] w-full flex items-center justify-center">
             {translatedProductName}
           </h3>
 
-          {/* Price */}
-          <div className="flex items-center gap-2 mt-1">
+          {/* Price - Pushed to bottom */}
+          <div className="flex items-center flex-col gap-1 mt-auto pt-2">
             {product.originalPrice > product.currentPrice && (
               <span className="text-gray-400 text-sm line-through decoration-[#9E2A2B] decoration-1">{product.originalPrice} AZN</span>
             )}
-            <span className="text-[#4A041D] font-bold text-lg">{product.currentPrice} AZN</span>
+            <span className="text-[#4A041D] font-bold text-xl">{product.currentPrice} AZN</span>
           </div>
         </div>
 
-        {/* Action */}
-        <div className="">
-          {renderButton()}
-        </div>
       </Link>
     </>
   );

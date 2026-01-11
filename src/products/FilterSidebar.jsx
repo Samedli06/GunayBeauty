@@ -4,6 +4,102 @@ import { useFilterProductsMutation, useGetCategoriesQuery, useGetCategoryFilters
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../i18n';
 
+
+const SortDropdown = ({ currentSort, onSortChange, t }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const options = [
+    { value: "", label: t('sortBy') },
+    { value: "price_asc", label: t('priceLowToHigh') },
+    { value: "price_desc", label: t('priceHighToLow') },
+    { value: "name_asc", label: t('nameAToZ') },
+    { value: "name_desc", label: t('nameZToA') }
+  ];
+
+  const selectedOption = options.find(opt => opt.value === (currentSort || "")) || options[0];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (value) => {
+    // Create a fake event to match the expected interface of onSortChange if it expects an event
+    const event = { target: { value } };
+    onSortChange(event);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative" ref={dropdownRef} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full px-4 py-2.5 bg-white border rounded-lg text-sm flex items-center justify-between transition-all duration-300 ${isOpen ? 'border-[#C5A059] ring-2 ring-[#C5A059] ring-opacity-20' : 'border-gray-300 hover:border-[#C5A059]'}`}
+      >
+        <span className="text-gray-700">{selectedOption.label}</span>
+        <ChevronDown className={`w-4 h-4 text-[#C5A059] transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} />
+      </button>
+
+      <div
+        className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-all duration-300 origin-top transform ${isOpen ? 'opacity-100 scale-y-100 translate-y-0' : 'opacity-0 scale-y-95 -translate-y-2 pointer-events-none'}`}
+      >
+        {options.map((option) => (
+          <div
+            key={option.value}
+            onClick={() => handleSelect(option.value)}
+            className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-200 ${currentSort === option.value || (!currentSort && option.value === "") ? 'bg-[#F5F5F0] text-[#4A041D] font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-[#C5A059]'}`}
+          >
+            {option.label}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const FilterDropdown = ({ label, children, isActive }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={dropdownRef} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`px-4 py-2 bg-white border rounded-lg text-sm flex items-center gap-2 transition-all duration-300 ${isOpen || isActive ? 'border-[#C5A059] ring-1 ring-[#C5A059] text-[#4A041D]' : 'border-gray-200 hover:border-[#C5A059] text-gray-700'}`}
+      >
+        <span className="font-medium">{label}</span>
+        <ChevronDown className={`w-4 h-4 text-[#C5A059] transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} />
+      </button>
+
+      <div
+        className={`absolute z-30 mt-2 min-w-[240px] bg-white border border-gray-100 rounded-xl shadow-xl p-4 transition-all duration-300 origin-top-left ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
 export const FilterSidebar = React.memo(({
   onFilterResults,
   onLoadingChange,
@@ -16,7 +112,8 @@ export const FilterSidebar = React.memo(({
   setCurrentPage,
   pageSize,
   forcedCategoryId = null,
-  showCategory = false
+  showCategory = false,
+  onSortChange
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -409,122 +506,130 @@ export const FilterSidebar = React.memo(({
 
   if (isCategoriesLoading) {
     return (
-      <div className="bg-transparent rounded-lg p-4">
-        <div className="animate-pulse space-y-4">
-          <div className="h-5 bg-gray-200 rounded w-1/2" />
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-full" />
-            <div className="h-4 bg-gray-200 rounded w-5/6" />
-            <div className="h-4 bg-gray-200 rounded w-4/6" />
-          </div>
-        </div>
-      </div>
+      <div className="w-full h-12 bg-gray-100 animate-pulse rounded-lg"></div>
     );
   }
 
   return (
-    <div className="rounded-lg bg-transparent" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      {showCategory && (
-        <>
-          <div className="mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('filters.category')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)
-                ?.slice(0, showAllCategories ? (translatedParentCat.length > 0 ? translatedParentCat : ParentCat).length : 6)
-                .map(item => (
-                  <label key={item.id} className="flex items-center space-x-2 cursor-pointer p-3 rounded-lg border border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200">
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+
+      {/* Left Side: Filter Dropdowns */}
+      <div className="flex flex-wrap items-center gap-3 flex-1">
+
+        {/* Categories Dropdown */}
+        {showCategory && (
+          <FilterDropdown
+            label={t('filters.category')}
+            isActive={selectedCategories.length > 0}
+          >
+            <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.map(item => (
+                <label key={item.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                  <div className="relative flex items-center">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 text-red-500 cursor-pointer border-gray-300 rounded focus:ring-red-500"
+                      className="peer appearance-none w-5 h-5 border border-gray-300 rounded checked:bg-[#4A041D] checked:border-[#4A041D] transition-all"
                       checked={selectedCategories.includes(item.id)}
                       onChange={() => handleCategoryChange(item.id)}
                     />
-                    <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{item.name}</span>
-                  </label>
-                ))}
+                    <svg className="absolute w-3 h-3 text-white hidden peer-checked:block pointer-events-none left-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <span className={`text-sm transition-colors ${selectedCategories.includes(item.id) ? 'text-[#4A041D] font-medium' : 'text-gray-600 group-hover:text-[#4A041D]'}`}>
+                    {item.name}
+                  </span>
+                </label>
+              ))}
             </div>
+          </FilterDropdown>
+        )}
 
-            {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.length > 6 && (
-              <button
-                onClick={toggleShowAll}
-                className="text-sm text-red-500 hover:text-red-600 font-medium mt-3"
-                style={{ fontFamily: 'Montserrat, sans-serif' }}
-              >
-                {showAllCategories ? t('filters.seeLess') : t('filters.seeAll')}
-              </button>
-            )}
-          </div>
-        </>
-      )}
-
-      {isFiltersLoading ? (
-        <div className="p-4">
-          <div className="animate-pulse space-y-4">
-            <div className="h-5 bg-gray-200 rounded w-1/3" />
-            <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-full" />
-              <div className="h-4 bg-gray-200 rounded w-4/5" />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtersToShow?.map(filter => {
-            return (
-              <div key={filter.id} className="">
-                <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{filter.name}</h3>
-                <div className="space-y-2">
-                  {filter.options?.map(option => (
-                    <label key={option.id} className="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors">
+        {/* Dynamic Filters */}
+        {!isFiltersLoading && filtersToShow?.map(filter => {
+          const isActive = selectedFilters[filter.id]?.filterOptionIds?.length > 0;
+          return (
+            <FilterDropdown
+              key={filter.id}
+              label={filter.name}
+              isActive={isActive}
+            >
+              <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                {filter.options?.map(option => (
+                  <label key={option.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                    <div className="relative flex items-center">
                       <input
                         type="checkbox"
-                        className="w-4 h-4 text-red-500 cursor-pointer border-gray-300 rounded focus:ring-red-500"
+                        className="peer appearance-none w-5 h-5 border border-gray-300 rounded checked:bg-[#4A041D] checked:border-[#4A041D] transition-all"
                         checked={selectedFilters[filter.id]?.filterOptionIds?.includes(option.id) || false}
-                        onChange={(e) => {
-                          handleFilterChange(e.target.checked, filter.id, option.id);
-                        }}
+                        onChange={(e) => handleFilterChange(e.target.checked, filter.id, option.id)}
                       />
-                      <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>{option.displayName || option.label}</span>
-                    </label>
-                  ))}
-                </div>
+                      <svg className="absolute w-3 h-3 text-white hidden peer-checked:block pointer-events-none left-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <span className={`text-sm transition-colors ${selectedFilters[filter.id]?.filterOptionIds?.includes(option.id) ? 'text-[#4A041D] font-medium' : 'text-gray-600 group-hover:text-[#4A041D]'}`}>
+                      {option.displayName || option.label}
+                    </span>
+                  </label>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      )}
+            </FilterDropdown>
+          );
+        })}
 
-      <div className="mt-6">
-        <h3 className="font-semibold text-gray-900 mb-3 text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('priceRange')}</h3>
-        <div className="flex items-center space-x-3">
-          <input
-            type="number"
-            placeholder={t('productsPage.min')}
-            value={minPrice}
-            onChange={handleMinPriceChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
-            style={{ fontFamily: 'Montserrat, sans-serif' }}
-            min="0"
-          />
-          <span className="text-gray-500" style={{ fontFamily: 'Montserrat, sans-serif' }}>-</span>
-          <input
-            type="number"
-            placeholder={t('productsPage.max')}
-            value={maxPrice}
-            onChange={handleMaxPriceChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
-            style={{ fontFamily: 'Montserrat, sans-serif' }}
-            min="0"
-          />
-        </div>
+        {/* Price Dropdown */}
+        <FilterDropdown
+          label={t('priceRange')}
+          isActive={minPrice || maxPrice}
+        >
+          <div className="space-y-4 p-1">
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">{t('productsPage.min')}</label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-400 text-sm">₼</span>
+                <input
+                  type="number"
+                  placeholder="0"
+                  value={minPrice}
+                  onChange={handleMinPriceChange}
+                  className="w-full pl-7 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] text-sm transition-all"
+                  min="0"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">{t('productsPage.max')}</label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5 text-gray-400 text-sm">₼</span>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={maxPrice}
+                  onChange={handleMaxPriceChange}
+                  className="w-full pl-7 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] text-sm transition-all"
+                  min="0"
+                />
+              </div>
+            </div>
+          </div>
+        </FilterDropdown>
+
+        {(isFiltering || isFiltersLoading) && (
+          <div className="flex items-center gap-2 text-sm text-[#C5A059]">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#C5A059]"></div>
+          </div>
+        )}
       </div>
 
-      {(isFiltering || isFiltersLoading) && (
-        <div className="mt-4 text-sm text-gray-500 flex items-center space-x-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
-          <span>{isFiltering ? t('productsPage.filtering') : t('productsPage.loadingFilters')}</span>
-        </div>
-      )}
+      {/* Right Side: Sort */}
+      <div className="w-full lg:w-[200px]">
+        <SortDropdown
+          currentSort={currentSort}
+          onSortChange={onSortChange}
+          t={t}
+        />
+      </div>
     </div>
   );
 });

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
-import { Grid, List, ChevronDown, Check } from 'lucide-react';
 import { Breadcrumb } from '../../products/Breadcrumb';
-import SearchUI from '../../components/UI/SearchUI';
+
 import { FilterSidebar } from '../../products/FilterSidebar';
 import { MobileFilterButtons } from '../../products/MobileFilters';
 import { ProductCard } from '../../products/ProductCard';
@@ -27,88 +26,16 @@ import SEO from '../../components/SEO/SEO';
 import { useTranslation } from 'react-i18next';
 import ProductBanner from '../../components/UI/ProductBanner';
 
-const ProductCardSkeleton = React.memo(({ col }) => (
-  <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${col ? '' : 'flex'}`}>
-    {col ? (
-      <>
-        <div className="w-full aspect-square bg-gray-200 animate-pulse" />
-        <div className="p-4 space-y-3">
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3" />
-        </div>
-      </>
-    ) : (
-      <>
-        <div className="w-48 h-48 bg-gray-200 animate-pulse flex-shrink-0" />
-        <div className="p-4 flex-1 space-y-3">
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-1/4" />
-        </div>
-      </>
-    )}
+const ProductCardSkeleton = React.memo(() => (
+  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="w-full aspect-square bg-gray-200 animate-pulse" />
+    <div className="p-4 space-y-3">
+      <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
+      <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3" />
+    </div>
   </div>
 ));
-
-
-const CustomDropdown = React.memo(({ value, onChange, options }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const selectedOption = useMemo(() =>
-    options.find(opt => opt.value === value) || options[0],
-    [options, value]
-  );
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleSelect = useCallback((optionValue) => {
-    onChange({ target: { value: optionValue } });
-    setIsOpen(false);
-  }, [onChange]);
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full lg:w-auto min-w-[180px] flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-      >
-        <span>{selectedOption.label}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-full lg:w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => handleSelect(option.value)}
-              className={`w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors ${value === option.value
-                ? 'bg-gray-50 text-gray-900 font-medium'
-                : 'text-gray-700 hover:bg-gray-50'
-                }`}
-            >
-              <span>{option.label}</span>
-              {value === option.value && <Check className="w-4 h-4 text-gray-900" />}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-});
 
 function Products() {
   const { slug } = useParams();
@@ -153,8 +80,6 @@ function Products() {
     return slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || t('allProducts');
   }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug, t]);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const [template, setTemplate] = useState(isMobile ? "cols" : "rows");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
@@ -223,14 +148,7 @@ function Products() {
   const [addingIds, setAddingIds] = useState(new Set());
   const [isAuthenticated, setIsAuthenticated] = useState(() => AuthUtils.isAuthenticated());
 
-  // Sort options for dropdown - memoized
-  const sortOptions = useMemo(() => [
-    { value: null, label: t('sortBy') },
-    { value: 'price_asc', label: t('priceLowToHigh') },
-    { value: 'price_desc', label: t('priceHighToLow') },
-    { value: 'name_asc', label: t('nameAToZ') },
-    { value: 'name_desc', label: t('nameZToA') }
-  ], [t]);
+
 
   const categoryId = useMemo(() => {
     if (!slug || !categories || isSpecialSlug) return null;
@@ -415,20 +333,7 @@ function Products() {
     return favorites.includes(productId);
   }, [favorites]);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
-  useEffect(() => {
-    // Mobil görünüşdə həmişə "cols" (grid), desktopda "rows" (list)
-    if (isMobile) {
-      setTemplate("cols");
-    } else {
-      setTemplate("rows");
-    }
-  }, [isMobile]);
 
   // Determine loading state based on slug type - memoized
   const shouldShowLoading = useMemo(() => {
@@ -497,7 +402,7 @@ function Products() {
 
       <div className="min-h-screen bg-[#f7fafc]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className='lg:hidden px-4 py-4 border-y-1 border-[#dee2e6] bg-white'>
-          <div className='mb-4'><SearchUI /></div>
+
           <Breadcrumb categoryData={parentCategoryInfo ? {
             parentCategoryName: parentCategoryInfo.parentCategoryName,
             parentCategorySlug: parentCategoryInfo.parentCategorySlug,
@@ -512,7 +417,7 @@ function Products() {
           </h1>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div className=" mx-auto px-4 py-6 sm:px-6 lg:px-8">
           {/* Banner Section */}
           <ProductBanner />
 
@@ -524,27 +429,26 @@ function Products() {
           } : null} /></div>
 
           {/* Desktop Filters as Cards */}
-          <div className="hidden lg:block mb-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>Filters</h2>
-              <FilterSidebar
-                onFilterResults={handleFilterResults}
-                onLoadingChange={setIsLoading}
-                currentSort={sortBy}
-                currentPage={currentPage}
-                isHotDeals={isHotDeals ? true : false}
-                isRecommended={isRecommended ? true : false}
-                isBrand={isBrand ? brandSlug : ''}
-                isSearch={isSearch ? searchQuery : ''}
-                setCurrentPage={setCurrentPage}
-                pageSize={itemsPerPage}
-                forcedCategoryId={categoryId}
-                showCategory={isSpecialSlug || !slug}
-              />
-            </div>
+          {/* Desktop Filters */}
+          <div className="hidden lg:block mb-8">
+            <FilterSidebar
+              onFilterResults={handleFilterResults}
+              onLoadingChange={setIsLoading}
+              currentSort={sortBy}
+              onSortChange={handleSortChange}
+              currentPage={currentPage}
+              setCurrentPage={handlePageChange}
+              pageSize={itemsPerPage}
+              forcedCategoryId={categoryId}
+              showCategory={true}
+              isHotDeals={isHotDeals}
+              isRecommended={isRecommended}
+              isBrand={isBrand ? brandSlug : null}
+              isSearch={searchQuery}
+            />
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 min-h-[calc(100vh-200px)]">
             <MobileFilterButtons
               onFilterResults={handleFilterResults}
               onLoadingChange={setIsLoading}
@@ -555,64 +459,12 @@ function Products() {
               forcedCategoryId={categoryId}
             />
 
-            <div className="hidden lg:flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              {shouldShowLoading ? (
-                <>
-                  <div className="h-5 bg-gray-200 rounded animate-pulse w-48" />
-                  <div className="flex items-center space-x-4">
-                    <div className="h-10 bg-gray-200 rounded animate-pulse w-32" />
-                    <div className="h-10 bg-gray-200 rounded animate-pulse w-20" />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <span className="text-sm text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                    {t('itemsFoundPr', { count: totalItems || 0 })}
-
-                    {categoryName && (
-                      <> {t('inCategoryPr')} <span className="font-semibold">{categoryName}</span></>
-                    )}
-                  </span>
 
 
-                  <div className="hidden lg:flex items-center space-x-4">
-                    <CustomDropdown
-                      value={sortBy}
-                      onChange={handleSortChange}
-                      options={sortOptions}
-                    />
-                    <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-                      <button
-                        onClick={() => {
-                          if (!isMobile) {
-                            setTemplate("cols");
-                          }
-                        }}
-                        className={`p-2 transition-colors ${template === "cols" ? 'bg-gray-900 text-white' : 'bg-white text-gray-900 hover:bg-gray-50'} cursor-pointer`}
-                      >
-                        <Grid className="w-4 h-4" />
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          if (!isMobile) {
-                            setTemplate("rows");
-                          }
-                        }}
-                        className={`p-2 transition-colors ${template === "cols" ? 'bg-white text-gray-900 hover:bg-gray-50' : 'bg-gray-900 text-white'} cursor-pointer`}
-                      >
-                        <List className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className={`mt-6 ${template === "cols" ? 'grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6' : 'flex flex-col gap-6'}`}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               {shouldShowLoading ? (
                 skeletonArray.map((_, index) => (
-                  <ProductCardSkeleton key={index} col={template === "cols"} />
+                  <ProductCardSkeleton key={index} />
                 ))
               ) : products?.length > 0 ? (
                 products.map((item) => {
@@ -627,7 +479,7 @@ function Products() {
                   return (
                     <ProductCard
                       key={item.id}
-                      col={template === "cols"}
+                      col={true}
                       info={cardInfo}
                       productData={item}
                       handleAddToCart={handleAddToCart}

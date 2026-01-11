@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Check } from 'lucide-react';
 import { Link } from 'react-router';
 import { useGetFavoriteStatusQuery } from '../store/API';
-import { translateDynamicField } from '../i18n'; // your dynamic translation helper
+import { translateDynamicField } from '../i18n';
 import { useTranslation } from 'react-i18next';
 
 export function ProductCard({
@@ -73,9 +73,9 @@ export function ProductCard({
   if (col) {
     // Column layout (grid view)
     return (
-      <div className="bg-white rounded-2xl overflow-hidden relative group hover:scale-[1.02] transition-all duration-300">
+      <div className="bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden   relative group transition-all duration-300 h-full flex flex-col hover:shadow-xl transform hover:-translate-y-1">
         <Link to={`/details/${id}`} className="block">
-          <div className="aspect-square p-4 relative bg-gray-50">
+          <div className="aspect-square p-4 relative bg-transparent flex items-center justify-center">
             <img
               src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
               alt={name || 'Product'}
@@ -96,62 +96,49 @@ export function ProductCard({
           </div>
         </Link>
 
-        <div className="p-4 relative">
-
-
-          <Link to={`/details/${id}`} className="block mb-4">
-            <div className='flex gap-2 items-start'>
-              <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[56px] flex-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        {/* Content Section - Flex 1 to fill space, p-4 padding */}
+        <div className="p-4 pt-2 bg-white flex flex-col flex-1">
+          <Link to={`/details/${id}`} className="block flex flex-col flex-1">
+            <div className='flex gap-2 items-start justify-between'>
+              {/* Title: Fixed height for 2 lines (~3rem/48px) */}
+              <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 h-[3rem] leading-snug flex-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {name}
               </h3>
               <button
                 onClick={handleFavoriteClick}
                 disabled={isTogglingFavorite}
-                className="p-2 h-fit rounded-full bg-gray-50 hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 hover:scale-110"
+                className="p-1.5 h-fit -mt-1 rounded-full hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 shrink-0"
               >
                 <Heart
-                  className={`w-5 h-5 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`}
+                  className={`w-5 h-5 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
                 />
               </button>
             </div>
-            {description && (
-              <p className="text-sm text-gray-600 mb-2 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                {description}
-              </p>
-            )}
 
-            <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <p className="text-xl font-bold text-[#E60C03]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
-              {hasDiscount && (
-                <p className="text-sm text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
+            {/* Description: Fixed height for 2 lines (~2.5rem/40px) */}
+            <div className="h-[2.5rem] mb-3">
+              {description && (
+                <p className="text-sm text-gray-500 line-clamp-2 leading-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                  {description}
+                </p>
               )}
             </div>
-            {hasDiscount && (
-              <p className="text-xs text-green-600 font-medium mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
-              </p>
-            )}
-          </Link>
 
-          <button
-            onClick={handleCartClick}
-            disabled={isAddingToCart || justAdded}
-            className={`w-full cursor-pointer text-sm lg:text-md py-3 px-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] ${justAdded
-              ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30'
-              : 'bg-gradient-to-r from-[#E60C03] to-[#C50A02] hover:from-[#FF0D04] hover:to-[#E60C03] disabled:from-red-300 disabled:to-red-300 disabled:cursor-not-allowed text-white shadow-lg shadow-red-500/30'
-              }`}
-          >
-            {justAdded ? (
-              <>
-                <Check className="w-4 h-4" />
-                {t('productCard.addedToCart')}
-              </>
-            ) : isAddingToCart ? (
-              t('productCard.adding')
-            ) : (
-              t('productCard.addToCart')
-            )}
-          </button>
+            {/* Price section - Pushed to bottom with mt-auto */}
+            <div className="mt-auto pt-2 border-t border-gray-100/50">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-lg md:text-xl font-bold text-[#C5A059]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
+                {hasDiscount && (
+                  <p className="text-sm text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
+                )}
+              </div>
+              {hasDiscount && (
+                <p className="text-xs text-green-600 font-medium mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                  {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
+                </p>
+              )}
+            </div>
+          </Link>
         </div>
       </div>
     );
@@ -160,17 +147,17 @@ export function ProductCard({
     return (
       <Link
         to={`/details/${id}`}
-        className="rounded-2xl p-4 bg-white flex items-center gap-6 relative group hover:scale-[1.01] transition-all duration-300"
+        className="p-4 bg-white shadow-md rounded-md border border-gray-200 flex items-center gap-6 relative group transition-all duration-300 hover:shadow-lg"
       >
-        <div className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-gray-50 rounded-xl overflow-hidden">
+        <div className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-transparent overflow-hidden flex items-center justify-center">
           <img
             src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
             alt={name || 'Product'}
-            className="max-w-[150px] object-cover aspect-square w-full h-full"
+            className="max-w-[150px] object-contain aspect-square w-full h-full rounded-lg"
             onError={(e) => {
               e.currentTarget.src = "/Icons/logo.svg";
               e.currentTarget.className =
-                "object-contain aspect-square w-full h-full";
+                "object-contain aspect-square w-full h-full rounded-lg";
             }}
           />
 
@@ -186,48 +173,36 @@ export function ProductCard({
           )}
         </div>
 
-        <div className="flex flex-col flex-1 space-y-4">
+        <div className="flex flex-col flex-1 space-y-4 py-2">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h2 className="text-2xl font-semibold" style={{ fontFamily: 'Montserrat, sans-serif' }}>{name}</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif' }}>{name}</h2>
               {description && (
-                <p className="text-sm text-gray-600 mt-1 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>{description}</p>
+                <p className="text-sm text-gray-600 mt-2 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>{description}</p>
               )}
-              <div className="flex items-center gap-3 mt-3 flex-wrap">
-                <p className="text-2xl font-bold text-[#E60C03]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
+              <div className="flex items-center gap-3 mt-4 flex-wrap">
+                <p className="text-2xl font-bold text-[#C5A059]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
+                {hasDiscount && (
+                  <div className='flex items-center gap-2'>
+                    <p className="text-base text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
+                    <span className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
+                      {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
             <button
               onClick={handleFavoriteClick}
               disabled={isTogglingFavorite}
-              className="p-2 rounded-full bg-gray-50 hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110"
+              className="p-2 rounded-full bg-gray-50 hover:bg-gray-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Heart
-                className={`w-6 h-6 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`}
+                className={`w-6 h-6 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
               />
             </button>
           </div>
-
-          <button
-            onClick={handleCartClick}
-            disabled={isAddingToCart || justAdded}
-            className={`h-fit self-end cursor-pointer w-[200px] text-sm lg:text-md py-3 px-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] ${justAdded
-              ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30'
-              : 'bg-gradient-to-r from-[#E60C03] to-[#C50A02] hover:from-[#FF0D04] hover:to-[#E60C03] disabled:from-red-300 disabled:to-red-300 disabled:cursor-not-allowed text-white shadow-lg shadow-red-500/30'
-              }`}
-          >
-            {justAdded ? (
-              <>
-                <Check className="w-4 h-4" />
-                {t('productCard.addedToCart')}
-              </>
-            ) : isAddingToCart ? (
-              t('productCard.adding')
-            ) : (
-              t('productCard.addToCart')
-            )}
-          </button>
         </div>
       </Link>
     );

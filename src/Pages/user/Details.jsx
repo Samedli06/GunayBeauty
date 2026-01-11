@@ -4,9 +4,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Heart, Download, Share2, Minus, Plus, X, Check, Copy, MessageCircle, Send, LogIn, UserPlus, Loader2, Section, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Heart, Download, Share2, Minus, Plus, X, Check, Copy, MessageCircle, Send, Loader2, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { Breadcrumb } from '../../products/Breadcrumb';
-import SearchUI from '../../components/UI/SearchUI';
+
 import {
   useGetProductQuery,
   useGetProductSpecificationsQuery,
@@ -27,15 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../../i18n';
 import SEO from '../../components/SEO/SEO';
 
-
-// Unauthorized Modal Component
-
-
-
-
-
-
-
+// Skeleton Components
 const SkeletonBox = ({ className = "", width, height }) => (
   <div
     className={`bg-gray-200 animate-pulse rounded-lg ${className}`}
@@ -44,133 +36,29 @@ const SkeletonBox = ({ className = "", width, height }) => (
 );
 
 const ImageSkeleton = () => (
-  <div className="bg-gray-200 animate-pulse rounded-lg h-48 md:h-80 w-full" />
-);
-
-const ThumbnailSkeleton = () => (
-  <div className="bg-gray-200 animate-pulse rounded-lg w-16 h-16" />
-);
-
-const MobileDetailsSkeleton = () => (
-  <div className="md:hidden">
-    <div className="bg-white border-y-1 border-[#DEE2E6]">
-      <div className="px-7 py-3">
-        <div className="flex items-center mb-2">
-          <SkeletonBox className="w-5 h-5 mr-2" />
-          <SkeletonBox className="w-20 h-5" />
-        </div>
-        <SkeletonBox className="w-3/4 h-6 mb-2" />
-        <div className="flex items-center gap-2 mt-2">
-          <SkeletonBox className="w-24 h-8" />
-          <SkeletonBox className="w-20 h-6" />
-          <SkeletonBox className="w-12 h-6" />
-        </div>
-      </div>
-      <div className="relative px-4 mb-4 flex w-full justify-center">
-        <div className="w-full max-w-[65vw]">
-          <ImageSkeleton />
-        </div>
-        <div className="absolute top-10 right-6 flex flex-col gap-3">
-          {[1, 2, 3].map(i => <SkeletonBox key={i} className="w-9 h-9" />)}
-        </div>
-      </div>
-      <div className="px-4 pb-6 bg-white">
-        <div className="flex space-x-2 justify-center">
-          {[1, 2, 3].map(i => <ThumbnailSkeleton key={i} />)}
-        </div>
-      </div>
+  <div className='flex gap-4 h-[600px]'>
+    <div className='flex flex-col gap-4 w-24'>
+      {[1, 2, 3, 4].map(i => <div key={i} className="w-24 h-24 bg-gray-200 rounded-lg animate-pulse" />)}
     </div>
-    <div className="p-4 mt-6 border-[#DEE2E6] border-y-1 border-b-0 bg-white">
-      <div className="flex flex-wrap gap-2 mb-4">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <SkeletonBox key={i} className="w-20 h-8" />
-        ))}
-      </div>
-    </div>
-    <div className="p-4 mb-6 space-y-3 border-y-1 border-[#DEE2E6] bg-white">
-      <SkeletonBox className="w-full h-12" />
-      <SkeletonBox className="w-full h-12" />
-    </div>
-    <div className="bg-white border-y-1 border-[#DEE2E6] mt-4">
-      <div className="px-4 py-4">
-        <div className="flex items-center justify-between mb-4 px-2">
-          <SkeletonBox className="w-20 h-6" />
-          <SkeletonBox className="w-12 h-5" />
-        </div>
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map(i => (
-            <div key={i}>
-              <div className="flex justify-between px-3 items-center">
-                <SkeletonBox className="w-20 h-5" />
-                <SkeletonBox className="w-24 h-5" />
-              </div>
-              {i < 5 && <hr className="my-2 mx-2 border-gray-300" />}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <div className="flex-1 bg-gray-200 animate-pulse rounded-3xl h-full w-full" />
   </div>
 );
 
 const DesktopDetailsSkeleton = () => (
-  <div className="hidden md:block max-w-7xl mx-auto px-4 pb-8">
-    <div className="py-4 pb-8">
-      <SkeletonBox className="w-64 h-6" />
+  <div className="hidden md:block max-w-[95vw] mx-auto px-6 pb-12 pt-8">
+    <div className="mb-8">
+      <SkeletonBox className="w-48 h-6" />
     </div>
-    <div className="grid grid-cols-2 gap-8">
-      <div className="space-y-4 w-full">
-        <div className="bg-white rounded-lg p-4 w-full flex h-full justify-center flex-col items-center py-9 sm:border-1 sm:border-[#DEE2E6]">
-          <ImageSkeleton />
-          <div className="flex space-x-2 mt-4">
-            {[1, 2, 3, 4].map(i => <ThumbnailSkeleton key={i} />)}
-          </div>
-        </div>
+    <div className="grid grid-cols-12 gap-12">
+      <div className="col-span-7">
+        <ImageSkeleton />
       </div>
-      <div className="space-y-6 h-full">
-        <div className="bg-white rounded-lg p-10 h-full sm:border-1 sm:border-[#DEE2E6]">
-          <div className="flex items-center mb-3">
-            <SkeletonBox className="w-5 h-5 mr-2" />
-            <SkeletonBox className="w-32 h-5" />
-          </div>
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex-1">
-              <SkeletonBox className="w-3/4 h-8 mb-2" />
-              <SkeletonBox className="w-full h-5 mb-4" />
-              <div className="flex items-center gap-3">
-                <SkeletonBox className="w-28 h-10" />
-                <SkeletonBox className="w-20 h-6" />
-                <SkeletonBox className="w-16 h-6" />
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              {[1, 2, 3].map(i => <SkeletonBox key={i} className="w-9 h-9" />)}
-            </div>
-          </div>
-          <div className="flex items-center gap-4 mb-6 mt-12">
-            <SkeletonBox className="w-9 h-9 rounded-full" />
-            <SkeletonBox className="w-8 h-8" />
-            <SkeletonBox className="w-9 h-9 rounded-full" />
-          </div>
-          <div className="flex flex-col">
-            <SkeletonBox className="w-full h-12 mt-6" />
-            <SkeletonBox className="w-full h-12 mt-6" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="bg-white rounded-lg p-6 mt-8 sm:border-1 sm:border-[#DEE2E6]">
-      <SkeletonBox className="w-20 h-6 mb-6" />
-      <div className="grid grid-cols-2 gap-x-12 gap-y-4">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-          <div key={i}>
-            <div className="flex justify-between items-center mx-2">
-              <SkeletonBox className="w-24 h-5" />
-              <SkeletonBox className="w-32 h-5" />
-            </div>
-            <hr className="my-2 border-gray-300" />
-          </div>
-        ))}
+      <div className="col-span-5 space-y-8">
+        <SkeletonBox className="w-3/4 h-10" />
+        <SkeletonBox className="w-1/2 h-8" />
+        <SkeletonBox className="w-full h-32" />
+        <SkeletonBox className="w-full h-12" />
+        <SkeletonBox className="w-full h-12" />
       </div>
     </div>
   </div>
@@ -194,8 +82,6 @@ function Details() {
   const { data: me, isLoading: isMeLoading } = useGetMeQuery();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-
-
   // Dynamic translation states
   const [translatedProduct, setTranslatedProduct] = useState(null);
   const [translatedProductSpec, setTranslatedProductSpec] = useState(null);
@@ -204,10 +90,6 @@ function Details() {
     setIsAuthenticated(AuthUtils.isAuthenticated());
   }, []);
 
-  const hasDiscount = false
-
-
-  // Replace the openDetail function with these functions
   const openDetail = (initialIndex = 0) => {
     setModalSlideIndex(initialIndex);
     setShowDetailModal(true);
@@ -227,7 +109,6 @@ function Details() {
     setModalSlideIndex((prev) => (prev - 1 + total) % total);
   };
 
-
   // RTK Query hooks
   const { data: product, isLoading: loading, error, isError } = useGetProductQuery(id, { skip: !id });
   const { data: productSpec, isLoading: isSpecLoading } = useGetProductSpecificationsQuery(product?.id, { skip: !product?.id });
@@ -237,7 +118,6 @@ function Details() {
     page: 1,
     pageSize: 6
   });
-
 
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -249,20 +129,10 @@ function Details() {
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = { ...product };
-
-        if (product.name) {
-          translated.name = await translateDynamicField(product.name, targetLang);
-        }
-        if (product.description) {
-          translated.description = await translateDynamicField(product.description, targetLang);
-        }
-        if (product.shortDescription) {
-          translated.shortDescription = await translateDynamicField(product.shortDescription, targetLang);
-        }
-        if (product.categoryName) {
-          translated.categoryName = await translateDynamicField(product.categoryName, targetLang);
-        }
-
+        if (product.name) translated.name = await translateDynamicField(product.name, targetLang);
+        if (product.description) translated.description = await translateDynamicField(product.description, targetLang);
+        if (product.shortDescription) translated.shortDescription = await translateDynamicField(product.shortDescription, targetLang);
+        if (product.categoryName) translated.categoryName = await translateDynamicField(product.categoryName, targetLang);
         setTranslatedProduct(translated);
       } else {
         setTranslatedProduct(product);
@@ -279,7 +149,6 @@ function Details() {
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = { ...productSpec };
-
         if (productSpec.specificationGroups) {
           translated.specificationGroups = await Promise.all(
             productSpec.specificationGroups.map(async (group) => ({
@@ -294,7 +163,6 @@ function Details() {
             }))
           );
         }
-
         setTranslatedProductSpec(translated);
       } else {
         setTranslatedProductSpec(productSpec);
@@ -302,10 +170,6 @@ function Details() {
     }
     translateProductSpec();
   }, [i18n.language, productSpec]);
-
-
-
-
 
   const [toggleFavorite] = useToggleFavoriteMutation();
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
@@ -321,10 +185,8 @@ function Details() {
     }
   }, [isAddingToCart, showSuccess]);
 
-  // Handle toggle favorite
   const handleToggleFavorite = async (productId) => {
     if (!productId) return;
-
     try {
       await toggleFavorite({ productId }).unwrap();
     } catch (err) {
@@ -338,27 +200,12 @@ function Details() {
     }
   };
 
-  // Handle PDF download
   const handleDownloadPdf = async () => {
-    if (!product?.id) {
-      toast.error("Product not loaded");
-      return;
-    }
-
+    if (!product?.id) { toast.error("Product not loaded"); return; }
     try {
-
-      const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('token='))
-        ?.split('=')[1];
-
-      const headers = {
-        'Accept': '*/*',
-      };
-
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
+      const headers = { 'Accept': '*/*' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
 
       const response = await fetch(`https://gunaybeauty-001-site1.ltempurl.com/api/v1/product-pdfs/download/product/${product.id}`, {
         method: 'GET',
@@ -366,15 +213,9 @@ function Details() {
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to download PDF: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
       const blob = await response.blob();
-
-      if (blob.size === 0) {
-        throw new Error('Downloaded file is empty');
-      }
+      if (blob.size === 0) throw new Error('Downloaded file is empty');
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -384,15 +225,12 @@ function Details() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-
     } catch (error) {
       console.error('Download error:', error);
       toast.error("No file exists for this product.");
-
     }
   };
 
-  // Handle 401 errors
   useEffect(() => {
     if (error?.status === 401 || error?.data?.status === 401) {
       setUnauthorizedAction('view this product');
@@ -400,34 +238,22 @@ function Details() {
     }
   }, [error]);
 
-  // Handle add to cart
   const handleAddToCart = async () => {
-    if (!product || !id) {
-      console.error('Product not available');
-      return;
-    }
+    if (!product || !id) return;
     try {
       if (isAuthenticated && handleAddToCart) {
-        await addCartItem({
-          productId: id,
-          quantity: quantity
-        }).unwrap();
+        await addCartItem({ productId: id, quantity: quantity }).unwrap();
       } else {
         CartUtils.addItem(product, quantity);
         window.dispatchEvent(new Event("cartUpdated"));
       }
-
-
       setShowSuccess(true);
     } catch (err) {
       console.error('Failed to add product to cart:', err);
       toast.error("Failed to add product to cart");
     }
-
-
   };
 
-  // Handle share functionality
   const handleShare = async (platform) => {
     const productUrl = window.location.href;
     const productTitle = product.name;
@@ -436,36 +262,21 @@ function Details() {
     if (platform === 'native') {
       if (navigator.share) {
         try {
-          await navigator.share({
-            title: productTitle,
-            text: productDescription,
-            url: productUrl,
-          });
+          await navigator.share({ title: productTitle, text: productDescription, url: productUrl });
           setShowShareMenu(false);
-        } catch (error) {
-          if (error.name !== 'AbortError') {
-            console.error('Error sharing:', error);
-            toast.error('Failed to share');
-          }
-        }
-      } else {
-        toast.info('Share API not supported on this browser');
-      }
+        } catch (error) { if (error.name !== 'AbortError') toast.error('Failed to share'); }
+      } else { toast.info('Share API not supported on this browser'); }
     } else if (platform === 'copy') {
       try {
         await navigator.clipboard.writeText(productUrl);
         setShowShareMenu(false);
-      } catch (error) {
-        console.error('Error copying to clipboard:', error);
-        toast.error('Failed to copy link');
-      }
+        toast.success("Link copied!");
+      } catch (error) { toast.error('Failed to copy link'); }
     } else if (platform === 'whatsapp') {
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(productTitle + ' - ' + productUrl)}`;
-      window.open(whatsappUrl, '_blank');
+      window.open(`https://wa.me/?text=${encodeURIComponent(productTitle + ' - ' + productUrl)}`, '_blank');
       setShowShareMenu(false);
     } else if (platform === 'telegram') {
-      const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(productUrl)}&text=${encodeURIComponent(productTitle)}`;
-      window.open(telegramUrl, '_blank');
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(productUrl)}&text=${encodeURIComponent(productTitle)}`, '_blank');
       setShowShareMenu(false);
     }
   };
@@ -474,13 +285,10 @@ function Details() {
     setQuantity(prev => Math.max(1, prev + change));
   };
 
-  // Get specifications
   const getSpecifications = (product, productSpec) => {
     if (!product) return [];
-
     const specs = [];
     const currentProductSpec = translatedProductSpec || productSpec;
-
     if (currentProductSpec && currentProductSpec.specificationGroups) {
       currentProductSpec.specificationGroups.forEach(group => {
         if (group.items && Array.isArray(group.items)) {
@@ -494,23 +302,13 @@ function Details() {
         }
       });
     }
-
-    if (specs.length === 0) {
-      return ['16GB RAM', 'RTX 4060', 'Intel® Core™ i7', '240Hz Display', 'Advanced Cooling', '1TB SSD'];
-    }
-
-    return specs;
+    return specs.length === 0 ? [] : specs;
   };
 
-  // Get features
   const getFeatures = (product, productSpec) => {
     if (!product) return [];
-
     const features = [];
     const currentProductSpec = translatedProductSpec || productSpec;
-
-
-
     if (currentProductSpec && currentProductSpec.specificationGroups) {
       currentProductSpec.specificationGroups.forEach(group => {
         if (group.items && Array.isArray(group.items)) {
@@ -524,57 +322,29 @@ function Details() {
         }
       });
     }
-
     return features;
   };
 
-  // Show skeleton while loading
   if (loading || isSpecLoading) {
-    return (
-      <>
-        <div className='p-6 py-4 border-y-1 border-[#DEE2E6] sm:hidden flex flex-col gap-5'>
-          <div className="animate-pulse">
-            <SkeletonBox className="w-full h-10 mb-4" />
-            <SkeletonBox className="w-48 h-6" />
-          </div>
-        </div>
-        <div className="min-h-[70vh] bg-gray-50 pt-8 sm:pt-0">
-          <MobileDetailsSkeleton />
-          <DesktopDetailsSkeleton />
-        </div>
-      </>
-    );
+    return <DesktopDetailsSkeleton />;
   }
 
   if (isError || !product) {
     return (
-      <div className="min-h-[70vh] bg-gray-50 flex items-center justify-center">
+      <div className="min-h-[70vh] bg-[#FCFCFC] flex items-center justify-center font-sans">
         <div className="text-center">
-          <X className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <X className="w-16 h-16 text-[#4A041D] mx-auto mb-4" />
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600">The product you're looking for doesn't exist or has been removed.</p>
-          {error && error.status !== 401 && (
-            <p className="text-sm text-gray-500 mt-2">
-              Error: {error.data?.message || error.message || 'Failed to load product'}
-            </p>
-          )}
+          <p className="text-gray-600">The product you're looking for doesn't exist.</p>
         </div>
       </div>
     );
   }
 
   const currentProduct = translatedProduct || product;
-  const specifications = getSpecifications(currentProduct, productSpec);
   const features = getFeatures(currentProduct, productSpec);
-
-  // Prepare product data for SEO
-  const productImageUrl = product?.imageUrl
-    ? `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}`
-    : '/Icons/logo.svg';
-
-  const productImages = product?.images
-    ? product.images.map(img => `https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`)
-    : [];
+  const productImageUrl = product?.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}` : '/Icons/logo.svg';
+  const productImages = product?.images ? product.images.map(img => `https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`) : [];
 
   const productForSEO = product ? {
     ...product,
@@ -584,33 +354,27 @@ function Details() {
     images: productImages,
     brandName: product.brandName,
     categoryName: currentProduct.categoryName,
-    categorySlug: product.categorySlug,
-    parentCategoryName: product.parentCategoryName,
-    parentCategorySlug: product.parentCategorySlug,
     prices: product.prices || [{ price: product.currentPrice || 0, discountedPrice: product.currentPrice || 0 }],
     currentPrice: product.prices?.[0]?.discountedPrice || product.currentPrice || 0,
     price: product.prices?.[0]?.price || product.currentPrice || 0,
   } : null;
 
-
-
   return (
-    <>
+    <section className="bg-[#FCFCFC] min-h-screen font-sans" style={{ fontFamily: 'Montserrat, sans-serif' }}>
       <SEO
-        title={`${currentProduct?.name || 'Product'} - Smart Team Electronics`}
-        description={currentProduct?.description || currentProduct?.shortDescription || `Buy ${currentProduct?.name} at Smart Team Electronics. Best prices and quality guarantee.`}
-        keywords={`${currentProduct?.name}, ${currentProduct?.categoryName}, electronics, smart team, Azerbaijan`}
+        title={`${currentProduct?.name || 'Product'} - GunayBeauty`}
+        description={currentProduct?.description || currentProduct?.shortDescription || `Buy ${currentProduct?.name} at GunayBeauty.`}
         image={productImageUrl}
         url={typeof window !== 'undefined' ? window.location.href : ''}
         type="product"
         product={productForSEO}
       />
+
       <UnauthorizedModal
         isOpen={showUnauthorizedModal}
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
-
 
       <QuickOrderModal
         isOpen={showQuickOrderModal}
@@ -619,525 +383,221 @@ function Details() {
         quantity={quantity}
       />
 
-      {/* Image Detail Modal with Slider */}
+      {/* Image Detail Modal */}
       {showDetailModal && (
-        <section className="fixed inset-0 w-screen h-screen bg-white bg-opacity-95 z-[10000]">
-          {/* Close Button */}
-          <X
-            onClick={closeDetail}
-            className="absolute top-10 right-10 cursor-pointer hover:opacity-70 transition-opacity w-8 h-8 text-black z-10"
-          />
-
-          {/* Prev Button */}
-          <button
-            onClick={prevModalSlide}
-            className="absolute left-10 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer transition-all z-10"
-          >
-            <ChevronLeft className="w-5 h-5 md:w-8 md:h-8 text-black" />
+        <section className="fixed inset-0 w-screen h-screen bg-white/95 backdrop-blur-sm z-[10000]">
+          <X onClick={closeDetail} className="absolute top-8 right-8 cursor-pointer hover:rotate-90 transition-transform w-10 h-10 text-[#4A041D] z-10" />
+          <button onClick={prevModalSlide} className="absolute left-8 top-1/2 -translate-y-1/2 p-4 bg-gray-100 hover:bg-gray-200 rounded-full transition-all z-10">
+            <ChevronLeft className="w-8 h-8 text-[#4A041D]" />
+          </button>
+          <button onClick={nextModalSlide} className="absolute right-8 top-1/2 -translate-y-1/2 p-4 bg-gray-100 hover:bg-gray-200 rounded-full transition-all z-10">
+            <ChevronRight className="w-8 h-8 text-[#4A041D]" />
           </button>
 
-          {/* Next Button */}
-          <button
-            onClick={nextModalSlide}
-            className="absolute right-10 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer transition-all z-10"
-          >
-            <ChevronRight className="w-5 h-5 md:w-8 md:h-8 text-black" />
-          </button>
-
-          {/* Image Display */}
           <div className="w-full h-full flex items-center justify-center p-8">
             <img
-              src={`https://gunaybeauty-001-site1.ltempurl.com${modalSlideIndex === 0
-                ? product?.imageUrl
-                : product?.images?.[modalSlideIndex - 1]?.imageUrl
-                }`}
+              src={`https://gunaybeauty-001-site1.ltempurl.com${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
               alt={product?.name}
-              className="max-w-[90vw] max-h-[70vh] md:max-w-[85vw] md:max-h-[80vh] object-contain"
-              onError={(e) => {
-                e.target.src = "/Icons/logo.svg";
-              }}
+              className="max-w-[90vw] max-h-[85vh] object-contain drop-shadow-2xl"
+              onError={(e) => { e.target.src = "/Icons/logo.svg"; }}
             />
-          </div>
-
-          {/* Slide Counter */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-gray-200 px-4 py-2 rounded-full">
-            <span className="text-black font-medium">
-              {modalSlideIndex + 1} / {(product?.images?.length || 0) + 1}
-            </span>
           </div>
         </section>
       )}
 
-
-      <div className='p-6 py-4 pt-0  border-y-1 border-[#DEE2E6] sm:hidden flex flex-col gap-5'>
-        <SearchUI />
-        <Breadcrumb productData={product} />
-      </div>
-
-      <div className="min-h-[70vh] bg-gray-50 pt-8 sm:pt-0">
-        {/* Mobile Layout */}
-        <div className="md:hidden">
-          <div className="bg-white border-y-1 border-[#DEE2E6]">
-            <div className="px-7 py-3">
-              <div className="flex items-center text-lg font-medium mb-2 inter">
-                {isInStock ? (
-                  <>
-                    <Check className='w-[20px] text-green-500' />
-                    <span className="text-green-500">{t('features.inStock')}</span>
-                  </>
-                ) : (
-                  <>
-                    <X className='w-[20px] text-red-500' />
-                    <span className="text-red-500">{t('features.outOfStock')}</span>
-                  </>
-                )}
-              </div>
-              <div className="flex items-center">
-                <h1 className="text-xl text-gray-900 inter">{currentProduct.name}</h1>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                {hasDiscount ? (
-                  <>
-                    <span className="text-2xl font-bold text-red-500">{me ? product?.prices[me?.role - 1]?.discountedPrice : product?.prices[0]?.discountedPrice} AZN</span>
-                    <span className="text-lg text-gray-500 line-through">{me ? product?.prices[me?.role - 1]?.price : product?.prices[0]?.price} AZN</span>
-                    <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium">
-                      -{product.discountPercentage}%
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-2xl font-bold text-red-500">{me ? product?.prices[me?.role - 1]?.discountedPrice : product?.prices[0]?.discountedPrice} AZN</span>
-                )}
-              </div>
-            </div>
-
-            <div className="relative px-4 mb-4 flex w-full justify-center">
-              <div className='self-center w-full'>
-                <Swiper
-                  pagination={false}
-                  autoplay={{ delay: 3000, disableOnInteraction: false }}
-                  modules={[Pagination, Autoplay]}
-                  className="mySwiper max-w-[65vw]"
-                  onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
-                  onSwiper={setSwiperRef}
-                >
-                  <SwiperSlide className='relative h-64 py-5 pt-8 rounded-lg'>
-                    <img
-                      onClick={() => openDetail(0)} // main image = index 0
-                      className='w-full rounded-lg p-3 aspect-square cursor-pointer'
-                      src={`https://gunaybeauty-001-site1.ltempurl.com${product?.imageUrl}`}
-                      alt={product?.name || 'Product'}
-                      onError={(e) => { e.target.src = "/Icons/logo.svg" }}
-                    />
-                  </SwiperSlide>
-
-                  {product?.images.map((item, index) => (
-                    <SwiperSlide key={index} className='relative h-64 py-5 pt-8 rounded-lg'>
-                      <img
-                        onClick={() => openDetail(index + 1)} // shift by +1 to match modal logic
-                        className='w-full rounded-lg p-3 aspect-square cursor-pointer'
-                        src={`https://gunaybeauty-001-site1.ltempurl.com${item?.imageUrl}`}
-                        alt={item?.name || 'Product'}
-                        onError={(e) => { e.target.src = "/Icons/logo.svg" }}
-                      />
-                    </SwiperSlide>
-                  ))}
-
-
-                </Swiper>
-              </div>
-
-              <div className="absolute top-10 right-6 flex flex-col gap-3">
-                <button onClick={() => handleToggleFavorite(id)} className="p-2 bg-gray-100 cursor-pointer rounded-lg hover:bg-gray-200 transition-colors">
-                  <Heart className={`w-5 h-5 text-gray-600 ${favoriteStatus?.isFavorite && 'fill-current'}`} />
-                </button>
-                <button
-                  onClick={handleDownloadPdf}
-                  className="p-2 bg-gray-100 cursor-pointer rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  <Download className="w-5 h-5 text-gray-600" />
-                </button>
-                <div className="relative">
-                  <button
-                    onClick={() => setShowShareMenu(!showShareMenu)}
-                    className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
-                    <Share2 className="w-5 h-5 text-gray-600" />
-                  </button>
-
-                  {showShareMenu && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-40"
-                        onClick={() => setShowShareMenu(false)}
-                      />
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                        <button
-                          onClick={() => handleShare('copy')}
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                        >
-                          <Copy className="w-4 h-4 text-gray-600" />
-                          <span>Copy Link</span>
-                        </button>
-                        <button
-                          onClick={() => handleShare('whatsapp')}
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                        >
-                          <MessageCircle className="w-4 h-4 text-green-600" />
-                          <span>WhatsApp</span>
-                        </button>
-                        <button
-                          onClick={() => handleShare('telegram')}
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                        >
-                          <Send className="w-4 h-4 text-blue-500" />
-                          <span>Telegram</span>
-                        </button>
-                        {navigator.share && (
-                          <>
-                            <hr className="my-2 border-gray-200" />
-                            <button
-                              onClick={() => handleShare('native')}
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                            >
-                              <Share2 className="w-4 h-4 text-gray-600" />
-                              <span>More Options</span>
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="px-4 pb-6 bg-white">
-              <div className="flex space-x-2 justify-center">
-
-                {product?.images.map((item, index) => (
-                  <button
-                    key={index + 1}
-                    className={`w-16 h-16 rounded-lg border-2 ${activeSlide === index + 1 ? 'border-red-500' : 'border-gray-200'} overflow-hidden`}
-                    onClick={() => swiperRef?.slideTo(index + 1)}
-                  >
-                    <img
-                      src={`https://gunaybeauty-001-site1.ltempurl.com${item?.imageUrl}`}
-                      alt={`${product.name} ${index + 1 + 1}`}
-                      className="w-full aspect-square h-full object-contain"
-                      onError={(e) => {
-                        e.target.src = "/Icons/logo.svg"
-                      }}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 mb-6 space-y-3 border-y-1 border-[#DEE2E6] bg-white w-full h-full self-end">
-            <button
-              onClick={handleAddToCart}
-
-              disabled={!isInStock || isAddingToCart || showSuccess}
-              className={`w-full flex justify-center items-center py-3 mt-6 rounded-lg font-medium transition-colors duration-200 ${!isInStock
-                ? 'bg-gray-400 cursor-not-allowed text-white'
-                : isAddingToCart
-                  ? 'bg-red-400 cursor-not-allowed text-white'
-                  : showSuccess
-                    ? 'bg-green-500 cursor-default text-white'
-                    : 'bg-red-500 hover:bg-red-600 cursor-pointer text-white'
-                }`}
-            >
-              {!isInStock ? (
-                'Out of Stock'
-              ) : isAddingToCart ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
-                </>
-              ) : showSuccess ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Added to cart
-                </>
-              ) : (
-                t('addToCart')
-
-              )}
-            </button>
-            <button
-              onClick={() => setShowQuickOrderModal(true)}
-              disabled={!isInStock}
-              className={`w-full flex justify-center items-center py-3 mt-3 rounded-lg font-medium transition-colors duration-200 ${!isInStock
-                ? 'bg-gray-400 cursor-not-allowed text-white'
-                : 'bg-green-500 hover:bg-green-600 cursor-pointer text-white'
-                }`}
-            >
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              {t('buyNow')}
-            </button>
-          </div>
-
-          <div className="bg-white border-y-1 border-[#DEE2E6] mt-4 helveticaNow">
-            <div className="px-4 py-4">
-              <div className="flex items-center justify-between mb-4 px-2 inter">
-                <h2 className="text-lg font-semibold text-gray-900">{t('features.title')}</h2>
-              </div>
-              <div className="space-y-3">
-                {features.map((feature, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between px-3 items-center inter">
-                      <span className="text-[#858a92] ">{feature.label}</span>
-                      <span className="text-gray-900 text-end">{feature.value}</span>
-                    </div>
-                    {index < features.length - 1 && (
-                      <hr className="my-2 mx-2 border-gray-300" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <SimilarProducts
-            products={similar?.items}
-            isLoading={isSimilarLoading}
-          />
+      {/* Main Content */}
+      <div className="max-w-[95vw] mx-auto px-4 md:px-8 pb-16 pt-6">
+        <div className="mb-6">
+          <Breadcrumb productData={product} />
         </div>
 
-        {/* Desktop Layout */}
-        <div className="hidden md:block max-w-7xl mx-auto px-4 pb-8">
-          <div className='py-4 pb-8'>
-            <Breadcrumb productData={product} />
-          </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-4 w-full">
-              <div className="bg-white rounded-lg p-4 w-full flex h-full justify-center flex-col items-center py-9 sm:border-1 sm:border-[#DEE2E6]">
+        {/* Desktop 2-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative items-start">
+
+          {/* Left Column: Sticky Images */}
+          {/* Left Column: Sticky Images (Desktop Only) */}
+          <div className="lg:col-span-7 relative lg:sticky lg:top-24 z-10">
+            <div className='flex flex-col-reverse lg:flex-row gap-6'>
+              {/* Thumbnails (Vertical on Desktop, Horizontal on Mobile) */}
+              <div className="flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px] hide-scrollbar py-2 lg:py-4 px-1 min-w-[80px] lg:min-w-[120px]">
+                {/* Main thumb */}
                 <div
-                  onClick={() => {
-                    const hoveredIndex = product?.images?.findIndex(img => img.imageUrl === hovered);
-                    openDetail(hoveredIndex !== -1 ? hoveredIndex + 1 : 0); // ✅ offset by +1
-                  }}
-                  className="w-fit cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => { setHovered(null); openDetail(0); }}
+                  onMouseEnter={() => setHovered(null)}
+                  className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${!hovered ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
                 >
-                  <img
-                    src={
-                      hovered
-                        ? `https://gunaybeauty-001-site1.ltempurl.com${hovered}`
-                        : `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}`
-                    }
-                    alt={product.name}
-                    className="h-80 object-contain rounded-lg transition-opacity duration-300 ease-in-out"
-                    key={hovered || product.imageUrl}
-                    style={{ animation: "fadeIn 0.3s ease-in-out" }}
-                    onError={(e) => {
-                      e.target.src = "/Icons/logo.svg";
-                    }}
-                  />
+                  <img src={productImageUrl} alt="Main" className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
                 </div>
 
-                <div className="flex space-x-2 mt-4">
-                  {product?.images.map((item, index) => (
-                    <div
-                      key={index}
-                      onMouseEnter={() => setHovered(item.imageUrl)}
-                      onMouseLeave={() => setHovered(null)}
-                      onClick={() => openDetail(index + 1)} // ✅ offset here too
-                      className={`w-16 h-16 rounded-lg border-2 border-gray-200 overflow-hidden cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 hover:shadow-lg ${hovered === item.imageUrl ? "ring-2 ring-red-500 ring-offset-2" : ""
-                        }`}
-                    >
-                      <img
-                        src={`https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}`}
-                        alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-contain transition-transform duration-200 hover:scale-105"
-                        onError={(e) => {
-                          e.target.src = "/Icons/logo.svg";
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
+                {/* Additional thumbs */}
+                {product?.images?.map((img, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => { setHovered(img.imageUrl); openDetail(idx + 1); }}
+                    onMouseEnter={() => setHovered(img.imageUrl)}
+                    className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${hovered === img.imageUrl ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
+                  >
+                    <img src={`https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
+                  </div>
+                ))}
               </div>
 
+              {/* Main Image Display */}
+              <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] min-h-[300px] lg:min-h-[600px] lg:h-[700px] flex items-center justify-center relative group">
+                <img
+                  src={hovered ? `https://gunaybeauty-001-site1.ltempurl.com${hovered}` : productImageUrl}
+                  alt={product.name}
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
+                  onClick={() => {
+                    const idx = hovered ? product?.images?.findIndex(i => i.imageUrl === hovered) : -1;
+                    openDetail(idx !== -1 ? idx + 1 : 0);
+                  }}
+                  onError={(e) => { e.target.src = '/Icons/logo.svg' }}
+                />
+                {/* Floating Action Buttons */}
+                <div className="absolute top-4 right-4 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button onClick={() => handleToggleFavorite(id)} className="p-3 bg-white shadow-md rounded-full hover:bg-[#4A041D] hover:text-white transition-colors group/btn">
+                    <Heart className={`w-5 h-5 text-gray-400 group-hover/btn:text-white ${favoriteStatus?.isFavorite ? 'fill-[#4A041D] text-[#4A041D]' : ''}`} />
+                  </button>
+                  <button onClick={() => setShowShareMenu(true)} className="p-3 bg-white shadow-md rounded-full hover:bg-[#4A041D] hover:text-white transition-colors">
+                    <Share2 className="w-5 h-5 text-gray-400 hover:text-white" />
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="space-y-6 h-full">
-              <div className="bg-white rounded-lg flex flex-col justify-between p-10 h-full sm:border-1 sm:border-[#DEE2E6]">
-                <div className="flex items-center text-lg font-medium mb-3 inter">
-                  {isInStock ? (
-                    <>
-                      <Check className='w-[20px] text-green-500' />
-                      <span className="text-green-500">{t("features.inStock")}</span>
-                    </>
-                  ) : (
-                    <>
-                      <X className='w-[20px] text-red-500' />
-                      <span className="text-red-500">{t("features.outOfStock")}</span>
-                    </>
-                  )}
-                </div>
+          {/* Right Column: Details & Info */}
+          <div className="lg:col-span-5 flex flex-col gap-8">
 
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h1 className="text-2xl font-semibold text-gray-900 mb-2">{currentProduct.name}</h1>
-                    <p className="text-gray-600 mb-4 line-clamp-5 break-all pr-2">{currentProduct.description}</p>
+            {/* Header Info */}
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-50">
+              <div className="flex items-center gap-3 mb-4">
+                {isInStock ? (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#FDFBF8] text-[#4A041D] border border-[#4A041D]/20">
+                    <Check size={12} className="mr-1" /> {t("features.inStock")}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
+                    <X size={12} className="mr-1" /> {t("features.outOfStock")}
+                  </span>
+                )}
+                {product.brandName && (
+                  <span className="text-xs font-bold text-[#4A041D] tracking-wider uppercase">{product.brandName}</span>
+                )}
+              </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-bold text-red-500">{me ? product?.prices[me?.role - 1]?.discountedPrice : product?.prices[0].discountedPrice} AZN</span>
-                    </div>
-                  </div>
+              <h1 className="text-2xl lg:text-4xl font-bold text-[#4A041D] mb-4 leading-tight">{currentProduct.name}</h1>
 
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={handleDownloadPdf}
-                      className="p-2 bg-gray-100 cursor-pointer rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      <Download className="w-5 h-5 text-gray-600" />
-                    </button>
-                    <div className="relative">
-                      <button
-                        onClick={() => setShowShareMenu(!showShareMenu)}
-                        className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                      >
-                        <Share2 className="w-5 h-5 text-gray-600" />
-                      </button>
+              <div className="flex items-baseline gap-4 mb-6">
+                <span className="text-3xl lg:text-4xl font-bold text-[#C5A059]">
+                  {me ? product?.prices[me?.role - 1]?.discountedPrice : product?.prices[0]?.discountedPrice} ₼
+                </span>
+                {(product?.prices[0]?.price > product?.prices[0]?.discountedPrice) && (
+                  <span className="text-lg lg:text-xl text-gray-400 line-through">
+                    {me ? product?.prices[me?.role - 1]?.price : product?.prices[0]?.price} ₼
+                  </span>
+                )}
+              </div>
 
-                      {showShareMenu && (
-                        <>
-                          <div
-                            className="fixed inset-0 z-40"
-                            onClick={() => setShowShareMenu(false)}
-                          />
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                            <button
-                              onClick={() => handleShare('copy')}
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                            >
-                              <Copy className="w-4 h-4 text-gray-600" />
-                              <span>Copy Link</span>
-                            </button>
-                            <button
-                              onClick={() => handleShare('whatsapp')}
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                            >
-                              <MessageCircle className="w-4 h-4 text-green-600" />
-                              <span>WhatsApp</span>
-                            </button>
-                            <button
-                              onClick={() => handleShare('telegram')}
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                            >
-                              <Send className="w-4 h-4 text-blue-500" />
-                              <span>Telegram</span>
-                            </button>
-                            {navigator.share && (
-                              <>
-                                <hr className="my-2 border-gray-200" />
-                                <button
-                                  onClick={() => handleShare('native')}
-                                  className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-sm"
-                                >
-                                  <Share2 className="w-4 h-4 text-gray-600" />
-                                  <span>More Options</span>
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                    <button onClick={() => handleToggleFavorite(id)} className="p-2 bg-gray-100 cursor-pointer rounded-lg hover:bg-gray-200 transition-colors">
-                      <Heart className={`w-5 h-5 text-gray-600 ${favoriteStatus?.isFavorite && 'fill-current'}`} />
-                    </button>
-                  </div>
-                </div>
+              <p className="text-gray-600 leading-relaxed text-sm lg:text-lg mb-8">
+                {currentProduct.shortDescription || currentProduct.description}
+              </p>
 
+              {/* Actions */}
+              <div className="flex flex-col gap-4">
                 {isInStock && (
-                  <div className="flex items-center gap-4 mb-6 mt-12">
-                    <button
-                      onClick={() => handleQuantityChange(-1)}
-                      className="p-2 border border-transparent hover:border-gray-300 hover:bg-white cursor-pointer bg-[#ebebeb] rounded-full"
-                    >
-                      <Minus className="w-4 h-4 text-[#6C6C6C]" />
-                    </button>
-                    <span className="text-2xl self-center font-medium text-[#6C6C6C] text-center inter">{quantity}</span>
-                    <button
-                      onClick={() => handleQuantityChange(1)}
-                      className="p-2 border border-transparent hover:border-gray-300 hover:bg-white cursor-pointer bg-[#ebebeb] rounded-full"
-                    >
-                      <Plus className="w-4 h-4 text-[#6C6C6C]" />
-                    </button>
+                  <div className="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl w-fit">
+                    <button onClick={() => handleQuantityChange(-1)} className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm hover:text-[#4A041D] transition-colors"><Minus size={18} /></button>
+                    <span className="w-12 text-center text-xl font-semibold text-[#4A041D]">{quantity}</span>
+                    <button onClick={() => handleQuantityChange(1)} className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm hover:text-[#4A041D] transition-colors"><Plus size={18} /></button>
                   </div>
                 )}
 
-                <div className='flex flex-col'>
+                <div className="grid grid-cols-2 gap-4 mt-2">
                   <button
                     onClick={handleAddToCart}
-                    disabled={!isInStock || isAddingToCart || showSuccess}
-                    className={`w-full flex justify-center items-center py-3 mt-6 rounded-lg font-medium transition-colors duration-200 ${!isInStock
-                      ? 'bg-gray-400 cursor-not-allowed text-white'
-                      : isAddingToCart
-                        ? 'bg-red-400 cursor-not-allowed text-white'
-                        : showSuccess
-                          ? 'bg-green-500 cursor-default text-white'
-                          : 'bg-red-500 hover:bg-red-600 cursor-pointer text-white'
-                      }`}
+                    disabled={!isInStock || isAddingToCart}
+                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-lg shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {!isInStock ? (
-                      'Out of Stock'
-                    ) : isAddingToCart ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Adding...
-                      </>
-                    ) : showSuccess ? (
-                      <>
-                        <Check className="w-4 h-4 mr-2" />
-                        Added to cart
-                      </>
-                    ) : (
-                      t('addToCart')
-                    )}
+                    {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={20} />}
+                    {t('addToCart')}
                   </button>
-
                   <button
                     onClick={() => setShowQuickOrderModal(true)}
                     disabled={!isInStock}
-                    className={`w-full flex justify-center items-center py-3 mt-3 rounded-lg font-medium transition-colors duration-200 ${!isInStock
-                      ? 'bg-gray-400 cursor-not-allowed text-white'
-                      : 'bg-green-500 hover:bg-green-600 cursor-pointer text-white'
-                      }`}
+                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    <ShoppingBag className="w-4 h-4 mr-2" />
                     {t('buyNow')}
                   </button>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-lg p-6 mt-8 sm:border-1 sm:border-[#DEE2E6]">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('features.title')}</h2>
-            <div className="grid grid-cols-2 gap-x-12 gap-y-4">
-              {features.map((feature, index) => (
-                <div key={index}>
-                  <div className="flex justify-between items-center inter mx-2">
-                    <span className="text-gray-600">{feature.label}</span>
-                    <span className="text-gray-900 font-medium">{feature.value}</span>
-                  </div>
-                  <hr className="my-2 border-gray-300" />
+            {/* Description & Features (Moved to Right Column) */}
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-50">
+              <h3 className="text-xl font-bold text-[#4A041D] mb-6 border-b border-gray-100 pb-2">{t('features.title')}</h3>
+
+              {features.length > 0 ? (
+                <div className="flex flex-col gap-4">
+                  {features.map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
+                      <span className="text-gray-500 font-medium">{item.label}</span>
+                      <span className="text-gray-900 font-semibold text-right">{item.value}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="text-gray-400 italic">No additional features available.</p>
+              )}
+
+              {currentProduct.description && (
+                <div className="mt-8 pt-6 border-t border-gray-100">
+                  <h4 className="font-bold text-[#4A041D] mb-3">Product Description</h4>
+                  <div className="prose prose-stone text-gray-600 leading-relaxed">
+                    {currentProduct.description}
+                  </div>
+                </div>
+              )}
             </div>
+
           </div>
-          <SimilarProducts
-            products={similar?.items}
-            isLoading={isRecLoading}
-          />
+        </div>
+
+        {/* Similar Products (Keep at bottom) */}
+        <div className="mt-20">
+          <SimilarProducts products={similar?.items} isLoading={isRecLoading} />
         </div>
       </div>
-    </>
-  )
+
+      {/* Share Menu Overlay */}
+      {showShareMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm" onClick={() => setShowShareMenu(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm transform scale-100 transition-all" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-[#4A041D]">Share Product</h3>
+              <button onClick={() => setShowShareMenu(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <button onClick={() => handleShare('copy')} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><Copy size={24} /></div>
+                <span className="font-medium text-sm">Copy Link</span>
+              </button>
+              <button onClick={() => handleShare('whatsapp')} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600"><MessageCircle size={24} /></div>
+                <span className="font-medium text-sm">WhatsApp</span>
+              </button>
+              <button onClick={() => handleShare('telegram')} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600"><Send size={24} /></div>
+                <span className="font-medium text-sm">Telegram</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </section>
+  );
 }
 
 export default Details;

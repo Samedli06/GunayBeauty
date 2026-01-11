@@ -140,7 +140,7 @@ const Brands = () => {
             <p className='text-[#505050] mb-4'>{t('brandsSection.errorMessage')}</p>
             <button
               onClick={() => refetch()}
-              className='bg-[#E60C03] text-white px-6 py-2 rounded-lg hover:bg-[#c00a02] transition-colors'
+              className='bg-[#4A041D] text-white px-6 py-2 rounded-lg hover:bg-[#6D082D] transition-colors'
             >
               {t('brandsSection.retry')}
             </button>
@@ -151,21 +151,22 @@ const Brands = () => {
   }
 
   return (
-    <section className='bg-[#F7FAFC] min-h-screen inter'>
+    <section className='bg-[#FCFCFC] min-h-screen font-sans' style={{ fontFamily: 'Montserrat, sans-serif' }}>
       {/* Hero Section */}
 
 
       <div className='max-w-[90vw] mx-auto py-8'>
         {/* Search Bar */}
-        <div className='bg-white rounded-lg border border-[#dee2e6]  mb-6'>
+        {/* Search Bar */}
+        <div className='bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 mb-8 max-w-2xl mx-auto'>
           <div className='relative'>
-            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' size={20} />
+            <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C5A059]' size={22} />
             <input
               type='text'
               placeholder={t('brandsSection.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className='w-full pl-10 pr-4 py-3 border border-[#dee2e6] rounded-lg focus:outline-none focus:border-[#E60C03] transition-colors'
+              className='w-full pl-12 pr-4 py-4 bg-transparent border-none rounded-2xl focus:ring-2 focus:ring-[#4A041D]/20 placeholder-gray-400 text-gray-700 text-lg transition-all'
             />
           </div>
         </div>
@@ -186,11 +187,11 @@ const Brands = () => {
               <Link
                 key={index}
                 to={`/products/brand/${brand.slug || brand.name.toLowerCase()}`}
-                className='group bg-white rounded-lg border-2 border-[#dee2e6] p-6 hover:border-[#E60C03] hover:shadow-lg transition-all duration-300 hover:-translate-y-1'
+                className='group bg-white rounded-xl border border-gray-100 p-6 hover:border-[#4A041D] hover:shadow-[0_8px_30px_rgba(74,4,29,0.1)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full'
               >
-                <div className='flex flex-col items-center'>
+                <div className='flex flex-col items-center flex-1'>
                   {/* Brand Logo */}
-                  <div className='w-full h-24 flex items-center justify-center mb-4'>
+                  <div className='w-full h-32 flex items-center justify-center mb-6 bg-gray-50 rounded-lg p-4 group-hover:bg-white transition-colors'>
                     <img
                       src={brand.logo}
                       alt={brand.name}
@@ -202,20 +203,20 @@ const Brands = () => {
                   </div>
 
                   {/* Brand Name */}
-                  <h3 className='text-lg font-semibold text-center mb-2 group-hover:text-[#E60C03] transition-colors capitalize'>
+                  <h3 className='text-lg font-bold text-center mb-2 text-[#4A041D] transition-colors capitalize' style={{ fontFamily: 'Montserrat, sans-serif' }}>
                     {brand.name}
                   </h3>
 
                   {/* Product Count */}
-                  <p className='text-sm text-[#505050] text-center mb-3'>
+                  <p className='text-sm text-gray-500 text-center mb-4'>
                     {brand.products} {brand.products === 1 ? 'product' : 'products'}
                   </p>
+                </div>
 
-                  {/* View Button */}
-                  <div className='flex items-center gap-2 text-[#E60C03] text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity'>
-                    View Products
-                    <ChevronRight size={16} />
-                  </div>
+                {/* View Button */}
+                <div className='flex items-center justify-center gap-2 text-[#C5A059] text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0'>
+                  View Products
+                  <ChevronRight size={16} />
                 </div>
               </Link>
             ))}

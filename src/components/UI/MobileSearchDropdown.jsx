@@ -60,7 +60,7 @@ const MobileSearchDropdown = ({
       <div className="space-y-6">
         {/* Categories Loading */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Grid className="w-4 h-4" />
             CATEGORIES
           </h3>
@@ -73,7 +73,7 @@ const MobileSearchDropdown = ({
 
         {/* Brands Loading */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Tag className="w-4 h-4" />
             BRANDS
           </h3>
@@ -86,7 +86,7 @@ const MobileSearchDropdown = ({
 
         {/* Products Loading */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Package className="w-4 h-4" />
             PRODUCTS
           </h3>
@@ -122,7 +122,7 @@ const MobileSearchDropdown = ({
       {/* Categories Section */}
       {hasCategories && (
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Grid className="w-4 h-4" />
             CATEGORIES ({searchResult.categories.length})
           </h3>
@@ -133,8 +133,8 @@ const MobileSearchDropdown = ({
                 onClick={() => onCategoryClick(category.id, category.name)}
                 className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors active:bg-gray-100"
               >
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Grid className="w-4 h-4 text-gray-600" />
+                <div className="w-8 h-8 bg-[#4A041D]/5 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Grid className="w-4 h-4 text-[#4A041D]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-800 truncate">{category.name}</p>
@@ -151,7 +151,7 @@ const MobileSearchDropdown = ({
       {/* Brands Section */}
       {hasBrands && (
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Tag className="w-4 h-4" />
             {t('brandsSection.brandsLabel')} ({searchResult.brands.length})
           </h3>
@@ -172,8 +172,8 @@ const MobileSearchDropdown = ({
                     }}
                   />
                 ) : (
-                  <div className="w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center">
-                    <Tag className="w-3 h-3 text-gray-500" />
+                  <div className="w-5 h-5 bg-[#4A041D]/5 rounded-full flex items-center justify-center">
+                    <Tag className="w-3 h-3 text-[#4A041D]" />
                   </div>
                 )}
                 <span className="text-xs font-medium text-gray-700">{brand.name}</span>
@@ -186,7 +186,7 @@ const MobileSearchDropdown = ({
       {/* Products Section */}
       {hasProducts && (
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2">
             <Package className="w-4 h-4" />
             PRODUCTS ({searchResult.products.length})
           </h3>

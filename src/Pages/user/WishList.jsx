@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchUI from '../../components/UI/SearchUI';
+
 import { Breadcrumb } from '../../products/Breadcrumb';
 import { Heart, Loader2, Check, Trash2 } from 'lucide-react';
 import {

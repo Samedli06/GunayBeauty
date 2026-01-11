@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import SearchUI from '../../components/UI/SearchUI'
+
 import { Breadcrumb } from '../../products/Breadcrumb'
 import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation } from '../../store/API'
 import { toast } from 'react-toastify';
@@ -12,9 +12,9 @@ const Profile = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: me, isLoading: isUserLoading, error: userError } = useGetMeQuery();
-  const [changePass, { isLoading: isPasswordLoading, error: passwordError }] = useChangePasswordMutation(); 
+  const [changePass, { isLoading: isPasswordLoading, error: passwordError }] = useChangePasswordMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
-  
+
   const [data, setData] = useState({
     name: '',
     lastName: '',
@@ -33,7 +33,7 @@ const Profile = () => {
   const getRoleName = (roleId) => {
     return roleNames[roleId] || t('profile.unknownRole');
   };
-  
+
   const [newPass, setNewPass] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -73,7 +73,7 @@ const Profile = () => {
   }, []);
 
   // Compare data to initial state
-  const detailsChanged = 
+  const detailsChanged =
     data.name !== initialData.name ||
     data.lastName !== initialData.lastName ||
     data.email !== initialData.email;
@@ -83,11 +83,11 @@ const Profile = () => {
   // Password validation (computed values, no side effects)
   const getPasswordError = () => {
     if (!data.password && !newPass) return '';
-    
+
     if (data.password && newPass && data.password === newPass) {
       return t('profile.passwordValidationError');
     }
-    
+
     return '';
   };
 
@@ -119,11 +119,11 @@ const Profile = () => {
 
   const handleDetailsSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       setInitialData({ ...data, password: '' });
       setSuccessMessage(t('profile.profileUpdatedSuccess'));
-      
+
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Failed to update profile:', error);
@@ -132,7 +132,7 @@ const Profile = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check for validation errors before submission
     if (hasPasswordError) {
       return;
@@ -146,16 +146,16 @@ const Profile = () => {
       };
 
       await changePass(passwordData).unwrap();
-      
+
       setInitialPassword('');
       setData({ ...data, password: '' });
       setNewPass('');
       setSuccessMessage(t('profile.passwordChangedSuccess'));
-      
+
       // Hide passwords after successful change
       setShowCurrentPassword(false);
       setShowNewPassword(false);
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
@@ -167,7 +167,7 @@ const Profile = () => {
       await logout().unwrap();
       document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       toast.success(t('profile.loggedOutSuccess'));
-      navigate('/login'); 
+      navigate('/login');
     } catch (error) {
       console.error('Failed to logout:', error);
       toast.error(t('profile.logoutFailed'));
@@ -357,9 +357,7 @@ const Profile = () => {
       )}
 
       <div className="lg:hidden px-4 pl-7 py-4 border-y bg-white lg:border-transparent border-[#dee2e6]">
-        <div className="mb-4 lg:hidden">
-          <SearchUI />
-        </div>
+
         <Breadcrumb />
       </div>
 
@@ -375,7 +373,7 @@ const Profile = () => {
             </div>
           </div>
           <div className='flex gap-3'>
-           
+
 
             <button
               onClick={() => setShowLogoutModal(true)}
@@ -409,7 +407,7 @@ const Profile = () => {
         <div className={`bg-white p-6 pt-7 card-hover rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
           <h1 className='font-semibold text-2xl'>{t('profile.myDetails')}</h1>
           <h1 className='mt-9 mb-2 font-semibold text-lg hidden md:block'>{t('profile.personalInformation')}</h1>
-          <hr className='mb-10 hidden md:block'/>
+          <hr className='mb-10 hidden md:block' />
 
           <div className='flex justify-between md:gap-14'>
             <div className='hidden md:block animate-slide-in-right' style={{ animationDelay: '0.2s' }}>
@@ -483,7 +481,7 @@ const Profile = () => {
         {/* Password section */}
         <div className={`bg-white p-6 pt-7 mt-10 card-hover rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
           <h1 className='mt-9 mb-2 font-semibold text-lg hidden md:block'>{t('profile.password')}</h1>
-          <hr className='mb-10 hidden md:block'/>
+          <hr className='mb-10 hidden md:block' />
 
           <div className='flex md:justify-between md:gap-14'>
             <div className='hidden md:block animate-slide-in-right' style={{ animationDelay: '0.4s' }}>
@@ -504,9 +502,8 @@ const Profile = () => {
                     required
                     disabled={isPasswordLoading}
                     onChange={(e) => setData({ ...data, password: e.target.value })}
-                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${
-                      hasPasswordError && data.password ? 'border-red-500' : 'border-[#DEE2E6]'
-                    }`}
+                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${hasPasswordError && data.password ? 'border-red-500' : 'border-[#DEE2E6]'
+                      }`}
                     value={data.password}
                   />
                   <button
@@ -536,9 +533,8 @@ const Profile = () => {
                     required
                     disabled={isPasswordLoading}
                     onChange={(e) => setNewPass(e.target.value)}
-                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${
-                      hasPasswordError && newPass ? 'border-red-500' : 'border-[#DEE2E6]'
-                    }`}
+                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${hasPasswordError && newPass ? 'border-red-500' : 'border-[#DEE2E6]'
+                      }`}
                     value={newPass}
                   />
                   <button

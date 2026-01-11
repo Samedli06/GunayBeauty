@@ -29,69 +29,71 @@ import AssignFilter from "../Pages/admin/AssignFilter"
 import FileManagementPanel from "../components/admin/FileUpload/FIleUI";
 import { SearchProvider } from "./Context";
 import WP from '../components/UI/WP'
+import BottomNavigation from "../components/user/BottomNavigation";
 import Register from "../Pages/user/Register";
 import Brands from "../Pages/user/Brands";
 import Brand from "../Pages/admin/Brand";
 import ErrorPage from "../products/ErrorPage";
 const Router = () => {
-  
+
   return (
     <BrowserRouter>
       <ScrollToTop />
       <SearchProvider>
-       
+
         <Routes>
-        {/* Login page */}
-        
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Login page */}
 
-        {/* User layout */}
-        <Route
-          path="/"
-          element={
-            <>
-              <Header />
-              <Outlet />
-              <Footer />
-              <WP />
-            </>
-          }
-          
-        >
-          <Route index element={<Home />} />
-          <Route path="products/:slug?" element={<Products />} /> 
-          <Route path="products/brand/:slug?" element={<Products />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-          
-          <Route path="/details/:id" element={<Details />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/favorites" element={<WishList />} />
-          <Route path="about" element={<About />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="download" element={<Download />} />
-          <Route path="secure" element={<Software />} />
-          <Route path="software" element={<Secure />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="/categories/:slug" element={<SubCategories />} />
-          <Route path="/brands" element={<Brands />} />
+          {/* User layout */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Outlet />
+                <Footer />
+                <BottomNavigation />
+                <WP />
+              </>
+            }
 
-          {/* 404 Error Page - MUST BE LAST */}
-           
-        </Route>
-        <Route path="*" element={<ErrorPage />} />
+          >
+            <Route index element={<Home />} />
+            <Route path="products/:slug?" element={<Products />} />
+            <Route path="products/brand/:slug?" element={<Products />} />
 
-        {/* Admin layout with Auth wrapper */}
-        <Route
-          path="/admin"
-          element={
-            <Auth>
-              <AdminLayout />
-            </Auth> 
-          }
-        >
+
+            <Route path="/details/:id" element={<Details />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/favorites" element={<WishList />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="download" element={<Download />} />
+            <Route path="secure" element={<Software />} />
+            <Route path="software" element={<Secure />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="/categories/:slug" element={<SubCategories />} />
+            <Route path="/brands" element={<Brands />} />
+
+            {/* 404 Error Page - MUST BE LAST */}
+
+          </Route>
+          <Route path="*" element={<ErrorPage />} />
+
+          {/* Admin layout with Auth wrapper */}
+          <Route
+            path="/admin"
+            element={
+              <Auth>
+                <AdminLayout />
+              </Auth>
+            }
+          >
             <Route index element={<Users />} />
             <Route path="category" element={<Category />} />
             <Route path="products" element={<ProductsUI />} />
@@ -101,7 +103,7 @@ const Router = () => {
             <Route path="product-filters" element={<AssignFilter />} />
             <Route path="file-management" element={<FileManagementPanel />} />
             <Route path="brands" element={<Brand />} />
-        </Route>
+          </Route>
         </Routes>
       </SearchProvider>
     </BrowserRouter>

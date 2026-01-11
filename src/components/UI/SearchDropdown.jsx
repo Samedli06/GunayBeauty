@@ -180,7 +180,7 @@ const SearchDropdown = ({
       {/* Categories Section */}
       {hasCategories && (
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
             <Grid className="w-4 h-4" />
             CATEGORIES ({currentSearchResult.categories.length})
           </h3>
@@ -191,8 +191,8 @@ const SearchDropdown = ({
                 onClick={() => onCategoryClick(category.slug, category.name)}
                 className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors group"
               >
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                  <Grid className="w-5 h-5 text-gray-600" />
+                <div className="w-10 h-10 bg-[#4A041D]/5 rounded-lg flex items-center justify-center group-hover:bg-[#4A041D]/10 transition-colors">
+                  <Grid className="w-5 h-5 text-[#4A041D]" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-800">{category.name}</p>
@@ -209,7 +209,7 @@ const SearchDropdown = ({
       {/* Brands Section */}
       {hasBrands && (
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
             <Tag className="w-4 h-4" />
             {t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
           </h3>
@@ -230,8 +230,8 @@ const SearchDropdown = ({
                     }}
                   />
                 ) : (
-                  <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-                    <Tag className="w-3 h-3 text-gray-500" />
+                  <div className="w-6 h-6 bg-[#4A041D]/5 rounded-full flex items-center justify-center">
+                    <Tag className="w-3 h-3 text-[#4A041D]" />
                   </div>
                 )}
                 <span className="text-sm font-medium text-gray-700">{brand.name}</span>
@@ -244,7 +244,7 @@ const SearchDropdown = ({
       {/* Products Section */}
       {hasProducts && (
         <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
+          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
             <Package className="w-4 h-4" />
             PRODUCTS ({currentSearchResult.products.length})
           </h3>
