@@ -82,7 +82,7 @@ const BannerSlider = () => {
                 {/* Desktop Image */}
                 <img
                   className={`hidden md:block w-full h-full object-cover md:rounded-lg lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
-                  src={`https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
+                  src={`https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';
@@ -94,8 +94,8 @@ const BannerSlider = () => {
                 <img
                   className={`block md:hidden w-full md:rounded-lg md:h-[40vh] lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
                   src={banner.mobileImageUrl
-                    ? `https://gunaybeauty-001-site1.ltempurl.com${banner.mobileImageUrl}`
-                    : `https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
+                    ? `https://kozmetik-001-site1.qtempurl.com/${banner.mobileImageUrl}`
+                    : `https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';

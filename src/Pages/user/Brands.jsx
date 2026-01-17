@@ -108,7 +108,7 @@ const Brands = () => {
   const brands = currentBrands?.map(brand => ({
     name: brand?.name || "Brand",
     logo: brand?.logoUrl
-      ? `https://gunaybeauty-001-site1.ltempurl.com${brand.logoUrl}`
+      ? `https://kozmetik-001-site1.qtempurl.com/${brand.logoUrl}`
       : './Icons/banner-commercial.svg',
     products: brand?.productCount || 0,
     slug: brand?.slug

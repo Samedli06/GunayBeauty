@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, CloudCog } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { translateDynamicField } from "../i18n";
 
-export function  Breadcrumb({ productData = null, categoryData = null }) {
+export function Breadcrumb({ productData = null, categoryData = null }) {
   const { i18n, t } = useTranslation();
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  console.log(categoryData)
+  console.log(productData)
 
 
-  
+
   // Dynamic translation states
   const [translatedProductData, setTranslatedProductData] = useState(null);
   const [translatedCategoryData, setTranslatedCategoryData] = useState(null);
@@ -27,11 +29,11 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
   useEffect(() => {
     async function translateProductData() {
       if (!productData) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = { ...productData };
-        
+
         if (productData.name) {
           translated.name = await translateDynamicField(productData.name, targetLang);
         }
@@ -44,7 +46,7 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
         if (productData.categoryName) {
           translated.categoryName = await translateDynamicField(productData.categoryName, targetLang);
         }
-        
+
         setTranslatedProductData(translated);
       } else {
         setTranslatedProductData(productData);
@@ -57,18 +59,18 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
   useEffect(() => {
     async function translateCategoryData() {
       if (!categoryData) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = { ...categoryData };
-        
+
         if (categoryData.parentCategoryName) {
           translated.parentCategoryName = await translateDynamicField(categoryData.parentCategoryName, targetLang);
         }
         if (categoryData.categoryName) {
           translated.categoryName = await translateDynamicField(categoryData.categoryName, targetLang);
         }
-        
+
         setTranslatedCategoryData(translated);
       } else {
         setTranslatedCategoryData(categoryData);
@@ -77,7 +79,6 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
     translateCategoryData();
   }, [i18n.language, categoryData]);
 
-  // ✅ include "details" so breadcrumb works for your product detail page
   const isProductPage =
     pathnames.includes("product") ||
     pathnames.includes("products") ||
@@ -86,6 +87,7 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
   // ✅ Category breadcrumb (Home > Parent Category > Sub Category)
   if (isProductPage && categoryData && !productData) {
     const currentCategoryData = translatedCategoryData || categoryData;
+    console.log(currentCategoryData)
     return (
       <nav className="flex items-center space-x-2 text-sm text-[#8B96A5] inter overflow-x-auto scrollbar-hide whitespace-nowrap">
         <Link
@@ -151,7 +153,7 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
         )}
 
         {/* Sub Category */}
-        {(currentProductData.subCategoryName || 
+        {(currentProductData.subCategoryName ||
           (currentProductData.categoryName && currentProductData.parentCategoryName && !currentProductData.subCategoryName)) && (
             <>
               <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -203,8 +205,8 @@ export function  Breadcrumb({ productData = null, categoryData = null }) {
       </Link>
 
       {pathnames.map((value, index) => {
-        if (isId(value) || value == "categories")  return null;
-        
+        if (isId(value) || value == "categories") return null;
+
 
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
         const isLast = index === pathnames.length - 1;

@@ -299,7 +299,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             {cartItems?.items?.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
                 <img
-                  src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
+                  src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
                   alt={item?.productName}
                   className="w-12 h-12 object-contain rounded bg-gray-50 p-1"
                   onError={(e) => {
@@ -733,7 +733,7 @@ const Cart = () => {
                             <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center">
                               <img
                                 className='w-full h-full object-contain'
-                                src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
+                                src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
                                 alt={item?.productName || 'Product'}
                                 onError={(e) => {
                                   e.target.src = "/Icons/logo.svg"
@@ -792,7 +792,7 @@ const Cart = () => {
                           <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center border border-gray-100">
                             <img
                               className="w-full h-full object-contain"
-                              src={`https://gunaybeauty-001-site1.ltempurl.com${item?.productImageUrl}`}
+                              src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
                               alt={item?.productName || "Product"}
                               onError={(e) => {
                                 e.currentTarget.src = "/Icons/logo.svg";
@@ -889,7 +889,7 @@ const Cart = () => {
                       <span>- {((translatedCartItems || cartItems)?.totalDiscount || 0).toFixed(2)} AZN</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-xl font-bold text-[#4A041D] pt-4">
+                  <div className="flex justify-between text-lg font-bold text-[#4A041D] pt-4">
                     <span>{t('total')}:</span>
                     <span>{((translatedCartItems || cartItems)?.totalAmount || 0).toFixed(2)} AZN</span>
                   </div>

@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-
-import { useGetCartCountQuery, useGetFavoritesCountQuery, useGetMeQuery, useSearchProductsQuery, useUpdateCartItemQuantityMutation } from "../../store/API";
+import { useGetCartCountQuery, useGetFavoritesCountQuery, useGetMeQuery, useSearchProductsQuery } from "../../store/API";
 import { Search, X } from 'lucide-react';
 import { SearchContext } from '../../router/Context';
 import { FaRegFile, FaRegUser, FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import SearchDropdown from '../UI/SearchDropdown';
 import MobileSearchDropdown from '../UI/MobileSearchDropdown';
 import UnauthorizedModal from '../UI/UnauthorizedModal';
+import CategoriesDropdown from '../UI/CategoriesDropdown';
 
 // Helper function to get cookie value
 const getCookie = (name) => {
@@ -25,6 +25,7 @@ const Header = () => {
 
   const [open, setOpen] = useState(false);
   const [mobileSearchActive, setMobileSearchActive] = useState(false);
+  const [animateCart, setAnimateCart] = useState(false);
 
   // Initialize language from cookie or default to 'en'
   const [selected, setSelected] = useState(() => {
@@ -53,6 +54,16 @@ const Header = () => {
     const localCart = JSON.parse(localStorage.getItem("ecommerce_cart")) || { items: [] };
     return localCart.items.length;
   });
+
+  useEffect(() => {
+    const handleCartAnimation = () => {
+      setAnimateCart(true);
+      setTimeout(() => setAnimateCart(false), 500); // Reset animation after 500ms
+    };
+
+    window.addEventListener('cartAnimation', handleCartAnimation);
+    return () => window.removeEventListener('cartAnimation', handleCartAnimation);
+  }, []);
 
   // ✅ handle both cases safely
   useEffect(() => {
@@ -83,8 +94,6 @@ const Header = () => {
   }, []);
 
   const { data: me, isLoading: isMeLoading } = useGetMeQuery();
-
-
 
   const [searchWidth, setSearchWidth] = useState(0);
   const searchRef = useRef(null);
@@ -329,7 +338,7 @@ const Header = () => {
               {searchOpen && (
                 <div
                   style={{ width: searchWidth || '100%' }}
-                  className="absolute top-full left-0 mt-2 bg-white border border-[#F3E7E1] rounded-sm shadow-xl z-50 overflow-hidden min-w-[300px]"
+                  className="absolute top-full left-0 mt-2 bg-white border border-[#F3E7E1] rounded-sm shadow-xl z-50 overflow-hidden min-w-[800px]"
                 >
                   <SearchDropdown
                     searchQuery={searchQuery}
@@ -387,7 +396,10 @@ const Header = () => {
               )}
             </div>
 
-            <Link to='/cart' className="cursor-pointer relative group">
+            <Link
+              to='/cart'
+              className={`cursor-pointer relative group transition-transform duration-300 ease-in-out ${animateCart ? 'scale-125' : 'scale-100'}`}
+            >
               <img className='w-5 h-5 lg:w-6 lg:h-6 brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity' src="/Icons/cart.svg" alt="Cart" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-white text-[#4A041D] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -411,6 +423,9 @@ const Header = () => {
         {/* Desktop Navigation - Slim Secondary Bar */}
         <div className="hidden lg:flex justify-center bg-[#43041A] py-3 border-t border-white/10">
           <div className="flex items-center gap-12">
+            <Link to='/categories' >
+              <CategoriesDropdown />
+            </Link>
             <Link to='/products' className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
               {t('SHOP ALL')}
             </Link>
@@ -420,9 +435,8 @@ const Header = () => {
             <Link to='/brands' className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
               {t('Brands')}
             </Link>
-            <Link to='/about' className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-              {t('About Us')}
-            </Link>
+
+
           </div>
         </div>
 

@@ -34,6 +34,8 @@ import Register from "../Pages/user/Register";
 import Brands from "../Pages/user/Brands";
 import Brand from "../Pages/admin/Brand";
 import ErrorPage from "../products/ErrorPage";
+import Categories from "../Pages/user/Categories";
+
 const Router = () => {
 
   return (
@@ -58,7 +60,7 @@ const Router = () => {
                 <Outlet />
                 <Footer />
                 <BottomNavigation />
-                <WP />
+                {/* <WP /> */}
               </>
             }
 
@@ -77,6 +79,7 @@ const Router = () => {
             <Route path="secure" element={<Software />} />
             <Route path="software" element={<Secure />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="/categories" element={<Categories />} />
             <Route path="/categories/:slug" element={<SubCategories />} />
             <Route path="/brands" element={<Brands />} />
 

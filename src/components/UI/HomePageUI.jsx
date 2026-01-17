@@ -188,7 +188,7 @@ const HomePageUI = ({
 
           <img
             className="w-full aspect-square h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
-            src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
+            src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
             alt={product.name}
             onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
           />

@@ -21,7 +21,7 @@ const CartUtils = {
             cart.totalPriceBeforeDiscount = cart.totalPriceBeforeDiscount || 0;
             cart.totalDiscount = cart.totalDiscount || 0;
             cart.totalAmount = cart.totalAmount || 0;
-            
+
             localStorage.setItem(this.CART_KEY, JSON.stringify(cart));
             window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cart }));
         } catch (error) {
@@ -84,6 +84,10 @@ const CartUtils = {
         }
 
         this.updateCartTotals(cart);
+
+        // Dispatch animation event
+        window.dispatchEvent(new Event('cartAnimation'));
+
         return cart;
     },
 
@@ -122,11 +126,11 @@ const CartUtils = {
 
     // ✅ Clear entire cart
     clearCart() {
-        const emptyCart = { 
-            items: [], 
-            totalPriceBeforeDiscount: 0, 
-            totalDiscount: 0, 
-            totalAmount: 0 
+        const emptyCart = {
+            items: [],
+            totalPriceBeforeDiscount: 0,
+            totalDiscount: 0,
+            totalAmount: 0
         };
         localStorage.setItem(this.CART_KEY, JSON.stringify(emptyCart));
         window.dispatchEvent(new CustomEvent('cartUpdated', { detail: emptyCart }));

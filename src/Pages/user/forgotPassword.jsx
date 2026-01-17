@@ -1,23 +1,14 @@
 // forgotPassword.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForgotPasswordMutation } from '../../store/API';
-import { Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { Loader2, ArrowLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router';
 import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const navigate = useNavigate();
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,117 +28,88 @@ const ForgotPassword = () => {
     }
   };
 
-  if (!isDesktop) {
-    return (
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="text-center mb-8 mt-4">
-          <img 
-            className='mx-auto w-50' 
-            src="./Icons/logo.svg" 
-            alt="" 
-            style={{
-              imageRendering: '-webkit-optimize-contrast',
-              WebkitTransform: 'translateZ(0)',
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden'
-            }}
-          />
+  return (
+    <div className="min-h-screen flex items-stretch font-sans bg-white selection:bg-[#4A041D] selection:text-white">
+      {/* Left Side - Visual Branding (Desktop) */}
+      <div className="hidden lg:flex w-1/2 bg-[#4A041D] flex-col justify-between p-16 relative overflow-hidden">
+        {/* Decorative Circles */}
+        <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-[#C5A059] rounded-full blur-[150px] opacity-10 -translate-x-1/2 -translate-y-1/2"></div>
+
+        {/* Content */}
+        <div className="relative z-10 animate-fade-in-up">
+          <Link to="/" className="inline-block">
+            <h1 className="text-white text-3xl font-bold tracking-widest uppercase">Gunay Beauty</h1>
+          </Link>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
-          <button 
-            className="flex items-center text-gray-600 text-sm mb-6" 
-            onClick={() => navigate('/login')}
-          >
-            ← Back
-          </button>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Forgot password?</h2>
-          <p className="text-gray-600 text-sm mb-6">
-            Don't worry! It happens. Please enter the email associated with your account.
+        <div className="relative z-10 max-w-lg text-white/90 animate-fade-in-up delay-100">
+          <h2 className="text-5xl !text-[#FFFF98] font-light mb-6 leading-tight">Password<br /><span className="font-bold text-[#C5A059]">Recovery.</span></h2>
+          <p className="text-lg opacity-80 leading-relaxed font-light">
+            Don't worry, we'll help you get back to your account in no time.
           </p>
+        </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <input 
-              type="email" 
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address" 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg" 
-            />
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold disabled:opacity-50"
-            >
-              {isLoading ? <Loader2 className="animate-spin mx-auto text-white" size={28} /> : 'Send a code'}
-            </button>
-          </form>
-
-          <div className="mt-4 text-center text-sm text-gray-600">
-            Remember password? <button type="button" className="text-blue-600" onClick={() => navigate('/login')}>Log in</button>
-          </div>
+        <div className="relative z-10 text-white/50 text-sm font-light flex items-center gap-4 animate-fade-in-up delay-200">
+          <span>© {new Date().getFullYear()} Gunay Beauty Store</span>
+          <div className="h-px w-8 bg-white/20"></div>
+          <span>Support</span>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="flex min-h-screen">
-      <div className="flex-1 bg-white flex items-center justify-center px-8">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <img 
-              className='mx-auto w-50' 
-              src="./Icons/logo.svg" 
-              alt="" 
-              style={{
-                imageRendering: '-webkit-optimize-contrast',
-                WebkitTransform: 'translateZ(0)',
-                transform: 'translateZ(0)',
-                backfaceVisibility: 'hidden',
-                WebkitBackfaceVisibility: 'hidden'
-              }}
-            />
+      {/* Right Side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-16 relative bg-white">
+        <Link to="/login" className="absolute top-6 left-6 p-2 text-gray-500 hover:text-[#4A041D] transition-colors flex items-center gap-2 group">
+          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-medium">Back to Login</span>
+        </Link>
+
+        <div className="w-full max-w-[420px] space-y-8 animate-fade-in">
+          {/* Logo for Mobile */}
+          <div className="lg:hidden text-center mb-8">
+            <Link to="/">
+              <span className="text-[#4A041D] text-2xl font-bold tracking-widest uppercase">Gunay Beauty</span>
+            </Link>
           </div>
 
-          <div>
-            <button 
-              className="flex items-center text-gray-600 text-sm mb-6" 
-              onClick={() => navigate('/login')}
-            >
-              ← Back
-            </button>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Forgot password?</h2>
-            <p className="text-gray-600 text-sm mb-8">
-              Don't worry! It happens. Please enter the email associated with your account.
-            </p>
+          <div className="text-center lg:text-left space-y-2">
+            <h2 className="text-3xl font-bold text-[#4A041D]">Forgot Password?</h2>
+            <p className="text-gray-500">Enter your email and we'll send you instructions</p>
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <input 
-                  type="email" 
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">Email Address</label>
+              <div className="relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl">
+                <input
+                  type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email Address" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 group-hover:bg-white group-hover:border-gray-300"
+                  placeholder="name@example.com"
                 />
               </div>
-
-              <button 
-                type="submit" 
-                disabled={isLoading}
-                className="w-full bg-red-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition duration-200 disabled:opacity-50"
-              >
-                {isLoading ? <Loader2 className="animate-spin mx-auto text-white" size={28} /> : 'Send a code'}
-              </button>
-            </form>
-
-            <div className="mt-6 text-center text-sm text-gray-600">
-              Remember password? <button type="button" className="text-red-600 hover:underline cursor-pointer" onClick={() => navigate('/login')}>Log in</button>
             </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#4A041D] hover:bg-[#600626] text-white py-4 rounded-xl font-bold tracking-wide transition-all duration-300 shadow-lg shadow-[#4A041D]/20 transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="animate-spin" size={20} />
+                  <span>Sending code...</span>
+                </div>
+              ) : 'Send Reset Code'}
+            </button>
+          </form>
+
+          <div className="pt-2 text-center text-sm text-gray-500">
+            Remember your password?{' '}
+            <Link to="/login" className="font-bold text-[#4A041D] hover:text-[#C5A059] transition-colors">
+              Log In
+            </Link>
           </div>
         </div>
       </div>

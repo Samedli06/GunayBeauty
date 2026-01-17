@@ -8,6 +8,8 @@ import { LogIn } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
+import { Gift, Package, Clock, CheckCircle, ChevronRight, CreditCard, Award, User as UserIcon } from 'lucide-react';
+
 const Profile = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -15,12 +17,24 @@ const Profile = () => {
   const [changePass, { isLoading: isPasswordLoading, error: passwordError }] = useChangePasswordMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
 
-  const [data, setData] = useState({
-    name: '',
-    lastName: '',
-    email: '',
-    password: ''
-  });
+  const [newPass, setNewPass] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+
+  // Password visibility states
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  // Logout confirmation modal state
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Animation state
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Trigger animations on mount
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const roleNames = {
     0: 'Admin Role',
@@ -34,134 +48,41 @@ const Profile = () => {
     return roleNames[roleId] || t('profile.unknownRole');
   };
 
-  const [newPass, setNewPass] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const toggleCurrentPasswordVisibility = () => setShowCurrentPassword(!showCurrentPassword);
+  const toggleNewPasswordVisibility = () => setShowNewPassword(!showNewPassword);
 
-  // Password visibility states
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-
-  // Logout confirmation modal state
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-
-  // Track initial state for comparison
-  const [initialData, setInitialData] = useState({});
-  const [initialPassword, setInitialPassword] = useState('');
-
-  // Animation state
-  const [isVisible, setIsVisible] = useState(false);
-
-  // Set initial data when fetched
-  useEffect(() => {
-    if (me) {
-      const userData = {
-        name: me.firstName || '',
-        lastName: me.lastName || '',
-        email: me.email || '',
-        password: ''
-      };
-      setData(userData);
-      setInitialData(userData);
-      setInitialPassword('');
-      setNewPass('');
-    }
-  }, [me]);
-
-  // Trigger animations on mount
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  // Compare data to initial state
-  const detailsChanged =
-    data.name !== initialData.name ||
-    data.lastName !== initialData.lastName ||
-    data.email !== initialData.email;
-
-  const passwordChanged = data.password !== initialPassword || newPass !== '';
-
-  // Password validation (computed values, no side effects)
-  const getPasswordError = () => {
-    if (!data.password && !newPass) return '';
-
-    if (data.password && newPass && data.password === newPass) {
-      return t('profile.passwordValidationError');
-    }
-
-    return '';
-  };
-
-  const passwordValidationError = getPasswordError();
-  const hasPasswordError = passwordValidationError !== '';
-
-  // Toggle password visibility functions
-  const toggleCurrentPasswordVisibility = () => {
-    setShowCurrentPassword(!showCurrentPassword);
-  };
-
-  const toggleNewPasswordVisibility = () => {
-    setShowNewPassword(!showNewPassword);
-  };
-
-  // Get API error message
   const getApiErrorMessage = (error) => {
-    if (error?.status === 401) {
-      return t('profile.unauthorizedMessage');
-    }
-    if (error?.data?.message) {
-      return error.data.message;
-    }
-    if (error?.message) {
-      return error.message;
-    }
+    if (error?.status === 401) return t('profile.unauthorizedMessage');
+    if (error?.data?.message) return error.data.message;
+    if (error?.message) return error.message;
     return t('profile.errorOccurred');
-  };
-
-  const handleDetailsSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      setInitialData({ ...data, password: '' });
-      setSuccessMessage(t('profile.profileUpdatedSuccess'));
-
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
-      console.error('Failed to update profile:', error);
-    }
   };
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-
-    // Check for validation errors before submission
-    if (hasPasswordError) {
+    if (currentPassword === newPass && currentPassword !== '') {
+      // Simple validation
       return;
     }
-
     try {
       const passwordData = {
-        currentPass: data.password,
+        currentPass: currentPassword,
         newPass: newPass,
         confirmNewPassword: newPass
       };
 
       await changePass(passwordData).unwrap();
-
-      setInitialPassword('');
-      setData({ ...data, password: '' });
+      setCurrentPassword('');
       setNewPass('');
       setSuccessMessage(t('profile.passwordChangedSuccess'));
-
-      // Hide passwords after successful change
       setShowCurrentPassword(false);
       setShowNewPassword(false);
-
-      // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Failed to change password:', error);
     }
   };
+
   const handleLogout = async () => {
     try {
       await logout().unwrap();
@@ -172,442 +93,282 @@ const Profile = () => {
       console.error('Failed to logout:', error);
       toast.error(t('profile.logoutFailed'));
     }
-
   };
 
-  // Loading state for initial user data
   if (isUserLoading) {
     return (
-      <section className='bg-[#f7fafc] inter pb-22'>
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FD1206]"></div>
-        </div>
-      </section>
+      <div className="flex justify-center items-center min-h-[60vh] bg-[#FDFBF8]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A041D]"></div>
+      </div>
     );
   }
 
-  // Error state for user data
   if (userError) {
     return (
-      <section className='bg-[#f7fafc] inter pb-22'>
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg max-w-md">
-            <div className='flex items-center'>
-              <svg className='w-5 h-5 mr-2 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
-                <path fillRule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clipRule='evenodd' />
-              </svg>
-              <span className='font-medium'>{getApiErrorMessage(userError)}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
+      <div className="flex justify-center items-center min-h-[60vh] bg-[#FDFBF8]">
+        <div className="text-[#4A041D] font-sans">{getApiErrorMessage(userError)}</div>
+      </div>
+    )
   }
 
+  // Mock Data for UI Visualization
+  const loyaltyPoints = 1250;
+  const nextTierPoints = 2000;
+  const progress = (loyaltyPoints / nextTierPoints) * 100;
+
+  const mockOrders = [
+    { id: 'ORD-2024-001', date: 'Oct 24, 2024', total: '₼ 145.00', status: 'Delivered', items: 3 },
+    { id: 'ORD-2024-002', date: 'Nov 02, 2024', total: '₼ 89.50', status: 'Processing', items: 1 },
+    { id: 'ORD-2024-003', date: 'Nov 15, 2024', total: '₼ 210.00', status: 'Cancelled', items: 5 },
+  ];
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Delivered': return 'bg-green-100 text-green-700 border-green-200';
+      case 'Processing': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'Cancelled': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+  };
+
   return (
-    <section className='bg-[#f7fafc] inter pb-22'>
+    <section className='bg-[#FDFBF8] min-h-screen pb-20 pt-8 font-sans'>
+      {/* Styles for animations */}
       <style>{`
+        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+        .animate-scale-in { animation: scaleIn 0.4s ease-out forwards; }
         @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
         @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.8;
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -1000px 0;
-          }
-          100% {
-            background-position: 1000px 0;
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        .animate-slide-in-right {
-          animation: slideInRight 0.5s ease-out forwards;
-        }
-
-        .animate-scale-in {
-          animation: scaleIn 0.4s ease-out forwards;
-        }
-
-        .animate-pulse-slow {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        .role-badge {
-          transition: all 0.3s ease;
-        }
-
-        .input-focus {
-          transition: all 0.3s ease;
-        }
-
-        .input-focus:focus {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(253, 18, 6, 0.1);
-        }
-
-        .button-hover {
-          transition: all 0.3s ease;
-        }
-
-        .button-hover:not(:disabled):hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(253, 18, 6, 0.3);
-        }
-
-        .card-hover {
-          transition: all 0.3s ease;
-        }
-
-        .card-hover:hover {
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
         }
       `}</style>
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center z-50 animate-fade-in">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 animate-scale-in">
-            <div className="flex items-center mb-4">
-              <svg className="w-6 h-6 text-[#FD1206] mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              <h3 className="text-xl font-semibold">{t('profile.confirmLogout')}</h3>
-            </div>
-            <p className="text-gray-600 mb-6">{t('profile.logoutMessage')}</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowLogoutModal(false)}
-                disabled={isLogoutLoading}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {t('profile.cancel')}
-              </button>
-              <button
-                onClick={handleLogout}
-                disabled={isLogoutLoading}
-                className="flex-1 px-4 py-2 bg-[#FD1206] text-white rounded-lg hover:bg-[#e01105] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {isLogoutLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {t('profile.loggingOut')}
-                  </>
-                ) : (
-                  t('profile.logout')
-                )}
-              </button>
+        <div className="fixed inset-0 bg-[#4A041D]/40 backdrop-blur-sm flex items-center justify-center z-[5000] px-4 animate-fade-in-up">
+          <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-[#4A041D]/5 rounded-full flex items-center justify-center mb-4">
+                <LogIn className="w-8 h-8 text-[#4A041D] ml-1" />
+              </div>
+              <h3 className="text-xl font-bold text-[#4A041D] mb-2 font-sans">{t('profile.confirmLogout')}</h3>
+              <p className="text-gray-500 mb-6 text-sm font-sans">{t('profile.logoutMessage')}</p>
+              <div className="flex gap-3 w-full">
+                <button onClick={() => setShowLogoutModal(false)} className="flex-1 py-3 border border-gray-200 rounded-xl text-gray-600 font-sans font-medium hover:bg-gray-50 transition-colors">
+                  {t('profile.cancel')}
+                </button>
+                <button onClick={handleLogout} className="flex-1 py-3 bg-[#4A041D] text-white rounded-xl font-sans font-medium hover:bg-[#7d1733] transition-colors shadow-lg shadow-[#4A041D]/20">
+                  {isLogoutLoading ? t('profile.loggingOut') : t('profile.logout')}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      <div className="lg:hidden px-4 pl-7 py-4 border-y bg-white lg:border-transparent border-[#dee2e6]">
+      <div className={`max-w-[1200px] mx-auto px-4 lg:px-8 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
 
-        <Breadcrumb />
-      </div>
-
-      <div className={`p-4 pl-7 pb-7 md:max-w-[80vw] md:mx-auto md:px-0 text-xl md:text-2xl font-semibold lg:bg-transparent border-b md:border-0 border-[#dee2e6] ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
-        <div className='hidden lg:block'>
-          <Breadcrumb />
-        </div>
-        <div className='flex items-center justify-between mt-4'>
-          <div className='flex items-center gap-3'>
-            <h1 className=''>{t('profile.profile')}</h1>
-            <div className='px-4 py-2 rounded-xl bg-[#FFBBB8]'>
-              <h3 className='text-base font-semibold text-black'>{getRoleName(me?.role)}</h3>
-            </div>
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <Breadcrumb />
+            <h1 className="text-3xl lg:text-4xl font-sans font-bold text-[#4A041D] mt-4 mb-2">
+              {t('Hello')}, {me?.firstName}!
+            </h1>
+            <p className="text-[#9E2A2B] font-sans text-sm tracking-wide">
+              {t('profile.welcomeBack')} | <span className="font-semibold">{getRoleName(me?.role)}</span>
+            </p>
           </div>
-          <div className='flex gap-3'>
-
-
-            <button
-              onClick={() => setShowLogoutModal(true)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#FD1206] border border-[#FD1206] rounded-lg hover:bg-[#FD1206] hover:text-white transition-all duration-300 button-hover"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              <span className="hidden sm:inline">{t('profile.logout')}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="flex items-center gap-2 px-6 py-2.5 border border-[#4A041D] text-[#4A041D] rounded-full hover:bg-[#4A041D] hover:text-white transition-all duration-300 font-sans font-medium text-sm button-hover shadow-sm"
+          >
+            <LogIn className="w-4 h-4" />
+            {t('profile.logout')}
+          </button>
         </div>
-      </div>
 
-      {/* Success Message */}
-      {successMessage && (
-        <div className="md:max-w-[80vw] md:mx-auto px-4 pt-4 animate-scale-in">
-          <div className='bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg shadow-lg'>
-            <div className='flex items-center'>
-              <svg className='w-4 h-4 mr-2 flex-shrink-0 animate-pulse-slow' fill='currentColor' viewBox='0 0 20 20'>
-                <path fillRule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clipRule='evenodd' />
-              </svg>
-              <span className='text-sm font-medium'>{successMessage}</span>
-            </div>
-          </div>
-        </div>
-      )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-      <div className='bg-white md:max-w-[80vw] md:mx-auto'>
-        {/* My details */}
-        <div className={`bg-white p-6 pt-7 card-hover rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
-          <h1 className='font-semibold text-2xl'>{t('profile.myDetails')}</h1>
-          <h1 className='mt-9 mb-2 font-semibold text-lg hidden md:block'>{t('profile.personalInformation')}</h1>
-          <hr className='mb-10 hidden md:block' />
+          {/* Left Column - Loyalty & Stats */}
+          <div className="lg:col-span-1 space-y-8">
 
-          <div className='flex justify-between md:gap-14'>
-            <div className='hidden md:block animate-slide-in-right' style={{ animationDelay: '0.2s' }}>
-              <p className='max-w-[250px] text-[#878787]'>
-                {t('profile.personalInfoDesc')}
-              </p>
-            </div>
+            {/* Loyalty Card */}
+            <div className="bg-gradient-to-br from-[#4A041D] to-[#7d1733] rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-xl group-hover:scale-110 transition-transform duration-700"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#C5A059]/30 rounded-full -ml-12 -mb-12 blur-lg group-hover:scale-125 transition-transform duration-700"></div>
 
-            <form
-              onSubmit={handleDetailsSubmit}
-              className='md:grid w-full md:w-[480px] md:grid-cols-2 md:gap-x-5'
-            >
-              <div className='flex flex-col mt-5 md:mt-0'>
-                <span className='font-semibold'>{t('profile.firstName')}</span>
-                <input
-                  type='text'
-                  required
-                  disabled={isUserLoading}
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
-                  className='bg-[#fbfbfb] py-2 mt-2 rounded-lg border border-[#DEE2E6] pl-4 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus'
-                  value={data.name}
-                />
+              <div className="relative z-10">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-lg font-sans font-medium opacity-90 !text-white">{t('Brand Loyalty')}</h3>
+                    <div className="text-3xl font-sans font-bold mt-1 tracking-tight">{loyaltyPoints} <span className="text-sm font-normal opacity-70">pts</span></div>
+                  </div>
+                  <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
+                    <Award className="w-6 h-6 text-[#C5A059]" />
+                  </div>
+                </div>
+
+                <div className="space-y-2 mb-6">
+                  <div className="flex justify-between text-xs font-sans tracking-wider uppercase opacity-80">
+                    <span>{t('Member')}</span>
+                    <span>{t('Gold')}</span>
+                  </div>
+                  <div className="w-full bg-black/20 rounded-full h-2 overflow-hidden">
+                    <div className="bg-[#C5A059] h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
+                  </div>
+                  <div className="text-xs opacity-70 text-right font-sans">
+                    {nextTierPoints - loyaltyPoints} {t('points to Gold Tier')}
+                  </div>
+                </div>
+
+                <button className="w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl font-sans text-sm font-medium transition-colors border border-white/10 flex items-center justify-center gap-2 backdrop-blur-md">
+                  <Gift className="w-4 h-4" />
+                  {t('Redeem Rewards')}
+                </button>
               </div>
-
-              <div className='flex flex-col mt-5 md:mt-0'>
-                <span className='font-semibold'>{t('profile.lastName')}</span>
-                <input
-                  type='text'
-                  required
-                  disabled={isUserLoading}
-                  onChange={(e) => setData({ ...data, lastName: e.target.value })}
-                  className='bg-[#fbfbfb] py-2 mt-2 rounded-lg border border-[#DEE2E6] pl-4 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus'
-                  value={data.lastName}
-                />
-              </div>
-
-              <div className='flex flex-col col-span-2 mt-5'>
-                <span className='font-semibold'>{t('profile.email')}</span>
-                <input
-                  type='email'
-                  required
-                  disabled={isUserLoading}
-                  onChange={(e) => setData({ ...data, email: e.target.value })}
-                  className='bg-[#fbfbfb] py-2 mt-2 rounded-lg border border-[#DEE2E6] pl-4 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus'
-                  value={data.email}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={!detailsChanged || isUserLoading}
-                style={{
-                  backgroundColor: (detailsChanged && !isUserLoading) ? '#FD1206' : '#DDDDDD',
-                  cursor: (detailsChanged && !isUserLoading) ? 'pointer' : 'not-allowed'
-                }}
-                className='col-span-2 py-2 my-7 rounded-lg border border-[#DEE2E6] w-full text-white flex items-center justify-center button-hover'
-              >
-                {isUserLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {t('profile.saving')}
-                  </>
-                ) : (
-                  t('profile.save')
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Password section */}
-        <div className={`bg-white p-6 pt-7 mt-10 card-hover rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
-          <h1 className='mt-9 mb-2 font-semibold text-lg hidden md:block'>{t('profile.password')}</h1>
-          <hr className='mb-10 hidden md:block' />
-
-          <div className='flex md:justify-between md:gap-14'>
-            <div className='hidden md:block animate-slide-in-right' style={{ animationDelay: '0.4s' }}>
-              <p className='max-w-[250px] text-[#878787]'>
-                {t('profile.passwordDesc')}
-              </p>
             </div>
 
-            <form
-              onSubmit={handlePasswordSubmit}
-              className='md:grid w-full md:w-[480px] md:grid-cols-2 md:gap-x-5'
-            >
-              <div className='flex flex-col col-span-2 mt-5 md:mt-0'>
-                <span className='font-semibold'>{t('profile.currentPassword')}</span>
-                <div className='relative'>
-                  <input
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    required
-                    disabled={isPasswordLoading}
-                    onChange={(e) => setData({ ...data, password: e.target.value })}
-                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${hasPasswordError && data.password ? 'border-red-500' : 'border-[#DEE2E6]'
-                      }`}
-                    value={data.password}
-                  />
-                  <button
-                    type="button"
-                    onClick={toggleCurrentPasswordVisibility}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors duration-200"
-                  >
-                    {showCurrentPassword ? (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    )}
-                  </button>
+            {/* Quick Stats or Info */}
+            <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 shadow-sm">
+              <h3 className="text-[#4A041D] font-sans font-bold mb-4 flex items-center gap-2">
+                <UserIcon className="w-5 h-5 text-[#C5A059]" />
+                {t('Account Overview')}
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Package className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm text-gray-600 font-sans">{t('Total Orders')}</span>
+                  </div>
+                  <span className="font-bold text-[#4A041D]">12</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                      <CreditCard className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm text-gray-600 font-sans">{t('Credits')}</span>
+                  </div>
+                  <span className="font-bold text-[#4A041D]">₼ 0.00</span>
                 </div>
               </div>
+            </div>
 
-              <div className='flex flex-col col-span-2 mt-5'>
-                <span className='font-semibold'>{t('profile.newPassword')}</span>
-                <div className='relative'>
+            {/* Update Password */}
+            <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 shadow-sm">
+              <h3 className="text-[#4A041D] font-sans font-bold mb-4">{t('Security')}</h3>
+              {successMessage && (
+                <div className="mb-4 p-3 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200 font-sans flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  {successMessage}
+                </div>
+              )}
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div>
                   <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    required
-                    disabled={isPasswordLoading}
-                    onChange={(e) => setNewPass(e.target.value)}
-                    className={`bg-[#fbfbfb] py-2 mt-2 rounded-lg border pl-4 pr-12 w-full disabled:opacity-50 disabled:cursor-not-allowed input-focus ${hasPasswordError && newPass ? 'border-red-500' : 'border-[#DEE2E6]'
-                      }`}
+                    type={showCurrentPassword ? "text" : "password"}
+                    placeholder={t('Current Password')}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-[#F9F9F9] border border-[#DEE2E6] rounded-xl text-sm focus:outline-none focus:border-[#4A041D]/50 focus:ring-1 focus:ring-[#4A041D]/20 transition-all font-sans"
+                  />
+                </div>
+                <div>
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder={t('New Password')}
                     value={newPass}
+                    onChange={(e) => setNewPass(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-[#F9F9F9] border border-[#DEE2E6] rounded-xl text-sm focus:outline-none focus:border-[#4A041D]/50 focus:ring-1 focus:ring-[#4A041D]/20 transition-all font-sans"
                   />
-                  <button
-                    type="button"
-                    onClick={toggleNewPasswordVisibility}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors duration-200"
-                  >
-                    {showNewPassword ? (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    )}
-                  </button>
                 </div>
+                <button
+                  type="submit"
+                  disabled={isPasswordLoading || !currentPassword || !newPass}
+                  className="w-full py-2.5 bg-[#4A041D] text-white rounded-xl font-sans font-medium text-sm hover:bg-[#7d1733] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#4A041D]/20"
+                >
+                  {isPasswordLoading ? t('Updating...') : t('Update Password')}
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Right Column - Order History */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 lg:p-8 shadow-sm h-full">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-sans font-bold text-[#4A041D]">{t('Order History')}</h2>
+                <button className="text-[#C5A059] text-sm font-sans font-medium hover:text-[#9E2A2B] transition-colors">
+                  {t('View All Orders')}
+                </button>
               </div>
 
-              {/* Validation Error message */}
-              {hasPasswordError && passwordValidationError && (
-                <div className='col-span-2 mt-3 mb-2 animate-scale-in'>
-                  <div className='bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg'>
-                    <div className='flex items-center'>
-                      <svg className='w-4 h-4 mr-2 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
-                        <path fillRule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clipRule='evenodd' />
-                      </svg>
-                      <span className='text-sm font-medium'>{passwordValidationError}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="space-y-4">
+                {mockOrders.length > 0 ? (
+                  mockOrders.map((order) => (
+                    <div key={order.id} className="group border border-[#F3E7E1] rounded-xl p-4 lg:p-5 hover:border-[#C5A059]/50 hover:shadow-md transition-all duration-300 bg-[#FDFBF8]/50">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                          <div className="p-3 bg-[#4A041D]/5 rounded-lg group-hover:bg-[#4A041D]/10 transition-colors">
+                            <Package className="w-6 h-6 text-[#4A041D]" />
+                          </div>
+                          <div>
+                            <h4 className="font-sans font-bold text-[#4A041D] text-sm md:text-base mb-1">{order.id}</h4>
+                            <div className="flex items-center gap-3 text-xs text-gray-500 font-sans">
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" /> {order.date}
+                              </span>
+                              <span>•</span>
+                              <span>{order.items} {t('Items')}</span>
+                            </div>
+                          </div>
+                        </div>
 
-              {/* API Error message */}
-              {passwordError && (
-                <div className='col-span-2 mt-3 mb-2 animate-scale-in'>
-                  <div className='bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg'>
-                    <div className='flex items-center'>
-                      <svg className='w-4 h-4 mr-2 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
-                        <path fillRule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clipRule='evenodd' />
-                      </svg>
-                      <span className='text-sm font-medium'>{getApiErrorMessage(passwordError)}</span>
+                        <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4 lg:gap-8">
+                          <div className="text-right">
+                            <div className="font-sans font-bold text-[#4A041D]">{order.total}</div>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-sans font-medium border ${getStatusColor(order.status)}`}>
+                            {order.status}
+                          </span>
+                          <button className="p-2 text-gray-400 hover:text-[#4A041D] hover:bg-[#4A041D]/5 rounded-lg transition-all hidden sm:block">
+                            <ChevronRight className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end md:hidden">
+                        <button className="text-xs font-sans font-bold text-[#C5A059] uppercase tracking-wider">
+                          {t('View Details')}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={!passwordChanged || hasPasswordError || isPasswordLoading}
-                style={{
-                  backgroundColor: (passwordChanged && !hasPasswordError && !isPasswordLoading) ? '#FD1206' : '#DDDDDD',
-                  cursor: (passwordChanged && !hasPasswordError && !isPasswordLoading) ? 'pointer' : 'not-allowed'
-                }}
-                className='col-span-2 py-2 my-7 rounded-lg border border-[#DEE2E6] w-full text-white flex items-center justify-center button-hover'
-              >
-                {isPasswordLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {t('profile.changingPassword')}
-                  </>
+                  ))
                 ) : (
-                  t('profile.save')
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Package className="w-8 h-8 text-gray-300" />
+                    </div>
+                    <h3 className="text-gray-900 font-medium font-sans mb-1">{t('No orders yet')}</h3>
+                    <p className="text-gray-500 text-sm font-sans">{t('Start shopping to earn loyalty points!')}</p>
+                    <button onClick={() => navigate('/products')} className="mt-4 px-6 py-2 bg-[#4A041D] text-white rounded-lg text-sm font-sans hover:bg-[#7d1733] transition-colors">
+                      {t('Browse Products')}
+                    </button>
+                  </div>
                 )}
-              </button>
-            </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

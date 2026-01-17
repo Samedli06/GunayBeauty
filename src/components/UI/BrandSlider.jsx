@@ -9,7 +9,7 @@ const InfiniteBrandSlider = () => {
 
 
   const brandsImg = brands?.map(brand => ({
-    src: `https://gunaybeauty-001-site1.ltempurl.com${brand?.logoUrl}`,
+    src: `https://kozmetik-001-site1.qtempurl.com/${brand?.logoUrl}`,
     alt: brand?.name || "Brand",
     slug: brand?.slug
   })) || [];

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Home, Store, User, Percent, Grid } from 'lucide-react';
+import { Home, Store, User, Percent, Grid, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthUtils from '../UI/AuthUtils';
 
@@ -25,13 +25,13 @@ const BottomNavigation = () => {
             path: '/products',
         },
         {
-            label: t('Offers') || 'Offers',
-            icon: Percent,
-            path: '/products/hot-deals',
+            label: t('Categories') || 'Categories',
+            icon: Grid,
+            path: '/categories',
         },
         {
             label: t('Brands') || 'Brands',
-            icon: Grid,
+            icon: Tag,
             path: '/brands',
         },
         {

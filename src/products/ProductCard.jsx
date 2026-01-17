@@ -12,7 +12,8 @@ export function ProductCard({
   handleAddToCart,
   isAddingToCart,
   toggleFavorite,
-  isFavorite = false
+  isFavorite = false,
+  compact = false
 }) {
   const { id, url, name: originalName, description: originalDescription, priceOriginal, price, discountPercentage, isHotDeal } = info;
   const [localFavorite, setLocalFavorite] = useState(isFavorite);
@@ -56,6 +57,7 @@ export function ProductCard({
     if (handleAddToCart) {
       handleAddToCart(id, productData);
       setJustAdded(true);
+      window.dispatchEvent(new Event('cartAnimation'));
     }
   };
 
@@ -73,67 +75,69 @@ export function ProductCard({
   if (col) {
     // Column layout (grid view)
     return (
-      <div className="bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden   relative group transition-all duration-300 h-full flex flex-col hover:shadow-xl transform hover:-translate-y-1">
+      <div className={`bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden relative group transition-all duration-300 h-full flex flex-col hover:shadow-xl transform hover:-translate-y-1 ${compact ? 'min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] lg:min-w-[270px] lg:max-w-[270px]' : ''}`}>
         <Link to={`/details/${id}`} className="block">
-          <div className="aspect-square p-4 relative bg-transparent flex items-center justify-center">
+          <div className={`aspect-square relative bg-transparent flex items-center justify-center ${compact ? 'p-2 lg:p-4' : 'p-4'}`}>
             <img
-              src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
+              src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
               alt={name || 'Product'}
               className="w-full h-full object-contain"
               onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
             />
 
             {isHotDeal && (
-              <div className="absolute top-2 right-2 bg-[#E60C03] text-white text-xs px-2 py-1 rounded font-semibold">
+              <div className={`absolute top-2 right-2 bg-[#E60C03] text-white rounded font-semibold ${compact ? 'text-[10px] lg:text-xs px-1.5 py-0.5 lg:px-2 lg:py-1' : 'text-xs px-2 py-1'}`}>
                 {t('productCard.hotDeal')}
               </div>
             )}
             {hasDiscount && discountPercentage > 0 && (
-              <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+              <div className={`absolute top-2 left-2 bg-red-500 text-white rounded-full font-semibold ${compact ? 'text-[10px] lg:text-xs px-1.5 py-0.5 lg:px-2 lg:py-1' : 'text-xs px-2 py-1'}`}>
                 -{discountPercentage}%
               </div>
             )}
           </div>
         </Link>
 
-        {/* Content Section - Flex 1 to fill space, p-4 padding */}
-        <div className="p-4 pt-2 bg-white flex flex-col flex-1">
+        {/* Content Section - Flex 1 to fill space */}
+        <div className={`${compact ? 'p-2 lg:p-3' : 'p-4'} pt-2 bg-white flex flex-col flex-1`}>
           <Link to={`/details/${id}`} className="block flex flex-col flex-1">
             <div className='flex gap-2 items-start justify-between'>
-              {/* Title: Fixed height for 2 lines (~3rem/48px) */}
-              <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 h-[3rem] leading-snug flex-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+              {/* Title: Fixed height */}
+              <h3 className={`${compact ? 'text-xs lg:text-base h-[2rem] lg:h-[3rem]' : 'text-base h-[3rem]'} font-semibold text-gray-900 mb-1 line-clamp-2 leading-snug flex-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {name}
               </h3>
               <button
                 onClick={handleFavoriteClick}
                 disabled={isTogglingFavorite}
-                className="p-1.5 h-fit -mt-1 rounded-full hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 shrink-0"
+                className={`rounded-full hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 shrink-0 ${compact ? 'p-1 lg:p-1.5 -mt-0.5 lg:-mt-1' : 'p-1.5 -mt-1 h-fit'}`}
               >
                 <Heart
-                  className={`w-5 h-5 transition-all duration-300 ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
+                  className={`transition-all duration-300 ${compact ? 'w-4 h-4 lg:w-5 lg:h-5' : 'w-5 h-5'} ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
                 />
               </button>
             </div>
 
-            {/* Description: Fixed height for 2 lines (~2.5rem/40px) */}
-            <div className="h-[2.5rem] mb-3">
-              {description && (
-                <p className="text-sm text-gray-500 line-clamp-2 leading-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                  {description}
-                </p>
-              )}
-            </div>
+            {/* Description: Fixed height for 2 lines (~2.5rem/40px) - Hidden in compact mode */}
+            {!compact && (
+              <div className="h-[2.5rem] mb-3">
+                {description && (
+                  <p className="text-sm text-gray-500 line-clamp-2 leading-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    {description}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Price section - Pushed to bottom with mt-auto */}
-            <div className="mt-auto pt-2 border-t border-gray-100/50">
+            <div className={`mt-auto  border-t border-gray-100/50 ${compact ? 'pt-1.5 lg:pt-2' : 'pt-2'}`}>
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-lg md:text-xl font-bold text-[#C5A059]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
+                <p className={`${compact ? 'text-sm lg:text-lg' : 'text-lg md:text-xl'} font-bold text-[#C5A059]`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
                 {hasDiscount && (
-                  <p className="text-sm text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
+                  <p className={`${compact ? 'text-xs lg:text-sm' : 'text-sm'} text-gray-400 line-through`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
                 )}
               </div>
               {hasDiscount && (
-                <p className="text-xs text-green-600 font-medium mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                <p className={`${compact ? 'text-[10px] lg:text-xs' : 'text-xs'} text-green-600 font-medium mt-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
                 </p>
               )}
@@ -151,7 +155,7 @@ export function ProductCard({
       >
         <div className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-transparent overflow-hidden flex items-center justify-center">
           <img
-            src={`https://gunaybeauty-001-site1.ltempurl.com${url}`}
+            src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
             alt={name || 'Product'}
             className="max-w-[150px] object-contain aspect-square w-full h-full rounded-lg"
             onError={(e) => {

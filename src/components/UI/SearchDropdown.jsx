@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Package, Tag, Grid } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { Search, Package, Tag, Grid, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../../i18n';
 
 // Skeleton Components
 const CategorySkeleton = () => (
-  <div className="flex items-center gap-3 p-2 animate-pulse">
-    <div className="w-10 h-10 bg-gray-200 rounded-lg" />
-    <div className="flex-1">
-      <div className="h-4 bg-gray-200 rounded w-24 mb-1" />
-      <div className="h-3 bg-gray-200 rounded w-16" />
+  <div className="flex items-center gap-4 p-3 animate-pulse border-b border-gray-50 last:border-0">
+    <div className="w-10 h-10 bg-gray-100 rounded-full" />
+    <div className="flex-1 space-y-2">
+      <div className="h-3 bg-gray-100 rounded w-1/3" />
+      <div className="h-2 bg-gray-100 rounded w-1/4" />
     </div>
   </div>
 );
 
 const BrandSkeleton = () => (
-  <div className="flex items-center gap-3 p-2 animate-pulse">
-    <div className="w-10 h-10 bg-gray-200 rounded-full" />
-    <div className="h-4 bg-gray-200 rounded w-20" />
+  <div className="flex items-center gap-2 p-2 animate-pulse">
+    <div className="w-8 h-8 bg-gray-100 rounded-full" />
+    <div className="h-3 bg-gray-100 rounded w-20" />
   </div>
 );
 
 const ProductSkeletonDesktop = () => (
-  <div className="bg-white rounded-lg border border-[#dee2e6] p-3 animate-pulse">
-    <div className="w-full aspect-square bg-gray-200 rounded-lg mb-3" />
+  <div className="bg-white rounded-lg p-3 animate-pulse">
+    <div className="w-full aspect-square bg-gray-100 rounded-lg mb-3" />
     <div className="space-y-2">
-      <div className="h-4 bg-gray-200 rounded w-3/4" />
-      <div className="h-3 bg-gray-200 rounded w-1/2" />
-      <div className="h-5 bg-gray-200 rounded w-1/3 mt-2" />
+      <div className="h-3 bg-gray-100 rounded w-3/4" />
+      <div className="h-3 bg-gray-100 rounded w-1/2" />
     </div>
   </div>
 );
@@ -37,20 +35,15 @@ const SearchDropdown = ({
   searchQuery,
   searchResult,
   isSearching,
-  onClose,
   onProductClick,
   onCategoryClick,
   onBrandClick,
   onViewAllProducts,
-  t,
-  width
+  t
 }) => {
   const { i18n } = useTranslation();
-
-  // Dynamic translation states
   const [translatedSearchResult, setTranslatedSearchResult] = useState(null);
 
-  // Dynamic translation effect
   useEffect(() => {
     async function translateSearchResult() {
       if (!searchResult) return;
@@ -59,7 +52,6 @@ const SearchDropdown = ({
       if (targetLang === 'en') {
         const translated = { ...searchResult };
 
-        // Translate categories
         if (searchResult.categories) {
           translated.categories = await Promise.all(
             searchResult.categories.map(async (category) => ({
@@ -69,7 +61,6 @@ const SearchDropdown = ({
           );
         }
 
-        // Translate brands
         if (searchResult.brands) {
           translated.brands = await Promise.all(
             searchResult.brands.map(async (brand) => ({
@@ -79,7 +70,6 @@ const SearchDropdown = ({
           );
         }
 
-        // Translate products
         if (searchResult.products) {
           translated.products = await Promise.all(
             searchResult.products.map(async (product) => ({
@@ -98,216 +88,159 @@ const SearchDropdown = ({
     translateSearchResult();
   }, [i18n.language, searchResult]);
 
-  // Empty state - before typing
-  if (searchQuery.length === 0 || searchQuery.length === 1) {
+  const containerStyle = { fontFamily: 'Montserrat, sans-serif' };
+
+  if (searchQuery.length < 2) {
     return (
-      <div className="p-8 text-center">
-        <Search className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-        <p className="text-gray-600 font-medium mb-1">Start typing to search</p>
-        <p className="text-gray-400 text-sm">
-          Search for products, categories, and brands
-        </p>
+      <div className="p-8 text-center" style={containerStyle}>
+        <div className="w-16 h-16 bg-[#4A041D]/5 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Search className="w-8 h-8 text-[#4A041D]/40" />
+        </div>
+        <p className="text-[#4A041D] font-medium text-lg mb-1">{t('search')}</p>
+        <p className="text-gray-400 text-sm">Start typing to see results...</p>
       </div>
     );
   }
 
-  // Loading state
   if (isSearching) {
     return (
-      <div className="p-4 max-h-[70vh] overflow-y-auto">
-        {/* Categories Loading */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
-            <Grid className="w-4 h-4" />
-            CATEGORIES
-          </h3>
-          <div className="space-y-2">
-            {[...Array(2)].map((_, idx) => (
-              <CategorySkeleton key={idx} />
-            ))}
+      <div className="p-6 max-h-[70vh] overflow-y-auto" style={containerStyle}>
+        <div className="grid grid-cols-12 gap-8">
+          <div className="col-span-3 border-r border-gray-100 pr-6 space-y-6">
+            <div className="space-y-4">
+              {[1, 2, 3].map(i => <CategorySkeleton key={i} />)}
+            </div>
           </div>
-        </div>
-
-        {/* Brands Loading */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
-            <Tag className="w-4 h-4" />
-            BRANDS
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {[...Array(3)].map((_, idx) => (
-              <BrandSkeleton key={idx} />
-            ))}
-          </div>
-        </div>
-
-        {/* Products Loading */}
-        <div>
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 flex items-center gap-2 font-sans">
-            <Package className="w-4 h-4" />
-            PRODUCTS
-          </h3>
-          <div className="grid grid-cols-2 [@media(min-width:1200px)]:grid-cols-3 [@media(min-width:1500px)]:grid-cols-4 gap-3">
-            {[...Array(4)].map((_, idx) => (
-              <ProductSkeletonDesktop key={idx} />
-            ))}
+          <div className="col-span-9">
+            <div className="grid grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map(i => <ProductSkeletonDesktop key={i} />)}
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  // No results state
   const currentSearchResult = translatedSearchResult || searchResult;
+
   if (!currentSearchResult || (!currentSearchResult.categories?.length && !currentSearchResult.brands?.length && !currentSearchResult.products?.length)) {
     return (
-      <div className="p-12 text-center">
-        <Search className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-        <p className="text-gray-600 font-medium mb-1">No results found</p>
-        <p className="text-gray-400 text-sm">
-          Try searching with different keywords
-        </p>
+      <div className="p-12 text-center" style={containerStyle}>
+        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Search className="w-8 h-8 text-gray-300" />
+        </div>
+        <p className="text-gray-900 font-medium text-lg mb-1">No results found</p>
+        <p className="text-gray-500 text-sm">We couldn't find matches for "{searchQuery}"</p>
       </div>
     );
   }
 
-  const hasCategories = currentSearchResult.categories && currentSearchResult.categories.length > 0;
-  const hasBrands = currentSearchResult.brands && currentSearchResult.brands.length > 0;
-  const hasProducts = currentSearchResult.products && currentSearchResult.products.length > 0;
+  const hasCategories = currentSearchResult.categories?.length > 0;
+  const hasBrands = currentSearchResult.brands?.length > 0;
+  const hasProducts = currentSearchResult.products?.length > 0;
 
   return (
-    <div className="p-4 max-h-[70vh] overflow-y-auto">
-      {/* Categories Section */}
-      {hasCategories && (
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
-            <Grid className="w-4 h-4" />
-            CATEGORIES ({currentSearchResult.categories.length})
-          </h3>
-          <div className="space-y-1">
-            {currentSearchResult.categories.slice(0, 5).map((category) => (
-              <div
-                key={category.id}
-                onClick={() => onCategoryClick(category.slug, category.name)}
-                className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors group"
-              >
-                <div className="w-10 h-10 bg-[#4A041D]/5 rounded-lg flex items-center justify-center group-hover:bg-[#4A041D]/10 transition-colors">
-                  <Grid className="w-5 h-5 text-[#4A041D]" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-800">{category.name}</p>
-                  {category.productCount > 0 && (
-                    <p className="text-xs text-gray-500">{category.productCount} products</p>
-                  )}
+    <div className="max-h-[75vh] overflow-y-auto bg-white" style={containerStyle}>
+      <div className="flex flex-col lg:flex-row">
+        {/* Left Sidebar: Categories & Brands */}
+        {(hasCategories || hasBrands) && (
+          <div className="w-full lg:w-1/4 bg-gray-50/50 p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+            {hasCategories && (
+              <div className="mb-8">
+                <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Grid className="w-3 h-3" /> Categories
+                </h3>
+                <div className="space-y-1">
+                  {currentSearchResult.categories.slice(0, 5).map((category) => (
+                    <div
+                      key={category.id}
+                      onClick={() => onCategoryClick(category.slug, category.name)}
+                      className="group flex items-center justify-between p-2.5 rounded-lg hover:bg-white hover:shadow-sm cursor-pointer transition-all duration-200"
+                    >
+                      <span className="text-sm text-gray-700 group-hover:text-[#4A041D] font-medium">{category.name}</span>
+                      <ChevronRight className="w-3 h-3 text-gray-300 group-hover:text-[#4A041D] opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {/* Brands Section */}
-      {hasBrands && (
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
-            <Tag className="w-4 h-4" />
-            {t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {currentSearchResult.brands.slice(0, 6).map((brand) => (
-              <div
-                key={brand.id}
-                onClick={() => onBrandClick(brand.slug, brand.name)}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full cursor-pointer transition-colors group border border-gray-200"
-              >
-                {brand.logoUrl ? (
-                  <img
-                    src={`https://gunaybeauty-001-site1.ltempurl.com${brand.logoUrl}`}
-                    alt={brand.name}
-                    className="w-6 h-6 rounded-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div className="w-6 h-6 bg-[#4A041D]/5 rounded-full flex items-center justify-center">
-                    <Tag className="w-3 h-3 text-[#4A041D]" />
-                  </div>
+            {hasBrands && (
+              <div>
+                <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Tag className="w-3 h-3" /> Brands
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {currentSearchResult.brands.slice(0, 8).map((brand) => (
+                    <div
+                      key={brand.id}
+                      onClick={() => onBrandClick(brand.slug, brand.name)}
+                      className="px-3 py-1.5 bg-white border border-gray-100 rounded-full text-xs font-medium text-gray-600 hover:border-[#4A041D] hover:text-[#4A041D] cursor-pointer transition-colors"
+                    >
+                      {brand.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Right Content: Products */}
+        <div className={`w-full ${hasCategories || hasBrands ? 'lg:w-3/4' : 'lg:w-full'} p-6`}>
+          {hasProducts && (
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider flex items-center gap-2">
+                  <Package className="w-3 h-3" /> Products
+                </h3>
+                {currentSearchResult.products.length > 4 && (
+                  <button onClick={onViewAllProducts} className="text-xs font-semibold text-[#C5A059] hover:text-[#b08d4b] transition-colors">
+                    View All Results &rarr;
+                  </button>
                 )}
-                <span className="text-sm font-medium text-gray-700">{brand.name}</span>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* Products Section */}
-      {hasProducts && (
-        <div>
-          <h3 className="text-xs font-semibold text-[#4A041D] mb-3 flex items-center gap-2 font-sans">
-            <Package className="w-4 h-4" />
-            PRODUCTS ({currentSearchResult.products.length})
-          </h3>
-          <div className="grid grid-cols-2 [@media(min-width:1200px)]:grid-cols-3 [@media(min-width:1500px)]:grid-cols-4 gap-3">
-            {currentSearchResult.products.slice(0, 4).map((product) => (
-              <div
-                key={product.id}
-                onClick={(e) => onProductClick(e, product.id)}
-                onMouseDown={(e) => e.preventDefault()}
-                className="bg-white rounded-lg border border-[#dee2e6] p-3 hover:shadow-md cursor-pointer transition-all group"
-              >
-                <div className="relative w-full aspect-square bg-white rounded-lg flex items-center justify-center mb-3 overflow-hidden">
-                  <img
-                    src={`https://gunaybeauty-001-site1.ltempurl.com${product.primaryImageUrl}`}
-                    alt={product.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      e.target.src = '/Icons/logo.svg';
-                    }}
-                  />
-                  {product.isHotDeal && (
-                    <div className="absolute top-2 right-2 bg-[#E60C03] text-white text-xs px-2 py-1 rounded">
-                      Hot Deal
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {currentSearchResult.products.slice(0, 4).map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={(e) => onProductClick(e, product.id)}
+                    className="group bg-white rounded-xl cursor-pointer transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] ring-1 ring-gray-100 hover:ring-[#4A041D]/10 overflow-hidden"
+                  >
+                    <div className="relative aspect-square bg-gray-50/30 p-4 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={`https://kozmetik-001-site1.qtempurl.com/${product.primaryImageUrl}`}
+                        alt={product.name}
+                        className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
+                      />
+                      {product.discountPercentage > 0 && (
+                        <div className="absolute top-2 left-2 bg-[#4A041D] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          -{product.discountPercentage}%
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {product.discountPercentage > 0 && (
-                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                      -{product.discountPercentage}%
+
+                    <div className="p-3">
+                      <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1 line-clamp-1">{product.categoryName}</p>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5em] leading-snug group-hover:text-[#4A041D] transition-colors">
+                        {product.name}
+                      </h4>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-sm font-bold text-[#C5A059]">{product.currentPrice} ₼</span>
+                        {product.originalPrice > product.currentPrice && (
+                          <span className="text-xs text-gray-300 line-through decoration-gray-300">{product.originalPrice} ₼</span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-gray-800 font-medium text-sm mb-1 line-clamp-2 min-h-[40px] font-sans">
-                    {product.name}
-                  </h4>
-                  <p className="text-gray-400 text-xs mb-2 truncate">
-                    {product.categoryName?.replace(/-/g, ' ')}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[#E60C03] font-bold text-base">
-                      {product.currentPrice.toLocaleString()} AZN
-                    </span>
-                    {product.discountPercentage > 0 && (
-                      <span className="text-gray-400 text-xs line-through">
-                        ${product.originalPrice.toLocaleString()}
-                      </span>
-                    )}
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          {currentSearchResult.products.length > 4 && (
-            <button
-              onClick={onViewAllProducts}
-              className="block w-full text-center mt-4 py-2 text-[#E60C03] hover:text-red-700 font-medium text-sm transition-colors"
-            >
-              View all {currentSearchResult.products.length} products →
-            </button>
+            </>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

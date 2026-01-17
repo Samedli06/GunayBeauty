@@ -21,7 +21,7 @@ const EditBrandUI = ({ item, setOpen }) => {
 
       // Set existing image preview
       if (item.logoUrl) {
-        setImagePreview(`https://gunaybeauty-001-site1.ltempurl.com${item.logoUrl}`);
+        setImagePreview(`https://kozmetik-001-site1.qtempurl.com/${item.logoUrl}`);
       }
     }
   }, [item]);
@@ -70,7 +70,7 @@ const EditBrandUI = ({ item, setOpen }) => {
 
   const removeImage = () => {
     setImageFile(null);
-    setImagePreview(item?.logoUrl ? `https://gunaybeauty-001-site1.ltempurl.com${item.logoUrl}` : null);
+    setImagePreview(item?.logoUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.logoUrl}` : null);
   };
 
   return (

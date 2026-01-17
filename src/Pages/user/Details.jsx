@@ -207,7 +207,7 @@ function Details() {
       const headers = { 'Accept': '*/*' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(`https://gunaybeauty-001-site1.ltempurl.com/api/v1/product-pdfs/download/product/${product.id}`, {
+      const response = await fetch(`https://kozmetik-001-site1.qtempurl.com//api/v1/product-pdfs/download/product/${product.id}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',
@@ -245,9 +245,11 @@ function Details() {
         await addCartItem({ productId: id, quantity: quantity }).unwrap();
       } else {
         CartUtils.addItem(product, quantity);
-        window.dispatchEvent(new Event("cartUpdated"));
+        // Dispatch event is already handled in CartUtils.addItem but good to be explicit if using hook too
+        // window.dispatchEvent(new Event("cartUpdated")); // Handled in CartUtils
       }
       setShowSuccess(true);
+      window.dispatchEvent(new Event('cartAnimation'));
     } catch (err) {
       console.error('Failed to add product to cart:', err);
       toast.error("Failed to add product to cart");
@@ -343,8 +345,8 @@ function Details() {
 
   const currentProduct = translatedProduct || product;
   const features = getFeatures(currentProduct, productSpec);
-  const productImageUrl = product?.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${product.imageUrl}` : '/Icons/logo.svg';
-  const productImages = product?.images ? product.images.map(img => `https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`) : [];
+  const productImageUrl = product?.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${product.imageUrl}` : '/Icons/logo.svg';
+  const productImages = product?.images ? product.images.map(img => `https://kozmetik-001-site1.qtempurl.com/${img.imageUrl}`) : [];
 
   const productForSEO = product ? {
     ...product,
@@ -396,7 +398,7 @@ function Details() {
 
           <div className="w-full h-full flex items-center justify-center p-8">
             <img
-              src={`https://gunaybeauty-001-site1.ltempurl.com${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
+              src={`https://kozmetik-001-site1.qtempurl.com/${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
               alt={product?.name}
               className="max-w-[90vw] max-h-[85vh] object-contain drop-shadow-2xl"
               onError={(e) => { e.target.src = "/Icons/logo.svg"; }}
@@ -406,7 +408,7 @@ function Details() {
       )}
 
       {/* Main Content */}
-      <div className="max-w-[95vw] mx-auto px-4 md:px-8 pb-16 pt-6">
+      <div className="max-w-[95vw]  mx-auto px-4 md:px-8 pb-16 pt-6">
         <div className="mb-6">
           <Breadcrumb productData={product} />
         </div>
@@ -437,15 +439,15 @@ function Details() {
                     onMouseEnter={() => setHovered(img.imageUrl)}
                     className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${hovered === img.imageUrl ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
                   >
-                    <img src={`https://gunaybeauty-001-site1.ltempurl.com${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
+                    <img src={`https://kozmetik-001-site1.qtempurl.com/${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
                   </div>
                 ))}
               </div>
 
               {/* Main Image Display */}
-              <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] min-h-[300px] lg:min-h-[600px] lg:h-[700px] flex items-center justify-center relative group">
+              <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] min-h-[300px] lg:min-h-[500px]  lg:max-h-[700px] flex items-center justify-center relative group">
                 <img
-                  src={hovered ? `https://gunaybeauty-001-site1.ltempurl.com${hovered}` : productImageUrl}
+                  src={hovered ? `https://kozmetik-001-site1.qtempurl.com/${hovered}` : productImageUrl}
                   alt={product.name}
                   className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
                   onClick={() => {
@@ -518,15 +520,15 @@ function Details() {
                   <button
                     onClick={handleAddToCart}
                     disabled={!isInStock || isAddingToCart}
-                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-lg shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-md shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={20} />}
+                    {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={21} />}
                     {t('addToCart')}
                   </button>
                   <button
                     onClick={() => setShowQuickOrderModal(true)}
                     disabled={!isInStock}
-                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-md transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {t('buyNow')}
                   </button>

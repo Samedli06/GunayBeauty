@@ -79,7 +79,7 @@ const BannerSlider = () => {
               <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full   relative">
                 <img
                   className="w-full object-cover md:rounded-lg lg:h-full  h-[26vh] md:h-[40vh] lg:p-2"
-                  src={`https://gunaybeauty-001-site1.ltempurl.com${banner.imageUrl}`}
+                  src={`https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
                     e.target.src = '/Icons/logo.svg';
@@ -165,8 +165,8 @@ const BannerSlider = () => {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${currentSlide === index
-                      ? 'bg-white shadow-lg scale-110'
-                      : 'bg-white/60 hover:bg-white/80'
+                    ? 'bg-white shadow-lg scale-110'
+                    : 'bg-white/60 hover:bg-white/80'
                     }`}
                 />
               ))}

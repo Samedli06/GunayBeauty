@@ -1,167 +1,217 @@
-import { ArrowRight } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router';
-import InfiniteBrandSlider from '../../components/UI/BrandSlider';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShieldCheck, Users, CreditCard, Sparkles, Star, Heart } from 'lucide-react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import SEO from '../../components/SEO/SEO';
 
 const About = () => {
   const { t } = useTranslation();
-  const [expanded, setExpanded] = useState(false);
-  const software = useRef(null);
-  const secure = useRef(null);
 
-  // Make left one match right one's height
   useEffect(() => {
-    if (software.current && secure.current) {
-      const softwareHeight = software.current.offsetHeight;
-      secure.current.style.height = `${softwareHeight}px`;
-    }
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic',
+    });
   }, []);
+
   return (
     <>
       <SEO
-        title="About Us - Smart Team Electronics"
-        description="Learn about Smart Team Electronics - your trusted partner for premium electronics in Azerbaijan. We offer quality products, excellent service, and innovative solutions including HEMPOS software installation."
-        keywords="about smart team, electronics store Azerbaijan, hempos, smart team electronics, company information"
+        title="Haqqımızda - Günay Beauty Store"
+        description="Günay Beauty Store - Lüks və orijinal gözəllik məhsullarının ünvanı."
+        keywords="about gunay beauty, cosmetics baku, luxury beauty store, original makeup"
         image="/Icons/logo.svg"
         type="website"
       />
-      <section className='bg-[#F7FAFC] pt-5 inter'>
-        <div className='flex flex-col p-12 md:p-7 md:pb-13 bg-white border-1 md:gap-10  md:max-w-[90vw] md:mx-auto md:rounded-lg border-[#dee2e6] md:flex-row'>
 
-            <div className="relative md:order-2 md:flex-3">
-              <img className="rounded-lg w-full md:hidden" src="/Banners/aboutBanner.svg" alt="" />
-              <img className="rounded-lg  hidden md:block min-h-[250px] w-full object-cover" src="/Banners/aboutBannerDesk.svg" alt="" />
+      <div className="min-h-screen bg-white overflow-hidden" style={{ fontFamily: 'Montserrat, sans-serif' }}>
 
-              <div className="absolute left-[-6%] md:left-[-10%] bottom-[-6%] md:bottom-[-5%] md:min-w-[270px]  md:text-[11px] text-white rounded-lg 
-              border max-w-[280px] border-[#818686] bg-transparent backdrop-blur-[29px] p-4 w-[66%] md:w-[70%]  lg:text-[12px]   text-[6px] [@media(min-width:350px)]:text-[7px] [@media(min-width:360px)]:text-[8px] [@media(min-width:420px)]:text-[9px] [@media(min-width:460px)]:text-[11px] inter">
-                <p >
-                 {t('about.missionStatement')}
+        {/* Hero Section */}
+        <div className="relative h-[40vh] lg:h-[50vh] bg-[#4A041D] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 opacity-10 pattern-dots" />
+          <div
+            className="text-center z-10 px-4"
+            data-aos="fade-up"
+          >
+            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4 tracking-widest uppercase">
+              Haqqımızda
+            </h1>
+            <div className="w-24 h-1 bg-[#C5A059] mx-auto rounded-full" />
+            <p className="text-white/80 mt-4 text-sm lg:text-lg tracking-wider font-light">
+              Günay Beauty Store
+            </p>
+          </div>
+        </div>
+
+        {/* Intro Section */}
+        <section className="py-16 lg:py-24 max-w-[1440px] mx-auto px-4 lg:px-12">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <div
+              className="lg:w-1/2 relative"
+              data-aos="fade-right"
+            >
+              <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+                <img
+                  src="./deals/deal-1.jpg"
+                  alt="Gunay Beauty Store Interior"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=2670&auto=format&fit=crop'; }}
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 lg:-bottom-10 lg:-right-10 bg-white p-6 lg:p-8 rounded-xl shadow-xl max-w-[200px] lg:max-w-[280px]">
+                <p className="text-[#4A041D] font-bold text-lg lg:text-2xl mb-1">100%</p>
+                <p className="text-gray-500 text-xs lg:text-sm">Orijinal və Keyfiyyətli Məhsullar</p>
+              </div>
+            </div>
+
+            <div
+              className="lg:w-1/2"
+              data-aos="fade-left"
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-[#4A041D] mb-6 leading-tight">
+                Lüks və Müasir <br />
+                <span className="text-[#C5A059]">Gözəllik Mağazası</span>
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-6 text-lg">
+                Günay Beauty Store Bakıda fəaliyyət göstərən, orijinal və keyfiyyətli gözəllik məhsullarını təqdim edən lüks və müasir beauty mağazasıdır.
+              </p>
+              <p className="text-gray-600 leading-relaxed text-base border-l-4 border-[#C5A059] pl-6 italic">
+                "Məqsədimiz hər bir müştərinin öz gözəlliyini doğru, təhlükəsiz və etibarlı məhsullarla kəşf etməsinə kömək etməkdir."
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Philosophy & Brands Section */}
+        <section className="bg-[#4A041D] py-20 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059] opacity-5 blur-[100px] rounded-full" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white opacity-5 blur-[100px] rounded-full" />
+
+          <div className="max-w-[1440px] mx-auto px-4 lg:px-12 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+              <Sparkles className="w-10 h-10 text-[#C5A059] mx-auto mb-6" />
+              <h2 className="text-3xl lg:text-4xl font-bold mb-6">Fəlsəfəmiz</h2>
+              <p className="text-white/80 text-lg leading-relaxed">
+                Bizim üçün gözəllik sadəcə xarici görünüş deyil — bu, özünə qulluq, özünə inam və düzgün seçimdir.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {['Estée Lauder', 'Dior', 'NARS', 'Sephora'].map((brand, index) => (
+                <div
+                  key={brand}
+                  className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl text-center hover:bg-white/10 transition-colors duration-300 group"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <Star className="w-6 h-6 text-[#C5A059] mx-auto mb-4 group-hover:scale-110 transition-transform" />
+                  <h3 className="text-xl font-bold tracking-wider">{brand}</h3>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-white/60 mt-12 italic" data-aos="fade-in" data-aos-delay="400">
+              ...və digər premium markaların seçilmiş məhsullarını mağazamızda tapa bilərsiniz.
+            </p>
+          </div>
+        </section>
+
+        {/* Features / Why Choose Us */}
+        <section className="py-20 lg:py-28 bg-gray-50">
+          <div className="max-w-[1440px] mx-auto px-4 lg:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div
+                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-[#4A041D]"
+                data-aos="fade-up"
+                data-aos-delay="0"
+              >
+                <div className="w-14 h-14 bg-[#4A041D]/5 rounded-xl flex items-center justify-center mb-6">
+                  <ShieldCheck className="w-8 h-8 text-[#4A041D]" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">100% Orijinal</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  Bütün məhsullarımız 100% orijinaldır və etibarlı mənbələrdən təmin edilir. Keyfiyyətə tam zəmanət veririk.
+                </p>
+              </div>
+
+              <div
+                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-[#C5A059]"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <div className="w-14 h-14 bg-[#C5A059]/10 rounded-xl flex items-center justify-center mb-6">
+                  <Users className="w-8 h-8 text-[#C5A059]" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Peşəkar Komanda</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  Təcrübəli komandamız seçim zamanı sizə fərdi yanaşma ilə kömək edir və ehtiyaclarınıza ən uyğun məhsulları tövsiyə edir.
+                </p>
+              </div>
+
+              <div
+                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-[#4A041D]"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                <div className="w-14 h-14 bg-[#4A041D]/5 rounded-xl flex items-center justify-center mb-6">
+                  <CreditCard className="w-8 h-8 text-[#4A041D]" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Rahat Ödəniş</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  Müştərilərimiz üçün rahat alış təcrübəsi yaratmaq məqsədilə nağd və daxili kreditlə ödəniş imkanları təqdim edirik.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="py-20 max-w-[1440px] mx-auto px-4 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Mission */}
+            <div
+              className="bg-[#FFF8F8] rounded-3xl p-10 lg:p-16 relative overflow-hidden group"
+              data-aos="fade-right"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFE4E4] rounded-full blur-[80px] -mr-32 -mt-32 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-white rounded-full shadow-sm">
+                    <Heart className="w-6 h-6 text-[#E60C03]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#4A041D]">Missiyamız</h3>
+                </div>
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  Missiyamız hər kəs üçün gözəllik baxımını daha əlçatan, zövqlü və etibarlı etməkdir. İstər gündəlik dəriyə qulluq, istər peşəkar makiyaj, istərsə də xüsusi günlər üçün məhsul axtarışında olun — Günay Beauty Store olaraq hər zaman yanınızdayıq.
                 </p>
               </div>
             </div>
 
-
-            <div className='mt-15 md:mt-0 text-center flex flex-col md:flex-4 md:items-start md:text-start items-center md:order-1'>
-                <h1 className='text-2xl font-semibold mb-4 '>{t('about.whoWeAre')}</h1>
-                <span
-                  className={`text-[#505050] md:line-clamp-none md:text-sm lg:text-lg max-w-[550px] ${expanded ? "" : "line-clamp-4 "}`}
-                >
-                {t('about.companyDescription')}
-                </span>
-            
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="text-[#e60c03] ml-1 font-medium md:hidden"
-                >
-                  {expanded ? t('about.less') : t('about.more')}
-                </button>
+            {/* Vision */}
+            <div
+              className="bg-[#FDFBF6] rounded-3xl p-10 lg:p-16 relative overflow-hidden group"
+              data-aos="fade-left"
+            >
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#F5E6CC] rounded-full blur-[80px] -ml-32 -mb-32 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-white rounded-full shadow-sm">
+                    <Star className="w-6 h-6 text-[#C5A059]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#C5A059]">Vizyonumuz</h3>
+                </div>
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  Vizyonumuz Azərbaycanda lüks gözəllik pərakəndəçiliyində etibarlı, sevilən və ilham verən bir marka olmaq, müştərilərimiz üçün sadəcə mağaza deyil, gözəllik təcrübəsi yaratmaqdır.
+                </p>
+              </div>
             </div>
-            
-
-            
-        </div>
-
-         <section className="md:mt-12   md:max-w-[90vw] md:mx-auto lg:mx-auto">
-          <InfiniteBrandSlider />
+          </div>
         </section>
 
-
-        <div className='flex flex-col md:grid lg:flex lg:flex-row md:grid-cols-2 gap-4 max-w-[90vw] mx-auto mt-8'>
-            <div className='flex flex-1 bg-white rounded-lg border-2 border-[#dee2e6] p-5 py-7 md:py-3 md:min-h-[140px]'>
-                <img className='mr-7 ml-2 md:mr-3  md:w-[55px] md:h-[55px] md:object-contain shrink-0  md:self-center' src="/Icons/about1.svg" alt="" />
-
-                <div className='flex flex-col justify-center  items-center'>
-                    <h1 className='text-md font-semibold self-start '>{t('about.whoWeAreTitle')}</h1>
-                    <p className='text-[#505050] text-xs md:text-base'>{t('about.whoWeAreDesc')}</p>
-                </div>
-
-            </div>
-
-            <div className='flex flex-1  bg-white rounded-lg border-2 border-[#dee2e6] p-5 py-7 md:py-3 md:min-h-[140px]'>
-                <img className='mr-7 md:mr-3  md:w-[55px] shrink-0 md:self-center' src="/Icons/about2.svg" alt="" />
-
-                <div className='flex flex-col justify-center items-center'>
-                    <h1 className='text-md font-semibold self-start'>{t('about.whatWeDo')}</h1>
-                    <p className='text-[#505050] text-xs md:text-base'>{t('about.whatWeDoDesc')}</p>
-                </div>
-
-            </div>
-
-            <div className='flex flex-1  bg-white rounded-lg border-2 border-[#dee2e6] p-5 py-7 md:py-3 md:min-h-[140px]'>
-                <img className='mr-7 md:mr-3  md:w-[55px] shrink-0 md:self-center' src="/Icons/about3.svg" alt="" />
-
-                <div className='flex flex-col justify-center items-center'>
-                    <h1 className='text-md font-semibold self-start'>{t('about.ourMission')}</h1>
-                    <p className='text-[#505050] text-xs md:text-base'>{t('about.ourMissionDesc')}</p>
-                </div>
-
-            </div>
-        </div>
-        <div className="pb-10 pt-18 max-w-[90vw] mx-auto text-2xl font-semibold">
-          <h1>{t('about.extraServices')}</h1>
-        </div>
-            
-        <div className="max-w-[90vw] mx-auto pb-25 flex flex-col md:flex-row md:gap-4">
-          <Link
-          ref={secure}
-          to="/secure"
-          className="flex-1 h-fit cursor-pointer bg-white rounded-lg border-2 border-gray-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400"
-        >
-          <img
-            className="w-full rounded-t-md h-[190px] lg:h-[220px] object-cover"
-            src="./deals/security-system-monitoring.jpg"
-            alt=""
-          />
-          <div className="relative bg-white p-5 pb-4 ">
-            <h1 className="font-semibold text-xl">{t('about.securitySystems')}</h1>
-            <p className="text-[#505050] text-sm mt-3 font-medium">
-              {t('about.securitySystemsDesc')}
-            </p>
-          </div>
-          <div className="bg-white p-7 pt-0 flex justify-end rounded-b-lg">
-            <button className="flex self-end cursor-pointer items-center gap-4 border-1 border-[#dee2e6] rounded-full p-3 py-2">
-              {t('about.learnMore')}
-              <div className="p-1 bg-[#FF4B43] rounded-full ">
-                <ArrowRight size={18} color="white" />
-              </div>
-            </button>
-          </div>
-          </Link>
-            
-          <Link
-            ref={software}
-            to="/software"
-            className="flex-1 bg-white rounded-lg border-2 mt-4 md:mt-0 border-gray-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gray-400"
-          >
-            <img
-              className="w-full rounded-t-md h-[190px] lg:h-[220px] object-contain p-4"
-              src="./deals/hem.png"
-              alt=""
-            />
-            <div className="relative bg-white p-5 pb-4 ">
-              <h1 className="font-semibold text-xl">
-                {t('about.hemsoftInstallation')}
-              </h1>
-              <p className="text-[#505050] text-sm mt-3 font-medium">
-                {t('about.hemsoftDesc')}
-              </p>
-            </div>
-            <div className="bg-white p-7 pt-0 flex justify-end rounded-b-lg">
-              <button className="flex cursor-pointer self-end items-center gap-4 border-1 border-[#dee2e6] rounded-full p-3 py-2">
-                {t('about.learnMore')}
-                <div className="p-1 bg-[#FF4B43] rounded-full ">
-                  <ArrowRight size={18} color="white" />
-                </div>
-              </button>
-            </div>
-          </Link>
-        </div>
-
-    </section>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default About
+export default About;

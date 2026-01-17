@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import icons from '../../../public/Icons/icons.jpg';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import { FaInstagram, FaTiktok } from 'react-icons/fa';
 
 const Footer = () => {
     const [open, setOpen] = useState(false);
@@ -79,11 +80,11 @@ const Footer = () => {
                             Discover your signature scent and embrace your beauty with our luxury collection.
                         </p>
                         <div className="flex gap-4">
-                            <a href="https://www.tiktok.com/@smartteam.az" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
-                                <img className="w-6 h-6 invert" src="/Icons/tiktok.svg" alt="TikTok" />
+                            <a href="https://www.tiktok.com/@gunaybeautystore1" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
+                                <FaTiktok className="w-6 h-6" />
                             </a>
-                            <a href="https://www.instagram.com/smart_team.az" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
-                                <img className="w-6 h-6 invert" src="/Icons/instagram.svg" alt="Instagram" />
+                            <a href="https://www.instagram.com/gunay_beauty_store_?igsh=MXFweW5hMDVkbjIyOA==" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
+                                <FaInstagram className="w-6 h-6" />
                             </a>
                         </div>
                     </div>
@@ -106,12 +107,12 @@ const Footer = () => {
                         <div className="flex flex-col gap-4 md:items-end">
                             <div className="flex items-center gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse">
                                 <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-phone.svg" alt="" />
-                                <span>+994 70 202 75 19</span>
+                                <span>+994 51 520 62 63</span>
                             </div>
                             <div className="flex items-start gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse text-right">
                                 <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-location.svg" alt="" />
                                 <div>
-                                    <p>28 may, Rəşid behbudov 66</p>
+                                    <p>Nərimanov rayonu. Fətəli Xan Xoyski 134</p>
                                 </div>
                             </div>
                         </div>

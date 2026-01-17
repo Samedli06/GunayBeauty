@@ -268,7 +268,7 @@ const ProductFilterAssignment = () => {
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
                             <img
-                              src={`https://gunaybeauty-001-site1.ltempurl.com/${product.primaryImageUrl}`}
+                              src={`https://kozmetik-001-site1.qtempurl.com//${product.primaryImageUrl}`}
                               alt={product.name}
                               className="w-12 h-12 rounded-lg object-cover bg-gray-600"
                               onError={(e) => {
@@ -376,8 +376,8 @@ const ProductFilterAssignment = () => {
                     <button
                       onClick={() => setAssignmentMode('single')}
                       className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${assignmentMode === 'single'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-400 hover:text-white'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-400 hover:text-white'
                         }`}
                     >
                       Tək məhsul
@@ -385,8 +385,8 @@ const ProductFilterAssignment = () => {
                     <button
                       onClick={() => setAssignmentMode('bulk')}
                       className={`px-4 py-2 rounded-md cursor-pointer font-medium transition-colors ${assignmentMode === 'bulk'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-400 hover:text-white'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-400 hover:text-white'
                         }`}
                     >
                       Toplu təyinat
@@ -449,8 +449,8 @@ const ProductFilterAssignment = () => {
                               key={product.id}
                               onClick={() => handleProductSelection(product.id)}
                               className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${selectedProducts.includes(product.id)
-                                  ? 'bg-blue-600 border-blue-500 text-white'
-                                  : 'bg-gray-700 border-gray-600 hover:bg-gray-600'
+                                ? 'bg-blue-600 border-blue-500 text-white'
+                                : 'bg-gray-700 border-gray-600 hover:bg-gray-600'
                                 }`}
                             >
                               <div className="flex-shrink-0 w-4">
@@ -459,7 +459,7 @@ const ProductFilterAssignment = () => {
                                 )}
                               </div>
                               <img
-                                src={`https://gunaybeauty-001-site1.ltempurl.com/${product.primaryImageUrl}`}
+                                src={`https://kozmetik-001-site1.qtempurl.com//${product.primaryImageUrl}`}
                                 alt={product.name}
                                 className="w-10 h-10 rounded-lg object-cover bg-gray-600"
                                 onError={(e) => {

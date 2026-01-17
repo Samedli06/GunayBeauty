@@ -1,9 +1,7 @@
 {
-
   "dealsDescriptionLine1": "Get the hottest discounts on top",
   "dealsDescriptionLine2": "electronics — limited-time offers",
   "dealsDescriptionLine3": "you don't want to miss!",
-
   "home": "Home",
   "aboutPage": "About Us",
   "downloadPage": "Download Program",
@@ -15,7 +13,6 @@
   "searchProducts": "Search products...",
   "featuredBrands": "Featured Brands",
   "products": "Products",
-
   "menu": {
     "home": "Home",
     "about": "About",
@@ -23,8 +20,9 @@
     "contact": "Contact Us",
     "login": "Login"
   },
-
   "categories": "Categories",
+  "noSubcategoriesAvailable": "No subcategories available",
+  "hoverForSubcategories": "Hover over a category to see subcategories",
   "networkEquipmentTitle": "Network Equipment",
   "networkEquipmentDesc": "Reliable routers, switches, and cabling systems for fast, stable, and secure connectivity. Scalable solutions to keep your business connected and future-ready.",
   "computers": "Computers",
@@ -44,7 +42,6 @@
   "hotDeals": "Hot Deals",
   "location": "Location",
   "failedAddToCart": "Failed to add product to cart",
-
   "footer": {
     "desc1": "Our company provides sales and installation",
     "desc2": "services for computers, office equipment, and",
@@ -63,8 +60,6 @@
     "langEnglish": "English",
     "langAzerbaijani": "Azerbaijani"
   },
-
-
   "itemsFound": "items",
   "inCategory": "in",
   "noProductsFound": "No products found",
@@ -76,7 +71,6 @@
   "nameZToA": "Name: Z to A",
   "pleaseLoginFirst": "Please log in first",
   "failedUpdateFavorites": "Failed to update favorites",
-
   "signInRequired": "Sign In Required",
   "signInRequiredMessage": "You need to be logged in to {{action}}. Please sign in or create an account to continue.",
   "signIn": "Sign In",
@@ -86,7 +80,6 @@
   "addedToCart": "Added to cart",
   "addToCart": "Add to cart",
   "brands": "Brands",
-
   "about": {
     "whoWeAre": "Who we are?",
     "companyDescription": "Smartteam is a professional company engaged in the import of commercial equipment, computers, and electronic products. Throughout our operations, we have strengthened our position in the market by providing our customers with reliable, high-quality, and innovative products. By constantly keeping up with technological advancements, we aim to add value to our partners and customers.",
@@ -106,7 +99,6 @@
     "hemsoftInstallation": "Hemsoft Software Installation",
     "hemsoftDesc": "The Hemsoft software, provided by Smartteam, is a modern POS and management system..."
   },
-
   "profile": {
     "profile": "Profile",
     "myDetails": "My details",
@@ -140,7 +132,6 @@
     "vip": "VIP",
     "unknownRole": "Unknown Role"
   },
-
   "secure": {
     "smartPosTitle": "Smart POS & Management with Hemsoft",
     "hemsoftDesc": "The Hemsoft software, provided by Smartteam, is a modern POS and management system specially designed for your business. Take your business to the next level with Hemsoft.",
@@ -156,7 +147,6 @@
     "continuousAssistance": "Continuous Assistance & Updates",
     "continuousAssistanceDesc": "Enjoy reliable technical support and regular updates to keep your system running at its best."
   },
-
   "quickOrder": {
     "title": "Quick Order",
     "fullName": "Full Name",
@@ -173,7 +163,6 @@
     "pleaseEnterPhone": "Please enter your customer phone",
     "orderFailed": "Failed to place order. Please try again."
   },
-
   "download": {
     "failedToLoad": "Failed to load files. Please try again later.",
     "noFilesAvailable": "No files available for download yet.",
@@ -181,14 +170,12 @@
     "clickToDownload": "Click to download",
     "downloadFailed": "Failed to download file. Please try again."
   },
-
   "contact": {
     "contactUs": "Contact Us",
     "phoneNumber": "Phone number",
     "email": "Email",
     "socialMedia": "Watch us from our social media accounts"
   },
-
   "admin": {
     "users": "Users",
     "manageUsers": "Manage user accounts and permissions",
@@ -204,7 +191,6 @@
     "brandDeletedSuccess": "Brand deleted successfully",
     "deletingBrandFailed": "Deleting Brand Failed"
   },
-
   "filters": {
     "filters": "Filters",
     "category": "Category",
@@ -216,7 +202,6 @@
     "clearFilters": "Clear Filters",
     "showResults": "Show Results"
   },
-
   "yourCartIsEmpty": "Your cart is empty",
   "addItemsToStart": "Add some items to get started",
   "remove": "Remove",
@@ -233,7 +218,6 @@
   "quantity": "Quantity",
   "price": "Price",
   "totalAmount": "Total Amount",
-
   "features": {
     "title": "Features",
     "name": "Name",
@@ -247,7 +231,6 @@
     "yes": "Yes",
     "no": "No"
   },
-
   "software": {
     "title": "Protect Your Space with Advanced Technology",
     "description": "We provide reliable protection for your workplace and living spaces through security systems built on modern technologies.",
@@ -263,7 +246,6 @@
     "fireAlarmSystem": "Fire Alarm & Signaling Systems",
     "fireAlarmSystemDesc": "Ensure quick response to emergencies."
   },
-
   "brandsSection": {
     "searchPlaceholder": "Search brands...",
     "showing": "Showing",
@@ -279,9 +261,6 @@
   "itemAddedToCart": "Item added to cart",
   "itemRemoved": "Item removed",
   "cartCleared": "Cart cleared",
-
-
-
   "favoritesEmpty": "Your favorites list is empty",
   "favoritesEmptyHint": "Start adding products you love!",
   "clearAll": "Clear All",
@@ -299,7 +278,6 @@
   "failedToClearFavorites": "Failed to clear favorites",
   "recommendedForYou": "Recommended for you",
   "description": "Description",
-
   "similarProd": "Similar Products",
   "sederek": "Sederek branch",
   "bayil": "Bayil Branch",
@@ -310,7 +288,6 @@
   "itemsFoundPr": "{{count}} items found",
   "inCategoryPr": "in",
   "allProducts": "All Products",
-
   "productsPage": {
     "hotDeals": "Hot Deals",
     "recommended": "Recommended",
@@ -331,7 +308,6 @@
     "category": "Category",
     "home": "Home"
   },
-
   "productCard": {
     "hotDeal": "Hot Deal",
     "save": "Save",
@@ -339,16 +315,9 @@
     "adding": "Adding...",
     "addToCart": "Add to the cart"
   },
-
   "pagination": {
     "previousPage": "Previous page",
     "page": "Page",
     "nextPage": "Next page"
   }
-  
-
-
-
-
-
 }

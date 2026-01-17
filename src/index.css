@@ -433,6 +433,7 @@ img {
 .animate-slide-in-bottom {
   animation: slideInBottom 0.6s ease-out forwards;
 }
+
 /* Luxury Redesign Utilities */
 :root {
   --luxury-burgundy: #4A041D;
@@ -440,8 +441,8 @@ img {
   --luxury-red-light: #9E2A2B;
   --luxury-gold: #C5A059;
   --premium-bg: linear-gradient(135deg, #FDFBF8 0%, #FFFFFF 100%);
-  --soft-shadow: 0 8px 30px rgba(0,0,0,0.06);
-  --hover-shadow: 0 15px 45px rgba(0,0,0,0.1);
+  --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  --hover-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
 }
 
 .bg-premium-gradient {
@@ -457,7 +458,7 @@ img {
   background: white;
   border-radius: 20px;
   box-shadow: var(--soft-shadow);
-  border: 1px solid rgba(0,0,0,0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
@@ -495,6 +496,7 @@ img {
     opacity: 0;
     transform: scale(0.98) translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -512,4 +514,63 @@ img {
 
 .group:hover .perfume-image-shadow {
   transform: scale(1.08) rotate(2deg);
+}
+
+/* Mobile Typography Overrides
+   Forces maximum font sizes on mobile to prevent "enormous" text 
+   Targeting devices up to 1024px (lg breakpoint)
+*/
+@media (max-width: 1024px) {
+
+  /* 1. Cap all Heading elements to text-lg (1.125rem) */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 2. Cap all large Tailwind utility classes to text-lg (1.125rem) */
+  /* This ensures that classes like text-5xl don't blow up on mobile */
+  .text-xl,
+  .text-2xl,
+  .text-3xl,
+  .text-4xl,
+  .text-5xl,
+  .text-6xl,
+  .text-7xl,
+  .text-8xl,
+  .text-9xl {
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 3. Ensure generic text is smaller than headings */
+  /* Using 0.95rem (approx 15px) - strictly lower than lg (18px) */
+  /* This targets body text that isn't already controlled by utility classes or constrained above */
+  p,
+  li,
+  a,
+  span,
+  button,
+  input,
+  select,
+  textarea,
+  label,
+  div {
+    /* Only apply max-size logic if it exceeds limits, but since we can't do logic in CSS, 
+       we trust the cascade. However, we want "rest" (body) to be lower than "lg". */
+  }
+
+  /* Explicitly size common text containers if they don't have overrides */
+  p,
+  li,
+  input,
+  label {
+    font-size: 0.95rem;
+    /* Soft rule, allows util classes like text-xs to override if needed */
+  }
 }

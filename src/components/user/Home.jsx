@@ -58,8 +58,8 @@ const Home = () => {
   const [hoveredCategorie, setHoveredCategorie] = useState(null)
   const [hoveredName, setHoveredName] = useState(null)
   const [activeCategorie, setActiveCategorie] = useState(null)
-  const { data: hotDeals, isLoading, error, refetch } = useGetHotDealsQuery({ limit: 12 });
-  const { data: recommended, isLoading: isRecommendedLoading } = useGetRecommendedQuery({ limit: 18 });
+  const { data: hotDeals, isLoading, error, refetch } = useGetHotDealsQuery({ limit: 8 });
+  const { data: recommended, isLoading: isRecommendedLoading } = useGetRecommendedQuery({ limit: 12 });
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
   const { t, i18n } = useTranslation();
 
@@ -298,7 +298,7 @@ const Home = () => {
                   <div className="w-full h-full flex items-center justify-center overflow-hidden">
                     <img
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                      src={item.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}` : getCategoryIcon(item.slug)}
+                      src={item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)}
                       alt={item.name}
                       onError={(e) => {
                         e.target.src = getCategoryIcon(item.slug);
@@ -368,7 +368,7 @@ const Home = () => {
               items={(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 8).map(item => ({
                 link: `/categories/${item.slug}`,
                 text: item.name,
-                image: item.imageUrl ? `https://gunaybeauty-001-site1.ltempurl.com${item.imageUrl}` : getCategoryIcon(item.slug)
+                image: item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)
               }))}
             />
           </div>
