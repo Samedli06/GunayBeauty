@@ -41,7 +41,7 @@ export const API = createApi({
     },
   }),
 
-  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth'],
+  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes'],
 
   endpoints: builder => ({
     // *AUTHENTICATION*
@@ -1080,6 +1080,23 @@ export const API = createApi({
       })
     }),
 
+    applyPromoCart: builder.mutation({
+      query: (body) => ({
+        url: '/api/v1/Cart/apply-promo',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Cart'],
+    }),
+
+    removePromoCart: builder.mutation({
+      query: () => ({
+        url: '/api/v1/Cart/promo',
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Cart'],
+    }),
+
     // Favorites
     addFavorite: builder.mutation({
       query: ({
@@ -1472,6 +1489,58 @@ export const API = createApi({
       }),
       invalidatesTags: ['Brands'],
     }),
+
+    // *PROMO CODES*
+    getPromoCodes: builder.query({
+      query: (params) => ({
+        url: '/api/v1/PromoCodes',
+        method: 'GET',
+        params,
+      }),
+      providesTags: ['PromoCodes'],
+    }),
+
+    getPromoCodeById: builder.query({
+      query: (id) => ({
+        url: `/api/v1/PromoCodes/${id}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, id) => [{ type: 'PromoCodes', id }],
+    }),
+
+    addPromoCode: builder.mutation({
+      query: (body) => ({
+        url: '/api/v1/PromoCodes',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['PromoCodes'],
+    }),
+
+    editPromoCode: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/api/v1/PromoCodes/${id}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['PromoCodes'],
+    }),
+
+    deletePromoCode: builder.mutation({
+      query: ({ id }) => ({
+        url: `/api/v1/PromoCodes/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['PromoCodes'],
+    }),
+
+    validatePromoCode: builder.mutation({
+      query: (body) => ({
+        url: '/api/v1/PromoCodes/validate',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -1575,6 +1644,8 @@ export const {
   useCreateWhatsappOrderMutation,
   useGetCartCountQuery,
   useQuickOrderMutation,
+  useApplyPromoCartMutation,
+  useRemovePromoCartMutation,
 
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
@@ -1592,5 +1663,11 @@ export const {
   useRemoveFileMutation,
   useUploadFileMutation,
   useDownloadFileMutation,
-  useDeleteProductImageMutation
+  useDeleteProductImageMutation,
+  useGetPromoCodesQuery,
+  useGetPromoCodeByIdQuery,
+  useAddPromoCodeMutation,
+  useEditPromoCodeMutation,
+  useDeletePromoCodeMutation,
+  useValidatePromoCodeMutation
 } = API;

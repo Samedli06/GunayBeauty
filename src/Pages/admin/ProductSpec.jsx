@@ -238,7 +238,7 @@ const ProductDetailPage = () => {
           {/* Product Management Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{product.name}</h1>
+              <h1 className="text-3xl font-bold !text-white mb-2">{product.name}</h1>
               <p className="text-gray-400">Slug: {product.slug}</p>
             </div>
 
@@ -265,7 +265,7 @@ const ProductDetailPage = () => {
 
             {/* Pricing Information */}
             <div className="bg-gray-800 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-semibold !text-white mb-3 flex items-center gap-2">
                 <DollarSign className="w-5 h-5" />
                 Qiymətlər
               </h3>
@@ -292,7 +292,7 @@ const ProductDetailPage = () => {
 
             {/* Inventory Information */}
             <div className="bg-gray-800 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h3 className="text-lg font-semibold !text-white mb-3 flex items-center gap-2">
                 <Package className="w-5 h-5" />
                 Anbar məlumatı
               </h3>
@@ -320,7 +320,7 @@ const ProductDetailPage = () => {
 
           {/* Product Details */}
           <div className="bg-gray-800 col-span-2 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3">Məhsul Məlumatları</h3>
+            <h3 className="text-lg font-semibold !text-white mb-3">Məhsul Məlumatları</h3>
             <div className="space-y-3">
               <div>
                 <p className="text-gray-400 text-sm">Kateqoriya</p>
@@ -342,7 +342,7 @@ const ProductDetailPage = () => {
           {/* Product Images Gallery */}
           {product.images && product.images.length > 0 && (
             <div className="bg-gray-800 col-span-2 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold !text-white mb-4 flex items-center gap-2">
                 <Package className="w-5 h-5" />
                 Məhsul şəkilləri ({product.images.length})
               </h3>
@@ -377,7 +377,7 @@ const ProductDetailPage = () => {
         {/* PDF Documents Section */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
+            <h2 className="text-2xl font-bold !text-white flex items-center gap-2">
               <FileText className="w-6 h-6" />
               Məhsul faylları
             </h2>
@@ -397,7 +397,7 @@ const ProductDetailPage = () => {
                         <FileText className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-white font-medium">
+                        <h3 className="!text-white font-medium">
                           {pdf.originalFileName || pdf.filename}
                         </h3>
                         {pdf.description && (
@@ -439,7 +439,7 @@ const ProductDetailPage = () => {
           ) : (
             <div className="text-center py-12">
               <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-400 mb-2">Heç bir sənəd yüklənməyib</h3>
+              <h3 className="text-xl font-semibold !text-white mb-2">Heç bir sənəd yüklənməyib</h3>
               <p className="text-gray-500">Məhsul sənədləri yükləndikdən sonra burada görünəcək</p>
             </div>
           )}
@@ -448,7 +448,7 @@ const ProductDetailPage = () => {
         {/* Specifications Section */}
         <div className="bg-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
+            <h2 className="text-2xl font-bold !text-white flex items-center gap-2">
               <Settings className="w-6 h-6" />
               Məhsul Spesifikasiyaları
             </h2>
@@ -508,7 +508,7 @@ const ProductDetailPage = () => {
             <div className="space-y-6">
               {specifications.specificationGroups.map((group, groupIndex) => (
                 <div key={groupIndex} className="bg-gray-700 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-white mb-3">{group.groupName}</h3>
+                  <h3 className="text-lg font-semibold !text-white mb-3">{group.groupName}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {group.items.map((item, itemIndex) => (
                       <div key={itemIndex} className="flex justify-between items-center py-2 border-b border-gray-600 last:border-b-0">
@@ -610,7 +610,7 @@ const ProductDetailPage = () => {
             // No Specifications State
             <div className="text-center py-12">
               <Settings className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-400 mb-2">Spesifikasiyalar əlavə edilməyib</h3>
+              <h3 className="text-xl font-semibold !text-white mb-2">Spesifikasiyalar əlavə edilməyib</h3>
               <p className="text-gray-500 mb-6">Məhsul idarəetməsini və müştəri məlumatını yaxşılaşdırmaq üçün ətraflı spesifikasiyalar əlavə edin</p>
             </div>
           )}

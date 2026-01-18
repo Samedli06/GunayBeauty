@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 const AddProductSpecifications = ({ setOpen, productId, productName }) => {
   const [addSpecs, { isLoading }] = useAddProductSpecificationsMutation();
-  
+
   const [specificationGroups, setSpecificationGroups] = useState([
     {
       groupName: '',
@@ -83,10 +83,10 @@ const AddProductSpecifications = ({ setOpen, productId, productName }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form
-    const isValid = specificationGroups.every(group => 
-      group.groupName.trim() !== '' && 
+    const isValid = specificationGroups.every(group =>
+      group.groupName.trim() !== '' &&
       group.items.every(item => item.name.trim() !== '' && item.value.trim() !== '')
     );
 
@@ -101,7 +101,7 @@ const AddProductSpecifications = ({ setOpen, productId, productName }) => {
         productId: productId,
         specificationGroups: specificationGroups
       }).unwrap();
-      
+
       toast.success('Məhsul spesifikasiyaları uğurla əlavə edildi!');
       setOpen();
     } catch (error) {
@@ -118,7 +118,7 @@ const AddProductSpecifications = ({ setOpen, productId, productName }) => {
           <div className="flex items-center gap-3">
             <Settings className="w-6 h-6 text-blue-400" />
             <div>
-              <h2 className="text-xl font-bold text-white">Məhsul spesifikasiyaları əlavə et</h2>
+              <h2 className="text-xl font-bold !text-white">Məhsul spesifikasiyaları əlavə et</h2>
               <p className="text-gray-400 text-sm">{productName}</p>
             </div>
           </div>

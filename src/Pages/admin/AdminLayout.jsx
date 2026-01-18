@@ -12,7 +12,7 @@ const AdminLayout = () => {
     return () => {
       document.body.classList.remove('dark-scrollbar');
     };
-  }, []); 
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-black">
@@ -22,7 +22,7 @@ const AdminLayout = () => {
         <header className="bg-black shadow-sm border-b border-gray-200 lg:pl-0 pl-16">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <h1 className="text-xl font-semibold text-gray-100">
+              <h1 className="text-xl font-semibold !text-white">
                 Admin Paneli
               </h1>
               <div className="flex items-center space-x-4">

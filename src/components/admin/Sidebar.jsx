@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Package, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store} from 'lucide-react';
+import { Menu, X, Package, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useLogoutMutation } from '../../store/API';
 import { PiFlagBanner } from 'react-icons/pi';
@@ -9,19 +9,20 @@ const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const [logout, { isLoading: isLoading }] = useLogoutMutation(); 
-  
+  const [logout, { isLoading: isLoading }] = useLogoutMutation();
 
-const menuItems = [
-  { icon: User, label: 'İstifadəçilər', active: false, to: '/admin' },
-  { icon: Package, label: 'Məhsullar', active: true, to: 'products' },
-  { icon: Grid3X3, label: 'Kateqoriyalar', active: false, to: 'category' },
-  { icon: PiFlagBanner, label: 'Bannerlər', active: false, to: 'banners' },
-  { icon: Filter, label: 'Filterlər', active: false, to: 'filters' },
-  { icon: Tags, label: 'Filter Təyinatı', active: false, to: 'product-filters' },
-  { icon: File, label: 'Fayl Təyinatı', active: false, to: 'file-management' },
-  { icon: Store, label: 'Brendlər', active: false, to: 'brands' },
-];
+
+  const menuItems = [
+    { icon: User, label: 'İstifadəçilər', active: false, to: '/admin' },
+    { icon: Package, label: 'Məhsullar', active: true, to: 'products' },
+    { icon: Grid3X3, label: 'Kateqoriyalar', active: false, to: 'category' },
+    { icon: PiFlagBanner, label: 'Bannerlər', active: false, to: 'banners' },
+    { icon: Filter, label: 'Filterlər', active: false, to: 'filters' },
+    { icon: Tags, label: 'Filter Təyinatı', active: false, to: 'product-filters' },
+    { icon: File, label: 'Fayl Təyinatı', active: false, to: 'file-management' },
+    { icon: Store, label: 'Brendlər', active: false, to: 'brands' },
+    { icon: Ticket, label: 'Promokodlar', active: false, to: 'promo-codes' },
+  ];
 
 
   const navHome = () => {
@@ -33,22 +34,22 @@ const menuItems = [
   const handleClick = async () => {
     try {
       const result = await logout().unwrap()
-    }catch {
-        toast.error(error?.data?.slice(1,100) || "Kateqoriyanın redaktəsi uğursuz oldu");
+    } catch {
+      toast.error(error?.data?.slice(1, 100) || "Kateqoriyanın redaktəsi uğursuz oldu");
 
     }
-     document.cookie.split(";").forEach(cookie => {
+    document.cookie.split(";").forEach(cookie => {
       document.cookie = cookie
         .replace(/^ +/, "")
         .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
     });
     navigate('/login')
-    
+
   }
   return (
     <>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={toggleSidebar}
         />
@@ -73,10 +74,10 @@ const menuItems = [
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <img className=' w-6 h-6 ' src="/Icons/logo2.png" alt="" />
               </div>
-              <h1 className="text-xl font-bold">Admin Paneli</h1>
+              <h1 className="text-xl font-bold !text-white">Admin Paneli</h1>
             </div>
           )}
-          
+
           <button
             onClick={toggleCollapse}
             className="hidden lg:block p-1 hover:bg-gray-700 rounded"
@@ -114,7 +115,7 @@ const menuItems = [
               </div>
             </div>
           )}
-          
+
           <button onClick={handleClick} className={`
             w-full flex items-center space-x-3 px-3 py-3 text-gray-300 hover:bg-red-600 hover:text-white rounded-lg transition-colors duration-200
             ${isCollapsed ? 'justify-center' : ''}

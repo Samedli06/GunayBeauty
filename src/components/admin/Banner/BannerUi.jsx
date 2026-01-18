@@ -232,7 +232,7 @@ const BannersUI = () => {
 
     return (
       <div className=" rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Yeni banner əlavə et</h2>
+        <h2 className="text-2xl font-bold !text-white mb-6">Yeni banner əlavə et</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -711,7 +711,7 @@ const BannersUI = () => {
 
     return (
       <div className=" rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Banneri redaktə et</h2>
+        <h2 className="text-2xl font-bold !text-white mb-6">Banneri redaktə et</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -1042,7 +1042,7 @@ const BannersUI = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-4xl font-bold text-white mb-2">Bannerlər</h2>
+            <h2 className="text-4xl font-bold !text-white mb-2">Bannerlər</h2>
             <p className="text-gray-400">Vebsayt bannerlərini idarə et</p>
           </div>
           <button
@@ -1089,7 +1089,7 @@ const BannersUI = () => {
                         <div>
                           <div className="flex justify-between items-start mb-4">
                             <div className="flex-1">
-                              <h3 className="text-2xl font-bold text-white mb-2">
+                              <h3 className="text-2xl font-bold !text-white mb-2">
                                 {banner.title}
                               </h3>
                               <p className="text-gray-400 text-base leading-relaxed">
@@ -1149,7 +1149,7 @@ const BannersUI = () => {
             {bannersD && bannersD.length === 0 && (
               <div className="text-center py-20">
                 <Image className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">Banner tapılmadı</h3>
+                <h3 className="text-xl font-semibold !text-white mb-2">Banner tapılmadı</h3>
                 <p className="text-gray-500 mb-6">İlk bannerinizi yaradaraq başlayın</p>
                 <button
                   onClick={() => setModalType("add")}

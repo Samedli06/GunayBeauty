@@ -270,7 +270,7 @@ const EditProduct = ({ setOpen, idPr }) => {
   return (
     <div className="bg-[#1f1f1f] text-white p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto dark-scrollbar">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Məhsulu redaktə et</h2>
+        <h2 className="text-2xl font-bold !text-white">Məhsulu redaktə et</h2>
       </div>
 
       <div className="space-y-6">

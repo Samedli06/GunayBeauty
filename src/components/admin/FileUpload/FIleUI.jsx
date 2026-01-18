@@ -7,7 +7,7 @@ const FileManagementPanel = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
-  
+
   const { data: files, isLoading: isFilesLoading, refetch } = useGetFilesQuery();
   const [removeFile, { isLoading: isRemoving }] = useRemoveFileMutation();
   const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
@@ -43,7 +43,7 @@ const FileManagementPanel = () => {
     if (file) {
       setSelectedFile(file);
       setFormData(prev => ({ ...prev, file }));
-      
+
       // Create preview URL for images
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
@@ -93,7 +93,7 @@ const FileManagementPanel = () => {
   const getFileIcon = (fileName) => {
     const ext = fileName?.split('.').pop()?.toLowerCase();
     const iconClass = "w-12 h-12";
-    
+
     if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) {
       return <File className={iconClass + " text-blue-400"} />;
     } else if (['pdf'].includes(ext)) {
@@ -120,10 +120,10 @@ const FileManagementPanel = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Fayl idarəetməsi</h1>
+            <h1 className="text-4xl font-bold !text-white mb-2">Fayl idarəetməsi</h1>
             <p className="text-gray-400 mt-1">Tətbiqiniz üçün yüklənə bilən faylları idarə edin</p>
           </div>
-          <button 
+          <button
             onClick={openModal}
             className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg flex items-center gap-2 hover:bg-gray-100 transition-all duration-200"
           >
@@ -146,8 +146,8 @@ const FileManagementPanel = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
               {files?.map((file) => (
-                <div 
-                  key={file.id} 
+                <div
+                  key={file.id}
                   className="bg-gray-700 rounded-lg p-6 border border-gray-600 hover:border-gray-500 transition-all duration-200 group"
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -177,10 +177,10 @@ const FileManagementPanel = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-white truncate" title={file.customFileName || file.fileName}>
+                    <h3 className="text-lg font-semibold !text-white truncate" title={file.customFileName || file.fileName}>
                       {file.originalFileName || file.fileName}
                     </h3>
-                    
+
                     {file.description && (
                       <p className="text-sm text-gray-400 line-clamp-2" title={file.description}>
                         {file.description}
@@ -218,8 +218,8 @@ const FileManagementPanel = () => {
             <div className="bg-gray-800 rounded-xl max-w-2xl w-full border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Yeni fayl yüklə</h2>
-                  <button 
+                  <h2 className="text-2xl font-bold !text-white">Yeni fayl yüklə</h2>
+                  <button
                     onClick={closeModal}
                     className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                   >
@@ -236,7 +236,7 @@ const FileManagementPanel = () => {
                       onChange={handleFileChange}
                       className="hidden"
                     />
-                    <label 
+                    <label
                       htmlFor="file-upload"
                       className="cursor-pointer flex flex-col items-center"
                     >
@@ -246,9 +246,9 @@ const FileManagementPanel = () => {
                           <p className="text-white font-medium">{selectedFile.name}</p>
                           <p className="text-sm text-gray-400">{formatFileSize(selectedFile.size)}</p>
                           {previewFile && (
-                            <img 
-                              src={previewFile} 
-                              alt="Preview" 
+                            <img
+                              src={previewFile}
+                              alt="Preview"
                               className="mt-4 max-h-48 rounded-lg mx-auto"
                             />
                           )}

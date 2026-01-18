@@ -35,6 +35,7 @@ import Brands from "../Pages/user/Brands";
 import Brand from "../Pages/admin/Brand";
 import ErrorPage from "../products/ErrorPage";
 import Categories from "../Pages/user/Categories";
+import PromoCodes from "../Pages/admin/PromoCodes";
 
 const Router = () => {
 
@@ -106,6 +107,7 @@ const Router = () => {
             <Route path="product-filters" element={<AssignFilter />} />
             <Route path="file-management" element={<FileManagementPanel />} />
             <Route path="brands" element={<Brand />} />
+            <Route path="promo-codes" element={<PromoCodes />} />
           </Route>
         </Routes>
       </SearchProvider>

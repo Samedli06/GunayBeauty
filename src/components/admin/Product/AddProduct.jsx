@@ -4,7 +4,7 @@ import { useAddDetailImagesMutation, useAddProductMutation, useGetCategoriesQuer
 import { toast } from "react-toastify";
 import { WiRefresh } from "react-icons/wi";
 
-const ProductFormUI = ({setOpen}) => {
+const ProductFormUI = ({ setOpen }) => {
 
   const { data: userRoles, error, isRolesLoading, refetch } = useGetUserRolesQuery();
 
@@ -20,7 +20,7 @@ const ProductFormUI = ({setOpen}) => {
   };
   const { data: categories, isLoading, errorC } = useGetCategoriesQuery();
   const [sortedCat, setSortedCat] = useState([]);
-  
+
   useEffect(() => {
     if (categories) {
       setSortedCat([...categories].sort((a, b) => a.name.localeCompare(b.name)));
@@ -28,12 +28,12 @@ const ProductFormUI = ({setOpen}) => {
   }, [categories]);
   const { data: brands, isLoading: isBrandsLoading } = useGetBrandsQuery();
   const { data: brand, isLoading: isBrandLoading } = useGetBrandQuery("1cd62de1-35cd-4d90-b767-dc1a443bdb3f");
-  const { data: brandPr, isLoading: is } = useGetProductsBrandQuery({brandSlug: "hp"});
+  const { data: brandPr, isLoading: is } = useGetProductsBrandQuery({ brandSlug: "hp" });
 
 
-  const { data: pdfs} = useGetProductPdfsQuery();
-  const [addProduct, { isLoading: isProductLoading }] = useAddProductMutation(); 
-  const [addDetailImages, { isLoading: isDetailLoading }] = useAddDetailImagesMutation(); 
+  const { data: pdfs } = useGetProductPdfsQuery();
+  const [addProduct, { isLoading: isProductLoading }] = useAddProductMutation();
+  const [addDetailImages, { isLoading: isDetailLoading }] = useAddDetailImagesMutation();
   const [addProductPdf, { isLoading: isPdfLoading }] = useAddProductPdfMutation();
 
   const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ const ProductFormUI = ({setOpen}) => {
       return {
         userRole: role,
         price,
-        discountedPrice: price, 
+        discountedPrice: price,
         discountPercentage: 0
       };
     })
@@ -61,12 +61,12 @@ const ProductFormUI = ({setOpen}) => {
 
 
   const [file, setFile] = useState(null);
-  const [files, setFiles] = useState([]); 
+  const [files, setFiles] = useState([]);
   const [pdfFile, setPdfFile] = useState(null);
   const [pdfDescription, setPdfDescription] = useState("");
   const [pdfCustomName, setPdfCustomName] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageUrls, setImageUrls] = useState([]); 
+  const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -96,11 +96,11 @@ const ProductFormUI = ({setOpen}) => {
   }, [files]);
 
   const handleFileUpload = (e) => {
-    const selectedFile = e.target.files[0]; 
+    const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
     setFile(selectedFile);
-    e.target.value = ""; 
+    e.target.value = "";
   };
 
   const handleMultipleFileUpload = (e) => {
@@ -108,7 +108,7 @@ const ProductFormUI = ({setOpen}) => {
     if (!selectedFiles || selectedFiles.length === 0) return;
 
     setFiles(prev => [...prev, ...selectedFiles]);
-    e.target.value = ""; 
+    e.target.value = "";
   };
 
   const handlePdfUpload = (e) => {
@@ -190,10 +190,10 @@ const ProductFormUI = ({setOpen}) => {
     try {
       const formDataToSend = new FormData();
       const productDataString = JSON.stringify(formData);
-      formDataToSend.append("productData", productDataString); 
+      formDataToSend.append("productData", productDataString);
       formDataToSend.append("imageFile", file, file.name);
 
-      
+
       // Add the product first
       const result = await addProduct(formDataToSend).unwrap();
 
@@ -207,7 +207,7 @@ const ProductFormUI = ({setOpen}) => {
 
         const resultDetail = await addDetailImages({
           id: result.id,
-          images: detailImagesFormData  
+          images: detailImagesFormData
         }).unwrap();
       }
 
@@ -216,15 +216,15 @@ const ProductFormUI = ({setOpen}) => {
         const pdfFormData = new FormData();
         pdfFormData.append("ProductId", result.id);
         pdfFormData.append("PdfFile", pdfFile, pdfFile.name);
-        
+
         if (pdfCustomName) {
           pdfFormData.append("CustomFileName", pdfCustomName);
         }
-        
+
         if (pdfDescription) {
           pdfFormData.append("Description", pdfDescription);
         }
-        
+
         pdfFormData.append("IsActive", "true");
 
         await addProductPdf({
@@ -273,11 +273,11 @@ const ProductFormUI = ({setOpen}) => {
   return (
     <div className="bg-[#1f1f1f] text-white p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto dark-scrollbar">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Yeni məhsul əlavə et</h2>
+        <h2 className="text-2xl font-bold !text-white">Yeni məhsul əlavə et</h2>
       </div>
 
       <div className="space-y-6">
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Product Name */}
           <div>
@@ -476,7 +476,7 @@ const ProductFormUI = ({setOpen}) => {
           </div>
 
           {/* Image Previews */}
-          {file && 
+          {file &&
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
               <div className="relative group">
                 <img
@@ -486,7 +486,7 @@ const ProductFormUI = ({setOpen}) => {
                 />
                 <button
                   type="button"
-                  onClick={() => {setFile(null)}}
+                  onClick={() => { setFile(null) }}
                   className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -523,7 +523,7 @@ const ProductFormUI = ({setOpen}) => {
           </div>
 
           {/* Multiple Image Previews */}
-          {files.length > 0 && 
+          {files.length > 0 &&
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
               {files.map((file, index) => (
                 <div key={index} className="relative group">
@@ -571,7 +571,7 @@ const ProductFormUI = ({setOpen}) => {
           </div>
 
           {/* PDF Preview and Details */}
-          {pdfFile && 
+          {pdfFile &&
             <div className="mt-4 space-y-4">
               <div className="flex items-center gap-3 p-4 bg-[#2c2c2c] rounded-md">
                 <FileText className="w-8 h-8 text-indigo-500" />

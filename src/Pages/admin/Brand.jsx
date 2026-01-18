@@ -35,7 +35,7 @@ const Brand = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">{t('admin.brands')}</h1>
+        <h1 className="text-2xl font-bold !text-white">{t('admin.brands')}</h1>
         <button
           onClick={() => setModalType("add")}
           className="px-6 py-3 font-semibold rounded-lg bg-white text-black hover:bg-gray-200 transition-all"
@@ -76,7 +76,7 @@ const Brand = () => {
                     alt=""
                   />
                   <div>
-                    <h2 className="text-lg font-medium">{brand.name}</h2>
+                    <h2 className="text-lg font-medium !text-white">{brand.name}</h2>
                     <p className="text-sm text-gray-400">{brand.slug || "slug"}</p>
                   </div>
                 </div>

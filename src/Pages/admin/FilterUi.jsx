@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, ChevronDown, ChevronUp, Save, X, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { 
-  useAddFilterMutation, 
-  useGetFiltersQuery, 
-  useRemoveFilterMutation, 
+import {
+  useAddFilterMutation,
+  useGetFiltersQuery,
+  useRemoveFilterMutation,
   useRemoveFilterOptionMutation,
   useUpdateFilterMutation,
-  useUpdateFilterOptionMutation 
+  useUpdateFilterOptionMutation
 } from '../../store/API';
 import { toast } from 'react-toastify';
 
 const FilterUi = () => {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); 
+  const [modalMode, setModalMode] = useState('add');
   const [loading, setLoading] = useState(false);
   const [expandedFilters, setExpandedFilters] = useState({});
 
@@ -65,7 +65,7 @@ const FilterUi = () => {
       setOriginalOptions(JSON.parse(JSON.stringify(opts))); // Deep clone for comparison
       setSelectedFilter(filter);
     } else {
-      setFormData({ name: '', value:"", type: 0, isActive: true, sortOrder: 0, options: [] });
+      setFormData({ name: '', value: "", type: 0, isActive: true, sortOrder: 0, options: [] });
       setOptions([]);
       setOriginalOptions([]);
       setSelectedFilter(null);
@@ -85,7 +85,7 @@ const FilterUi = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const parsed = type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value);
-    setFormData(prev => ({ ...prev, [name]: parsed })); 
+    setFormData(prev => ({ ...prev, [name]: parsed }));
   };
 
   const addOption = () => {
@@ -137,7 +137,7 @@ const FilterUi = () => {
             // Check if option was modified
             const original = originalOptions.find(o => o.id === option.id);
             const isModified = JSON.stringify(original) !== JSON.stringify(option);
-            
+
             if (isModified) {
               await updateFilterOption({
                 filterId: selectedFilter.id,
@@ -162,7 +162,7 @@ const FilterUi = () => {
 
         toast.success("Filtr uğurla yeniləndi!");
       }
-      
+
       refetch();
       closeModal();
     } catch (err) {
@@ -174,7 +174,7 @@ const FilterUi = () => {
 
   const deleteFilter = async (filterId) => {
     try {
-      await removeFilter({id: filterId}).unwrap();
+      await removeFilter({ id: filterId }).unwrap();
       toast.success("Filtr uğurla silindi");
       refetch();
     } catch (error) {
@@ -203,7 +203,7 @@ const FilterUi = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Filterlərin idarə edilməsi</h1>
+            <h1 className="text-4xl font-bold !text-white mb-2">Filterlərin idarə edilməsi</h1>
             <p className="text-gray-400 mt-1">Məhsul filtrlərini və onların seçimlərini idarə et</p>
           </div>
           <button onClick={() => openModal('add')} className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg flex items-center gap-2 hover:bg-gray-100 transition-all duration-200">
@@ -226,8 +226,8 @@ const FilterUi = () => {
 
                       <div>
                         <div className="flex items-center gap-3 mb-1">
-                          <h3 className="text-xl font-semibold text-white">{filter.name}</h3>
-                         </div>
+                          <h3 className="text-xl font-semibold !text-white">{filter.name}</h3>
+                        </div>
                       </div>
                     </div>
 
@@ -240,7 +240,7 @@ const FilterUi = () => {
 
                   {expandedFilters[filter.id] && Array.isArray(filter.options) && filter.options.length > 0 && (
                     <div className="mt-6 ml-12">
-                      <h4 className="font-semibold text-white mb-4 text-lg">Seçimlər ({filter.options.length})</h4>
+                      <h4 className="font-semibold !text-white mb-4 text-lg">Seçimlər ({filter.options.length})</h4>
                       <div className="space-y-3">
                         {filter.options.map((option) => (
                           <div key={option.id} className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
@@ -249,10 +249,10 @@ const FilterUi = () => {
                               <span className="text-gray-400 ml-3">({option.value})</span>
                             </div>
                             <div className="flex items-center gap-2">
-                           
-                              <button 
-                                onClick={() => deleteFilterOption(filter.id, option.id)} 
-                                className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-lg transform hover:scale-110 transition-all duration-200" 
+
+                              <button
+                                onClick={() => deleteFilterOption(filter.id, option.id)}
+                                className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-lg transform hover:scale-110 transition-all duration-200"
                                 title="Delete Option"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -275,7 +275,7 @@ const FilterUi = () => {
             <div className="bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">{modalMode === 'add' ? 'Yeni filtr əlavə et' : modalMode === 'edit' ? 'Filtri redaktə et' : 'Filter detalları'}</h2>
+                  <h2 className="text-2xl font-bold !text-white">{modalMode === 'add' ? 'Yeni filtr əlavə et' : modalMode === 'edit' ? 'Filtri redaktə et' : 'Filter detalları'}</h2>
                   <button onClick={closeModal} className="p-2 hover:bg-gray-700 rounded-lg transition-colors"><X className="w-5 h-5 text-gray-400" /></button>
                 </div>
 
@@ -331,7 +331,7 @@ const FilterUi = () => {
 
                   {modalMode !== 'view' && (
                     <div className="flex justify-end gap-4 pt-6 border-t border-gray-600">
-                        <button type="button" onClick={closeModal} className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition-colors">Ləğv et</button>
+                      <button type="button" onClick={closeModal} className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition-colors">Ləğv et</button>
                       <button type="button" onClick={handleSubmit} disabled={loading} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50 font-semibold transition-colors">
                         {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
                         <Save className="w-4 h-4" />

@@ -1,7 +1,17 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2, X, Loader2, Check, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router';
-import { useGetCartItemsQuery, useUpdateCartItemQuantityMutation, useRemoveCartItemMutation, useRemoveCartMutation, useGetMeQuery, useCreateWhatsappOrderMutation } from '../../store/API';
+import {
+  useGetCartItemsQuery,
+  useUpdateCartItemQuantityMutation,
+  useRemoveCartItemMutation,
+  useRemoveCartMutation,
+  useGetMeQuery,
+  useCreateWhatsappOrderMutation,
+  useApplyPromoCartMutation,
+  useRemovePromoCartMutation
+} from '../../store/API';
+import { Ticket, Tag } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../../i18n';
@@ -378,10 +388,16 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                   <span>- {(cartItems?.totalDiscount || 0).toFixed(2)} AZN</span>
                 </div>
               )}
+              {(cartItems?.promoCodeDiscountAmount || 0) > 0 && (
+                <div className="flex items-center justify-between text-sm text-green-600">
+                  <span>{t('promoDiscount') || 'Promo Discount'} ({cartItems.appliedPromoCode}):</span>
+                  <span>- {(cartItems?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
+                </div>
+              )}
               <div className="flex items-center justify-between pt-2 border-t border-gray-200">
                 <span className="font-medium text-gray-900">{t('total') || 'Total Amount'}:</span>
                 <span className="text-2xl font-bold text-gray-900">
-                  {(cartItems?.totalAmount || 0).toFixed(2)} AZN
+                  {(cartItems?.finalAmount || cartItems?.totalAmount || 0).toFixed(2)} AZN
                 </span>
               </div>
             </div>
@@ -445,6 +461,12 @@ const Cart = () => {
   const [removeCartItem] = useRemoveCartItemMutation();
   const [removeCart] = useRemoveCartMutation();
   const [createWPOrder] = useCreateWhatsappOrderMutation();
+  const [applyPromo] = useApplyPromoCartMutation();
+  const [removePromo] = useRemovePromoCartMutation();
+
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [isRemovingPromo, setIsRemovingPromo] = useState(false);
 
   const [removingItems, setRemovingItems] = useState(new Set());
   const [isRemovingCart, setIsRemovingCart] = useState(false);
@@ -675,6 +697,32 @@ const Cart = () => {
     }
   };
 
+  const handleApplyPromo = async () => {
+    if (!promoCodeInput.trim()) return;
+    try {
+      setIsApplyingPromo(true);
+      await applyPromo({ promoCode: promoCodeInput }).unwrap();
+      toast.success(t('promoApplied') || 'Promo code applied!');
+      setPromoCodeInput('');
+    } catch (error) {
+      toast.error(error?.data?.message || t('promoFailed') || 'Invalid promo code');
+    } finally {
+      setIsApplyingPromo(false);
+    }
+  };
+
+  const handleRemovePromo = async () => {
+    try {
+      setIsRemovingPromo(true);
+      await removePromo().unwrap();
+      toast.success(t('promoRemoved') || 'Promo code removed');
+    } catch (error) {
+      toast.error(t('promoRemoveFailed') || 'Failed to remove promo code');
+    } finally {
+      setIsRemovingPromo(false);
+    }
+  };
+
   if (isError) {
     return (
       <section className="inter bg-[#f7fafc] min-h-[80vh] flex items-center justify-center">
@@ -692,7 +740,7 @@ const Cart = () => {
         <Breadcrumb />
       </div>
 
-      <div className="min-h-[80vh] lg:max-w-[90vw] lg:mx-auto border-none lg:border-0">
+      <div className="min-h-[80vh] lg:max-w-[98vw] lg:mx-auto border-none lg:border-0">
         <div className='p-4 pl-7 pb-0 hidden lg:block'>
           <Breadcrumb />
         </div>
@@ -889,9 +937,61 @@ const Cart = () => {
                       <span>- {((translatedCartItems || cartItems)?.totalDiscount || 0).toFixed(2)} AZN</span>
                     </div>
                   )}
+
+                  {/* Promo Code Section */}
+                  {isAuthenticated && (
+                    <div className="pt-2">
+                      {!(translatedCartItems || cartItems)?.appliedPromoCode ? (
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <Ticket className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              type="text"
+                              placeholder={t('enterPromo') || "Promo code"}
+                              value={promoCodeInput}
+                              onChange={(e) => setPromoCodeInput(e.target.value)}
+                              className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg min-w-[150px] text-sm focus:outline-none focus:ring-1 focus:ring-[#4A041D]"
+                            />
+                          </div>
+                          <button
+                            onClick={handleApplyPromo}
+                            disabled={isApplyingPromo || !promoCodeInput.trim()}
+                            className="px-4 py-2 bg-[#4A041D] text-white rounded-lg text-sm font-semibold hover:bg-[#6D082D] transition-colors disabled:opacity-50"
+                          >
+                            {isApplyingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : t('apply') || 'Apply'}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-green-50 border border-green-100 rounded-xl">
+                          <div className="flex items-center gap-2">
+                            <Tag className="w-4 h-4 text-green-600" />
+                            <div>
+                              <p className="text-xs text-green-600 font-bold uppercase">{(translatedCartItems || cartItems)?.appliedPromoCode}</p>
+                              <p className="text-[10px] text-green-500">{(translatedCartItems || cartItems)?.promoCodeDiscountPercentage}% {t('discountApplied') || 'discount applied'}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={handleRemovePromo}
+                            disabled={isRemovingPromo}
+                            className="p-1.5 hover:bg-green-100 rounded-lg transition-colors"
+                          >
+                            {isRemovingPromo ? <Loader2 className="w-3 h-3 animate-spin text-green-600" /> : <X className="w-4 h-4 text-green-600" />}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {((translatedCartItems || cartItems)?.promoCodeDiscountAmount || 0) > 0 && (
+                    <div className="flex justify-between text-green-600 text-base font-medium">
+                      <span>{t('promoDiscount') || 'Promo Discount'}:</span>
+                      <span>- {((translatedCartItems || cartItems)?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-lg font-bold text-[#4A041D] pt-4">
                     <span>{t('total')}:</span>
-                    <span>{((translatedCartItems || cartItems)?.totalAmount || 0).toFixed(2)} AZN</span>
+                    <span>{((translatedCartItems || cartItems)?.finalAmount || (translatedCartItems || cartItems)?.totalAmount || 0).toFixed(2)} AZN</span>
                   </div>
                 </div>
 

@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next';
 const Users = () => {
     const { t } = useTranslation();
     const { data: users, error, isLoading, refetch } = useGetUsersQuery();
-    const { data: userRoles, isRolesLoading  } = useGetUserRolesQuery();
+    const { data: userRoles, isRolesLoading } = useGetUserRolesQuery();
     const { data: userStatistics, error: Serror, isLoading: SisLoading, refetch: refetchStatistics } = useGetUserStaticsQuery();
     const [deleteUser, { isDeleteLoading }] = useDeleteUserMutation();
     const [editRole, { isRoleLoading }] = useEditUserRoleMutation();
-    
+
     const [modalType, setModalType] = useState(null);
     const [edit, setEdit] = useState(null)
     const [activeDropdown, setActiveDropdown] = useState(null);
@@ -50,7 +50,7 @@ const Users = () => {
         setIsUpdatingRole(userId);
         try {
             const result = await editRole({ id: userId, role: newRole }).unwrap();
-            
+
             const roleLabel = availableRoles.find(r => r.key === newRole)?.label || newRole;
             toast.success(`Rolu uğurla dəyişdirildi: ${userRoles[newRole].name}`);
 
@@ -138,7 +138,7 @@ const Users = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">{t('admin.users')}</h1>
+                    <h1 className="text-2xl font-bold !text-white">{t('admin.users')}</h1>
                     <p className="text-gray-400 mt-1">{t('admin.manageUsers')}</p>
                 </div>
             </div>
@@ -148,7 +148,7 @@ const Users = () => {
                 <div className="bg-blue-600 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">{t('admin.totalUsers')}</h3>
+                            <h3 className="!text-white text-sm font-medium">{t('admin.totalUsers')}</h3>
                             <p className="text-3xl font-bold text-white mt-2">{userStatistics?.totalUsers}</p>
                         </div>
                         <div className="text-white/60">
@@ -160,7 +160,7 @@ const Users = () => {
                 <div className="bg-purple-600 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">{t('admin.admins')}</h3>
+                            <h3 className="!text-white text-sm font-medium">{t('admin.admins')}</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.adminUsers}
                             </p>
@@ -174,7 +174,7 @@ const Users = () => {
                 <div className="bg-blue-500 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">Ümumi istifadəçilər</h3>
+                            <h3 className="!text-white text-sm font-medium">Ümumi istifadəçilər</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.normalUsers}
                             </p>
@@ -188,7 +188,7 @@ const Users = () => {
                 <div className="bg-green-500 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">Topdan istifadəçilər</h3>
+                            <h3 className="!text-white text-sm font-medium">Topdan istifadəçilər</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.retailUsers}
                             </p>
@@ -202,7 +202,7 @@ const Users = () => {
                 <div className="bg-yellow-500 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">Diller istifadəçilər</h3>
+                            <h3 className="!text-white text-sm font-medium">Diller istifadəçilər</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.wholesaleUsers}
                             </p>
@@ -216,7 +216,7 @@ const Users = () => {
                 <div className="bg-pink-600 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-white/80 text-sm font-medium">Ekslüziv istifadəçilər</h3>
+                            <h3 className="!text-white text-sm font-medium">Ekslüziv istifadəçilər</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.vipUsers}
                             </p>
@@ -273,9 +273,9 @@ const Users = () => {
                                             alt={`${item.firstName} ${item.lastName}`}
                                         />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-1">{item.firstName} {item.lastName}</h3>
+                                    <h3 className="text-xl font-bold !text-white mb-1">{item.firstName} {item.lastName}</h3>
                                     <p className="text-gray-400 text-sm mb-3">{item.email}</p>
-                                    
+
                                     {/* Role Dropdown */}
                                     <div className="relative role-dropdown-container">
                                         <div
@@ -284,7 +284,7 @@ const Users = () => {
                                         >
                                             {isUpdatingRole === item.id ? (
                                                 <LoaderIcon className="w-3 h-3 animate-spin" />
-                                            ) : ( 
+                                            ) : (
                                                 <>
                                                     {React.createElement(getRoleIcon(item.roleName), { className: "text-xs" })}
                                                     <span>{availableRoles.find(r => r.key === item.roleName)?.label || item.roleName}</span>
@@ -292,18 +292,18 @@ const Users = () => {
                                                 </>
                                             )}
                                         </div>
-                                        
+
                                         {/* Dropdown Menu */}
                                         {activeDropdown === item.id && (
                                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-gray-700 border border-gray-600 rounded-lg shadow-xl z-50 overflow-hidden">
                                                 <div className="py-1">
                                                     {userRoles?.map(role => {
-                                                        
-                                                       
+
+
                                                         const roleConfig = availableRoles.find(r => r.key === role.name);
                                                         const IconComponent = roleConfig.icon;
                                                         const isCurrentRole = item.roleName === role.name;
-                                                        
+
                                                         return (
                                                             <button
                                                                 key={role.value}

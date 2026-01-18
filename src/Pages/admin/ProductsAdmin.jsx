@@ -118,7 +118,7 @@ const ProductsUI = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-4xl font-bold text-white mb-2">{t('admin.products')}</h2>
+            <h2 className="text-4xl font-bold !text-white mb-2">{t('admin.products')}</h2>
             <p className="text-gray-400">{t('admin.manageProducts')}</p>
           </div>
           <button
@@ -410,7 +410,7 @@ const ProductsUI = () => {
                     onClick={() => handleViewProduct(product)}
                   >
                     <div className="mb-3">
-                      <h3 className="text-lg font-semibold text-white mb-1 truncate hover:text-blue-400 transition-colors">
+                      <h3 className="text-lg font-semibold !text-white mb-1 truncate hover:text-blue-400 transition-colors">
                         {product.name}
                       </h3>
                       <p className="text-gray-400 text-sm truncate">
@@ -514,7 +514,7 @@ const ProductsUI = () => {
                 <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                 {searchQuery ? (
                   <>
-                    <h3 className="text-xl font-semibold text-gray-400 mb-2">Heç bir nəticə tapılmadı</h3>
+                    <h3 className="text-xl font-semibold !text-white mb-2">Heç bir nəticə tapılmadı</h3>
                     <p className="text-gray-500 mb-6">"{searchQuery}" üçün məhsul tapılmadı</p>
                     <button
                       onClick={() => setSearchQuery("")}
@@ -525,7 +525,7 @@ const ProductsUI = () => {
                   </>
                 ) : (
                   <>
-                    <h3 className="text-xl font-semibold text-gray-400 mb-2">Heç bir məhsul tapılmadı</h3>
+                    <h3 className="text-xl font-semibold !text-white mb-2">Heç bir məhsul tapılmadı</h3>
                     <p className="text-gray-500 mb-6">İlk məhsulunu əlavə etməklə başla</p>
                     <button
                       onClick={() => setModalType("add")}

@@ -176,7 +176,7 @@ const ProductFilterAssignment = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Məhsul Filtrinin Təyinatı</h1>
+            <h1 className="text-4xl font-bold !text-white mb-2">Məhsul Filtrinin Təyinatı</h1>
             <p className="text-gray-400 mt-1">Filtrləri məhsullara tək-tək və ya toplu şəkildə təyin et</p>
           </div>
           <button
@@ -196,7 +196,7 @@ const ProductFilterAssignment = () => {
                 <Package className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">{products?.length || 0}</h3>
+                <h3 className="text-2xl font-bold !text-white">{products?.length || 0}</h3>
                 <p className="text-gray-400">Ümumi məhsul sayı</p>
               </div>
             </div>
@@ -208,7 +208,7 @@ const ProductFilterAssignment = () => {
                 <Filter className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">{filters?.length || 0}</h3>
+                <h3 className="text-2xl font-bold !text-white">{filters?.length || 0}</h3>
                 <p className="text-gray-400">Mövcud filtrlər</p>
               </div>
             </div>
@@ -220,7 +220,7 @@ const ProductFilterAssignment = () => {
                 <Tags className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">
+                <h3 className="text-2xl font-bold !text-white">
                   {filters?.reduce((acc, f) => acc + (f.options?.length || 0), 0) || 0}
                 </h3>
                 <p className="text-gray-400">Ümumi seçimlər</p>
@@ -233,7 +233,7 @@ const ProductFilterAssignment = () => {
         <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 mb-8">
           <div className="p-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-              <h2 className="text-2xl font-bold text-white">Məhsul Filtrinin Təyinatıs</h2>
+              <h2 className="text-2xl font-bold !text-white">Məhsul Filtrinin Təyinatıs</h2>
               <div className="flex gap-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -361,7 +361,7 @@ const ProductFilterAssignment = () => {
             <div className="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Filtrləri məhsullara təyin et</h2>
+                  <h2 className="text-2xl font-bold !text-white">Filtrləri məhsullara təyin et</h2>
                   <button
                     onClick={closeModal}
                     className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
@@ -398,7 +398,7 @@ const ProductFilterAssignment = () => {
                   {/* Product Selection */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <h3 className="text-lg font-semibold !text-white flex items-center gap-2">
                         <Package className="w-5 h-5" />
                         Məhsulları seç
                       </h3>
@@ -483,7 +483,7 @@ const ProductFilterAssignment = () => {
                   {/* Filter Selection */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <h3 className="text-lg font-semibold !text-white flex items-center gap-2">
                         <Filter className="w-5 h-5" />
                         Filtr və seçim seç
                       </h3>
@@ -551,7 +551,7 @@ const ProductFilterAssignment = () => {
 
                     {/* Assignment Summary */}
                     <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                      <h4 className="text-sm font-medium text-gray-300 mb-2">Təyinat xülasəsi</h4>
+                      <h4 className="text-sm font-medium !text-white mb-2">Təyinat xülasəsi</h4>
                       <div className="space-y-1 text-sm">
                         <p className="text-white">
                           <span className="text-gray-400">Məhsullar:</span> {getSelectedProductsText()}
