@@ -471,8 +471,8 @@ function Products() {
                   const cardInfo = {
                     url: item.primaryImageUrl,
                     name: item.name,
-                    priceOriginal: item?.originalPrice,
-                    price: item?.currentPrice,
+                    priceOriginal: item?.price,
+                    price: item?.discountedPrice && item?.discountedPrice > 0 ? item.discountedPrice : item.price,
                     id: item.id,
                     description: item.shortDescription
                   };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Package, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket } from 'lucide-react';
+import { Menu, X, Package, ShoppingBag, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useLogoutMutation } from '../../store/API';
 import { PiFlagBanner } from 'react-icons/pi';
@@ -22,6 +22,7 @@ const SideBar = () => {
     { icon: File, label: 'Fayl Təyinatı', active: false, to: 'file-management' },
     { icon: Store, label: 'Brendlər', active: false, to: 'brands' },
     { icon: Ticket, label: 'Promokodlar', active: false, to: 'promo-codes' },
+    { icon: ShoppingBag, label: 'Sifarişlər', active: false, to: 'orders' },
   ];
 
 

@@ -28,11 +28,11 @@ export const CartUtils = {
   // Add item to cart
   addItem(product, quantity = 1) {
     const cart = this.getCart();
-    
+
     // Extract needed data from product
     const cartItem = {
-      id: uuidv4(), 
-      cartId: uuidv4(), 
+      id: uuidv4(),
+      cartId: uuidv4(),
       productId: product.id,
       productName: product.name,
       productSku: product.sku,
@@ -52,7 +52,7 @@ export const CartUtils = {
     if (existingItemIndex > -1) {
       // Update quantity and total price
       cart.items[existingItemIndex].quantity += quantity;
-      cart.items[existingItemIndex].totalPrice = 
+      cart.items[existingItemIndex].totalPrice =
         cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].unitPrice;
     } else {
       // Add new item
@@ -66,12 +66,10 @@ export const CartUtils = {
     return cart;
   },
 
-  // Get product price (uses first available price or discounted price if exists)
+  // Get product price (handles discounted price)
   getProductPrice(product) {
-    if (!product.prices || product.prices.length === 0) return 0;
-    
-    const price = product.prices[0];
-    return price.discountedPrice > 0 ? price.discountedPrice : price.price;
+    if (product.discountedPrice && product.discountedPrice > 0) return Number(product.discountedPrice);
+    return Number(product.price) || 0;
   },
 
   // Remove item from cart
@@ -87,14 +85,14 @@ export const CartUtils = {
   updateQuantity(itemId, quantity) {
     const cart = this.getCart();
     const item = cart.items.find(item => item.id === itemId);
-    
+
     if (item && quantity > 0) {
       item.quantity = quantity;
       item.totalPrice = item.quantity * item.unitPrice;
       cart.totalAmount = cart.items.reduce((sum, item) => sum + item.totalPrice, 0);
       this.saveCart(cart);
     }
-    
+
     return cart;
   },
 
@@ -116,16 +114,16 @@ const AddToCart = ({ product, quantity = 1, onSuccess, children, className }) =>
 
   const handleAddToCart = () => {
     setIsAdding(true);
-    
+
     try {
       const updatedCart = CartUtils.addItem(product, quantity);
-      
+
       // Call success callback if provided
       if (onSuccess) {
         onSuccess(updatedCart);
       }
 
-      
+
     } catch (error) {
       console.error('Error adding to cart:', error);
     } finally {

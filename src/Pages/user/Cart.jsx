@@ -9,7 +9,9 @@ import {
   useGetMeQuery,
   useCreateWhatsappOrderMutation,
   useApplyPromoCartMutation,
-  useRemovePromoCartMutation
+  useRemovePromoCartMutation,
+  API_BASE_URL,
+  useInitiatePaymentMutation
 } from '../../store/API';
 import { Ticket, Tag } from 'lucide-react';
 import { toast } from 'react-toastify';
@@ -228,7 +230,10 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     customerName: '',
-    customerPhone: ''
+    customerPhone: '',
+    customerEmail: '',
+    shippingAddress: '',
+    notes: ''
   });
   const [error, setError] = useState('');
 
@@ -252,6 +257,14 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
       setError('Please enter your phone number');
       return false;
     }
+    if (!formData.customerEmail.trim()) {
+      setError('Please enter your email address');
+      return false;
+    }
+    if (!formData.shippingAddress.trim()) {
+      setError('Please enter your shipping address');
+      return false;
+    }
     return true;
   };
 
@@ -267,7 +280,10 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
     if (!isSubmitting) {
       setFormData({
         customerName: '',
-        customerPhone: ''
+        customerPhone: '',
+        customerEmail: '',
+        shippingAddress: '',
+        notes: ''
       });
       setError('');
       onClose();
@@ -276,7 +292,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 backdrop-blur-sm bg-black/30 z-[9999] flex items-center justify-center p-4"
       onClick={handleClose}
     >
       <div
@@ -309,11 +325,11 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             {cartItems?.items?.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
                 <img
-                  src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
+                  src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
                   alt={item?.productName}
                   className="w-12 h-12 object-contain rounded bg-gray-50 p-1"
                   onError={(e) => {
-                    e.target.src = "/Icons/logo.svg"
+                    e.target.src = "/Icons/logo.jpeg"
                   }}
                 />
                 <div className="flex-1 min-w-0">
@@ -365,6 +381,54 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 disabled={isSubmitting || isSuccess}
                 placeholder="+994 XX XXX XX XX"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="customerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('payment.emailAddress') || 'Email Address'} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="customerEmail"
+                name="customerEmail"
+                value={formData.customerEmail}
+                onChange={handleInputChange}
+                disabled={isSubmitting || isSuccess}
+                placeholder="example@mail.com"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="shippingAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('payment.shippingAddress') || 'Shipping Address'} <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="shippingAddress"
+                name="shippingAddress"
+                value={formData.shippingAddress}
+                onChange={handleInputChange}
+                disabled={isSubmitting || isSuccess}
+                placeholder="Enter your full shipping address"
+                rows="2"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('payment.orderNotes') || 'Order Notes'}
+              </label>
+              <textarea
+                id="notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
+                disabled={isSubmitting || isSuccess}
+                placeholder="Any special instructions for delivery?"
+                rows="2"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
               />
             </div>
 
@@ -460,7 +524,7 @@ const Cart = () => {
   const [updateCartItemQuantity] = useUpdateCartItemQuantityMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
   const [removeCart] = useRemoveCartMutation();
-  const [createWPOrder] = useCreateWhatsappOrderMutation();
+  const [initiatePayment] = useInitiatePaymentMutation();
   const [applyPromo] = useApplyPromoCartMutation();
   const [removePromo] = useRemovePromoCartMutation();
 
@@ -524,56 +588,33 @@ const Cart = () => {
   }, [i18n.language, cartItems]);
 
   const handleCheckoutSubmit = async (formData) => {
+    console.log("🔥 checkout submit triggered");
     setIsOrderSubmitting(true);
 
     try {
-      const orderPayload = {
-        phoneNumber: "0506740649",
+      const paymentPayload = {
         customerName: formData?.customerName || me?.fullName,
+        customerEmail: formData?.customerEmail || me?.email,
         customerPhone: formData?.customerPhone.replace(/\D/g, '') || me?.phoneNumber,
-        items: cartItems?.items?.map(item => ({
-          id: item.id,
-          cartId: item.cartId,
-          productId: item.productId,
-          productName: item.productName,
-          productSku: item.productSku,
-          productDescription: item.productDescription,
-          productImageUrl: item.productImageUrl || "",
-          quantity: Number(item.quantity),
-          unitPrice: Number(item.unitPrice),
-          totalPrice: Number(item.totalPrice),
-          createdAt: new Date(item.createdAt).toISOString(),
-        })) ?? [],
-        totalAmount: Number(cartItems?.totalAmount) || 0,
-        currency: "AZN",
+        shippingAddress: formData?.shippingAddress,
+        notes: formData?.notes
       };
+      console.log("📦 Payment Payload:", paymentPayload);
+      const response = await initiatePayment(paymentPayload).unwrap();
+      console.log("✅ Payment Initiation Success:", response);
 
-      const response = await createWPOrder(orderPayload).unwrap();
-
-      if (response.whatsAppUrl) {
+      if (response.redirect_url) {
         setIsOrderSuccess(true);
 
-        setTimeout(async () => {
-          window.open(response.whatsAppUrl, "_blank");
-
-          if (isAuthenticated) {
-            await removeCart().unwrap();
-          } else {
-            CartUtils.clearCart();
-            setLocalCart({
-              items: [],
-              totalPriceBeforeDiscount: 0,
-              totalDiscount: 0,
-              totalAmount: 0
-            });
-          }
-
-          setIsCheckoutModalOpen(false);
-          setIsOrderSuccess(false);
-        }, 1500);
+        // Brief delay to show success icon before redirect
+        setTimeout(() => {
+          window.location.href = response.redirect_url;
+        }, 1000);
       }
+
     } catch (error) {
-      console.error('Order creation error:', error);
+      console.error('❌ Payment Initiation Error:', error);
+      toast.error(error?.data?.message || 'Failed to initiate payment. Please try again.');
       setIsOrderSubmitting(false);
     }
   };
@@ -781,10 +822,10 @@ const Cart = () => {
                             <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center">
                               <img
                                 className='w-full h-full object-contain'
-                                src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
+                                src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
                                 alt={item?.productName || 'Product'}
                                 onError={(e) => {
-                                  e.target.src = "/Icons/logo.svg"
+                                  e.target.src = "/Icons/logo.jpeg"
                                 }}
                               />
                             </div>
@@ -840,10 +881,10 @@ const Cart = () => {
                           <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center border border-gray-100">
                             <img
                               className="w-full h-full object-contain"
-                              src={`https://kozmetik-001-site1.qtempurl.com/${item?.productImageUrl}`}
+                              src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
                               alt={item?.productName || "Product"}
                               onError={(e) => {
-                                e.currentTarget.src = "/Icons/logo.svg";
+                                e.currentTarget.src = "/Icons/logo.jpeg";
                               }}
                             />
                           </div>
@@ -996,7 +1037,7 @@ const Cart = () => {
                 </div>
 
                 <button
-                  onClick={() => !me ? setIsCheckoutModalOpen(true) : handleCheckoutSubmit()}
+                  onClick={() => setIsCheckoutModalOpen(true)}
                   className="w-full mt-6 cursor-pointer bg-[#4A041D] hover:bg-[#6D082D] text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
                   disabled={!(translatedCartItems || cartItems)?.items?.length}
                 >

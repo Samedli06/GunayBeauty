@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { useGetParentCategoriesQuery } from '../../store/API';
+import { useGetParentCategoriesQuery, API_BASE_URL } from '../../store/API';
 import { translateDynamicField } from '../../i18n';
 import SEO from '../../components/SEO/SEO';
 import { ChevronRight, Loader2 } from 'lucide-react';
@@ -94,7 +94,7 @@ const Categories = () => {
                                     <div className="absolute inset-0 bg-gradient-to-tr from-[#4A041D]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                                     <img
-                                        src={category.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${category.imageUrl}` : getCategoryIcon(category.slug)}
+                                        src={category.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${category.imageUrl}` : getCategoryIcon(category.slug)}
                                         alt={category.name}
                                         className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-in-out drop-shadow-sm"
                                         onError={(e) => {
@@ -126,7 +126,7 @@ const Categories = () => {
                                                         >
                                                             <div className="w-20 h-20 lg:w-12 lg:h-12 bg-white rounded-full border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm group-hover/sub:border-[#C5A059] transition-all">
                                                                 <img
-                                                                    src={sub.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${sub.imageUrl}` : getCategoryIcon(sub.slug)}
+                                                                    src={sub.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${sub.imageUrl}` : getCategoryIcon(sub.slug)}
                                                                     alt={sub.name}
                                                                     className="w-full h-full object-cover p-1"
                                                                     onError={(e) => {
@@ -140,6 +140,7 @@ const Categories = () => {
                                                             </span>
                                                         </Link>
                                                     ))}
+
                                                 </div>
                                                 {category.subCategories.length > 4 && (
                                                     <div className="text-center pt-1 border-t border-gray-50">

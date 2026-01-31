@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { useGetCartCountQuery, useGetFavoritesCountQuery, useGetMeQuery, useSearchProductsQuery } from "../../store/API";
+import { useGetCartCountQuery, useGetFavoritesCountQuery, useGetMeQuery, useSearchProductsQuery, useGetParentCategoriesQuery } from "../../store/API";
+import { translateDynamicField } from '../../i18n';
 import { Search, X } from 'lucide-react';
 import { SearchContext } from '../../router/Context';
 import { FaRegFile, FaRegUser, FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
@@ -50,6 +51,9 @@ const Header = () => {
     skip: !hasToken,
   });
 
+  const { data: parentCategories } = useGetParentCategoriesQuery();
+  const [navCategories, setNavCategories] = useState([]);
+
   const [cartCount, setCartCount] = useState(() => {
     const localCart = JSON.parse(localStorage.getItem("ecommerce_cart")) || { items: [] };
     return localCart.items.length;
@@ -93,7 +97,7 @@ const Header = () => {
     };
   }, []);
 
-  const { data: me, isLoading: isMeLoading } = useGetMeQuery();
+  const { data: me, isLoading: isMeLoading, error: meError } = useGetMeQuery();
 
   const [searchWidth, setSearchWidth] = useState(0);
   const searchRef = useRef(null);
@@ -214,6 +218,35 @@ const Header = () => {
     };
   }, [open, searchOpen, setSearchOpen]);
 
+  // Handle Navbar Categories Translation
+  useEffect(() => {
+    async function prepareNavCategories() {
+      if (!parentCategories) return;
+
+      const limited = parentCategories.slice(0, 6);
+      const targetLang = i18next.language;
+
+      if (targetLang === 'en') {
+        const translated = await Promise.all(
+          limited.map(async (cat) => ({
+            ...cat,
+            name: await translateDynamicField(cat.name, 'en'),
+            subCategories: cat.subCategories ? await Promise.all(
+              cat.subCategories.map(async (sub) => ({
+                ...sub,
+                name: await translateDynamicField(sub.name, 'en')
+              }))
+            ) : []
+          }))
+        );
+        setNavCategories(translated);
+      } else {
+        setNavCategories(limited);
+      }
+    }
+    prepareNavCategories();
+  }, [parentCategories, i18next.language]);
+
   const { data: searchResult, isLoading: isSearching } = useSearchProductsQuery({ q: searchQuery }, {
     skip: !searchQuery || searchQuery.length < 2
   });
@@ -225,9 +258,22 @@ const Header = () => {
   };
 
   const handleFavoriteClick = () => {
-    setUnauthorizedAction('add items to Favorites');
-    setShowUnauthorizedModal(true);
-  }
+    if (hasToken && meError?.status !== 401) {
+      navigate('/favorites');
+    } else {
+      setUnauthorizedAction(t('unauthorized.favorites'));
+      setShowUnauthorizedModal(true);
+    }
+  };
+
+  const handleAccountClick = () => {
+    if (hasToken && meError?.status !== 401) {
+      navigate('/profile');
+    } else {
+      setUnauthorizedAction(t('unauthorized.account'));
+      setShowUnauthorizedModal(true);
+    }
+  };
 
   const handleClearSearch = () => {
     setSearchQuery('');
@@ -385,7 +431,7 @@ const Header = () => {
             </div>
 
             <div
-              onClick={() => { hasToken ? navigate('/favorites') : handleFavoriteClick() }}
+              onClick={handleFavoriteClick}
               className="cursor-pointer relative group"
             >
               <img className='w-5 h-5 lg:w-6 lg:h-6 brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity' src="/Icons/favorites.svg" alt="Favorites" />
@@ -408,35 +454,88 @@ const Header = () => {
               )}
             </Link>
 
-            <Link to={hasToken ? "/profile" : "/login"} className="cursor-pointer hidden lg:block group">
-              {hasToken ? (
+            <div onClick={handleAccountClick} className="cursor-pointer hidden lg:block group">
+              {hasToken && meError?.status !== 401 ? (
                 <div className="flex items-center gap-2">
                   <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Account</span>
                 </div>
               ) : (
                 <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Log In</span>
               )}
-            </Link>
+            </div>
           </div>
         </div>
 
         {/* Desktop Navigation - Slim Secondary Bar */}
         <div className="hidden lg:flex justify-center bg-[#43041A] py-3 border-t border-white/10">
-          <div className="flex items-center gap-12">
-            <Link to='/categories' >
+          <div className="flex items-center gap-10">
+            {/* 1. Categories */}
+            <Link to='/categories' className="whitespace-nowrap text-[12px]">
               <CategoriesDropdown />
             </Link>
-            <Link to='/products' className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-              {t('SHOP ALL')}
-            </Link>
-            <Link to='/products/hot-deals' className="text-white hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-bold transition-colors shadow-glow">
+
+            {/* 2. First 3 Parent Categories */}
+            {navCategories.slice(0, 3).map((cat) => (
+              <div key={cat.id} className="relative group/cat">
+                <Link
+                  to={`/categories/${cat.slug}`}
+                  className="text-white/90 hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap block py-1"
+                >
+                  {cat.name}
+                </Link>
+
+                {/* Subcategories Dropdown */}
+                {cat.subCategories && cat.subCategories.length > 0 && (
+                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw] h-[20vh] overflow-y-auto z-[60] p-6 custom-scrollbar">
+                    <div className="grid grid-cols-2 gap-x-10 gap-y-1">
+                      {cat.subCategories.map(sub => (
+                        <Link
+                          key={sub.id}
+                          to={`/products/${sub.slug}`}
+                          className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* 3. Darling Favorites */}
+            <Link to='/products?isHotDeal=true' className="text-white hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-bold transition-colors shadow-glow whitespace-nowrap border border-white/20 px-3 py-1 rounded-sm">
               {t('Darlings Favourites')}
             </Link>
-            <Link to='/brands' className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-              {t('Brands')}
-            </Link>
 
+            {/* 4. Last 3 Parent Categories */}
+            {navCategories.slice(3, 6).map((cat) => (
+              <div key={cat.id} className="relative group/cat">
+                <Link
+                  to={`/categories/${cat.slug}`}
+                  className="text-white/90 hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap block py-1"
+                >
+                  {cat.name}
+                </Link>
 
+                {/* Subcategories Dropdown */}
+                {cat.subCategories && cat.subCategories.length > 0 && (
+                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw] h-[20vh] overflow-y-auto z-[60] p-6 custom-scrollbar">
+                    <div className="grid grid-cols-2 gap-x-10 gap-y-1">
+                      {cat.subCategories.map(sub => (
+                        <Link
+                          key={sub.id}
+                          to={`/products/${sub.slug}`}
+                          className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 

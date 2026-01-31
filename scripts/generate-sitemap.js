@@ -1,20 +1,21 @@
 /**
  * Sitemap Generator Script
  * 
- * This script generates a sitemap.xml file for the Smart Team Electronics website.
+ * This script generates a sitemap.xml file for the Gunay Beauty website.
  * Run this script periodically or as part of your build process to keep the sitemap updated.
  * 
  * Usage: node scripts/generate-sitemap.js
- * 
- * Note: For a production app, you may want to fetch actual product/category URLs
- * from your API and generate dynamic sitemaps.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration
-const BASE_URL = 'https://smartteam.az'; // Update with your actual domain
+const BASE_URL = 'https://gunaybeauty.az'; // Updated for Gunay Beauty
 const OUTPUT_PATH = path.join(__dirname, '../public/sitemap.xml');
 
 // Static pages that should always be in the sitemap
@@ -50,23 +51,17 @@ const staticPages = [
     lastmod: new Date().toISOString().split('T')[0]
   },
   {
-    url: '/products/hot-deals',
-    changefreq: 'daily',
+    url: '/categories',
+    changefreq: 'weekly',
     priority: '0.9',
     lastmod: new Date().toISOString().split('T')[0]
-  },
-  {
-    url: '/products/recommended',
-    changefreq: 'daily',
-    priority: '0.9',
-    lastmod: new Date().toISOString().split('T')[0]
-  },
+  }
 ];
 
 // Generate XML sitemap
 function generateSitemap() {
   const today = new Date().toISOString().split('T')[0];
-  
+
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -86,30 +81,7 @@ function generateSitemap() {
   });
 
   // Note: In a production environment, you would fetch products and categories
-  // from your API and add them dynamically here. For example:
-  /*
-  // Example: Add product pages
-  products.forEach(product => {
-    xml += `  <url>
-    <loc>${BASE_URL}/details/${product.id}</loc>
-    <lastmod>${product.updatedAt || today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-`;
-  });
-
-  // Example: Add category pages
-  categories.forEach(category => {
-    xml += `  <url>
-    <loc>${BASE_URL}/products/${category.slug}</loc>
-    <lastmod>${category.updatedAt || today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-`;
-  });
-  */
+  // from your API and add them dynamically here.
 
   xml += `</urlset>`;
 

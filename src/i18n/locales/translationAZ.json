@@ -43,9 +43,9 @@
   "location": "Məkan",
   "failedAddToCart": "Məhsulu səbətə əlavə etmək alınmadı",
   "footer": {
-    "desc1": "Şirkətimiz ticarət avadanlıqları, kompüterlər,",
-    "desc2": "ofis avadanlıqları və zəif cərəyan sistemləri",
-    "desc3": "sahəsində satış və texniki xidmətlər təqdim edir.",
+    "desc1": "Zərifliyin və gözəlliyin ünvanı olan Gunay Beauty Store-da",
+    "desc2": "sizə ən özəl ətirləri və gözəllik məhsullarını təqdim edirik.",
+    "desc3": "Özünüzü kəşf edin.",
     "mainPages": "Əsas Səhifələr",
     "auth": "Autentifikasiya",
     "home": "Ana Səhifə",
@@ -53,10 +53,11 @@
     "download": "Proqramı Yüklə",
     "contact": "Əlaqə",
     "login": "Daxil ol",
+    "privacyPolicy": "Məxfilik Siyasəti",
     "contactUs": "Bizimlə Əlaqə",
-    "address1": " Qurban Abbasov 35",
-    "address2": "Sədərək Ticarət Mərkəzi,",
-    "address3": "Sıra 5-6, Mağaza 60",
+    "address1": "28 May, Rəşid Behbudov 66",
+    "phone": "070 202 75 19",
+    "workingHours": "11:00 – 20:00",
     "langEnglish": "İngilis dili",
     "langAzerbaijani": "Azərbaycan dili"
   },
@@ -72,13 +73,17 @@
   "pleaseLoginFirst": "Zəhmət olmasa əvvəlcə daxil olun",
   "failedUpdateFavorites": "Sevimliləri yeniləmək mümkün olmadı",
   "signInRequired": "Daxil Olmaq Tələb Olunur",
-  "signInRequiredMessage": "Sevimlilərə əlavə etmək üçün üçün daxil olmalısınız. Davam etmək üçün daxil olun və ya hesab yaradın.",
+  "signInRequiredMessage": "{{action}} üçün daxil olmalısınız. Davam etmək üçün daxil olun və ya hesab yaradın.",
   "signIn": "Daxil Ol",
   "signUp": "Qeydiyyat",
   "continueBrowsing": "Baxışa davam et",
   "adding": "Əlavə edilir...",
   "addedToCart": "Səbətə əlavə edildi",
   "addToCart": "Səbətə əlavə et",
+  "unauthorized": {
+    "favorites": "Məhsulları sevimlilərə əlavə etmək",
+    "account": "Hesabınıza daxil olmaq"
+  },
   "about": {
     "whoWeAre": "Biz kimik?",
     "companyDescription": "Smartteam kommersiya avadanlıqları, kompüterlər və elektron məhsulların idxalı ilə məşğul olan peşəkar şirkətdir. Fəaliyyətimiz boyunca müştərilərimizə etibarlı, yüksək keyfiyyətli və innovativ məhsullar təqdim etməklə bazar mövqeyimizi gücləndirmişik. Texnoloji tərəqqini daim izləyərək, tərəfdaşlarımıza və müştərilərimizə dəyər əlavə etməyə çalışırıq.",
@@ -318,5 +323,75 @@
     "previousPage": "Əvvəlki səhifə",
     "page": "Səhifə",
     "nextPage": "Növbəti səhifə"
+  },
+  "promoDiscount": "Endirim faizi",
+  "startShopping": "Alış-verişə Başla",
+  "privacyPolicy": {
+    "title": "Məxfilik Siyasəti",
+    "lastUpdated": "Son yenilənmə",
+    "sections": {
+      "introduction": {
+        "title": "Giriş",
+        "content": "Gunay Beauty Store-a xoş gəlmisiniz. Biz sizin şəxsi məlumatlarınızı və məxfilik hüququnuzu qorumağa sadiqik. Bu Məxfilik Siyasəti veb saytımızı (gunaybeauty.az) ziyarət etdiyiniz və xidmətlərimizdən istifadə etdiyiniz zaman məlumatlarınızı necə topladığımızı, istifadə etdiyimizi və qoruduğumuzu izah edir."
+      },
+      "informationWeCollect": {
+        "title": "Topladığımız Məlumatlar",
+        "content": "Bizə birbaşa təqdim etdiyiniz məlumatları toplayırıq. Bura daxildir: \n• Şəxsi identifikatorlar: Ad, e-poçt ünvanı və telefon nömrəsi.\n• Hesab məlumatları: Şifrələnmiş şifrə və autentifikasiya tokenləri.\n• Sifariş detalları: Alınan məhsullar, miqdarlar, ümumi məbləğlər və valyuta (AZN).\n• Texniki məlumatlar: Bir çox hostinq xidmətləri tərəfindən avtomatik toplansa da, biz əsasən sizin sessiyanız üçün lazım olan məlumatlara, məsələn, autentifikasiya kukilərinə diqqət yetiririk."
+      },
+      "howWeCollect": {
+        "title": "Məlumatları Necə Toplayırıq",
+        "content": "Məlumatlar bir neçə üsulla toplanır:\n• Qeydiyyat: Platformamızda hesab yaratdıqda.\n• Sifarişi Tamamlama və Sürətli Sifariş: Satınalmanı asanlaşdırmaq üçün detalları təqdim etdikdə.\n• Birbaşa Qarşılıqlı Əlaqə: Əlaqə formalarımız və ya müştəri xidmətləri vasitəsilə bizimlə əlaqə saxladıqda.\n• Avtomatlaşdırılmış Texnologiyalar: Alış-veriş səbətinizi idarə etmək və daxil olduğunuz sessiyanı saxlamaq üçün kuki və yerli yaddaşdan (local storage) istifadə edirik."
+      },
+      "howWeUse": {
+        "title": "Məlumatlardan Necə İstifadə Edirik",
+        "content": "Məlumatlarınız yalnız xidmətlərimizi təqdim etmək və təkmilləşdirmək üçün istifadə olunur, bura daxildir:\n• Sifarişlərin İşlənməsi: Satınalmalarınızı idarə etmək üçün.\n• Hesabın İdarə Edilməsi: Profilinizi, sifariş tarixinizi və loyallıq xallarınızı saxlamaq üçün.\n• Ünsiyyət: Sifarişlərinizlə bağlı və ya sorğularınıza cavab olaraq sizinlə əlaqə saxlamaq üçün.\n• Təhlükəsizlik: Veb saytımızı və hesabınızı icazəsiz girişdən qorumaq üçün."
+      },
+      "cookies": {
+        "title": "Kukilər və İzləmə Texnologiyaları",
+        "content": "Biz vacib kuki və yaddaş texnologiyalarından istifadə edirik:\n• Autentifikasiya Kukiləri: Hesabınıza təhlükəsiz şəkildə daxil olmağınız üçün.\n• Yerli Yaddaş (Local Storage): Brauzerinizin yerli yaddaşında 'ecommerce_cart' istifadə edirik ki, səbətinizdəki məhsullar sessiyalar arası saxlanılsın."
+      },
+      "thirdParty": {
+        "title": "Üçüncü Tərəf Xidmətləri",
+        "content": "Xidmətlərimizi təkmilləşdirmək üçün üçüncü tərəf provayderləri ilə inteqrasiya edirik:\n•  Google Fonts: Peşəkar veb sayt tipoqrafiyası üçün istifadə olunur."
+      },
+      "sharingSec": {
+        "title": "Məlumat Paylaşımı və Təhlükəsizlik",
+        "content": "Biz sizin şəxsi məlumatlarınızı üçüncü tərəflərə satmırıq və ya icarəyə vermirik. Məlumatları yalnız sifarişlərinizi yerinə yetirmək üçün zəruri olduqda və ya qanunla tələb olunduqda paylaşırıq. Məlumatlarınızı qorumaq üçün şifrəli şifrələmə və JWT (JSON Web Tokens) daxil olmaqla sənaye standartlı təhlükəsizlik tədbirlərindən istifadə edirik."
+      },
+      "rightsRetention": {
+        "title": "İstifadəçi Hüquqları və Saxlanma",
+        "content": "Profil səhifəniz vasitəsilə şəxsi məlumatlarınıza daxil olmaq, yeniləmək və ya silinməsini tələb etmək hüququnuz var. Məlumatlarınızı hesabınız aktiv olduğu müddətdə və ya sizə xidmət göstərmək və hüquqi öhdəliklərə əməl etmək üçün lazım olduğu müddətdə saxlayırıq."
+      },
+      "children": {
+        "title": "Uşaqların Məxfiliyi",
+        "content": "Xidmətlərimiz 13 yaşından kiçik uşaqlara yönəlməyib. Biz bilərəkdən uşaqlardan şəxsi məlumat toplamırıq. Əgər bir uşağın bizə şəxsi məlumat təqdim etdiyindən xəbərdar olsaq, həmin məlumatların silinməsi üçün tədbirlər görəcəyik."
+      },
+      "contact": {
+        "title": "Bizimlə Əlaqə",
+        "desc": "Bu Məxfilik Siyasəti və ya məlumat təcrübələrimizlə bağlı hər hansı sualınız və ya narahatlığınız varsa, aşağıdakı kanallardan hər hansı biri vasitəsilə bizimlə əlaqə saxlaya bilərsiniz:",
+        "email": "E-poçt",
+        "phone": "Telefon",
+        "address": "Ünvan"
+      }
+    }
+  },
+  "payment": {
+    "successful": "Ödəniş Uğurludur!",
+    "failed": "Ödəniş Uğursuz Oldu",
+    "successText": "Təşəkkür edirik! Sifarişiniz uğurla yerləşdirildi və hazırda emal olunur.",
+    "errorMessage": "Ödəniş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin və ya dəstək xidməti ilə əlaqə saxlayın.",
+    "orderId": "Sifariş ID",
+    "transactionId": "Tranzaksiya ID",
+    "status": "Ödəniş Statusu",
+    "viewOrders": "Sifarişlərimə Bax",
+    "tryAgain": "Yenidən Cəhd Edin",
+    "backToHome": "Ana Səhifəyə Qayıt",
+    "invalidOrder": "Yanlış sifariş məlumatı.",
+    "emailAddress": "E-poçt Ünvanı",
+    "shippingAddress": "Çatdırılma Ünvanı",
+    "orderNotes": "Sifariş Qeydləri",
+    "verifying": "Yoxlanılır...",
+    "paid": "Ödənilib",
+    "processing": "Emal olunur"
   }
 }

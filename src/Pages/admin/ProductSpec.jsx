@@ -23,7 +23,8 @@ import {
   useUpdateProductSpecificationsMutation,
   useDeleteProductSpecificationsMutation,
   useGetProductPdfsQuery,
-  useDeleteProductPdfMutation
+  useDeleteProductPdfMutation,
+  API_BASE_URL
 } from '../../store/API';
 import { toast } from 'react-toastify';
 
@@ -222,7 +223,7 @@ const ProductDetailPage = () => {
           {/* Product Image */}
           <div className="bg-white rounded-xl overflow-hidden">
             <img
-              src={`https://kozmetik-001-site1.qtempurl.com//${product.imageUrl}`}
+              src={`https://kozmetik-001-site1.qtempurl.com${product.imageUrl}`}
               alt={product.name}
               className="w-full object-contain h-full max-h-[500px]"
               onError={(e) => {
@@ -272,20 +273,12 @@ const ProductDetailPage = () => {
               <div className="grid grid-cols-2 gap-4">
 
                 <div className='flex flex-col justify-between'>
-                  <p className="text-gray-400 text-sm">Orjinal qiymət</p>
-                  <p className="text-2xl font-bold text-green-400">{product?.prices[0].discountedPrice} AZN</p>
+                  <p className="text-gray-400 text-sm">Qiymət</p>
+                  <p className="text-2xl font-bold text-green-400">{product?.price} AZN</p>
                 </div>
                 <div className='flex flex-col justify-between'>
-                  <p className="text-gray-400 text-sm">Topdan qiyməti</p>
-                  <p className="text-2xl font-bold text-green-400">{product?.prices[1]?.discountedPrice} AZN</p>
-                </div>
-                <div className='flex flex-col justify-between'>
-                  <p className="text-gray-400 text-sm">Diller qiyməti</p>
-                  <p className="text-2xl font-bold text-green-400">{product.prices[2]?.discountedPrice} AZN</p>
-                </div>
-                <div className='flex flex-col justify-between'>
-                  <p className="text-gray-400 text-sm">Eksklüziv qiyməti</p>
-                  <p className="text-2xl font-bold text-green-400">{product.prices[3]?.discountedPrice} AZN</p>
+                  <p className="text-gray-400 text-sm">Endirimli Qiymət</p>
+                  <p className="text-2xl font-bold text-green-400">{product?.discountedPrice || 0} AZN</p>
                 </div>
               </div>
             </div>
@@ -351,7 +344,7 @@ const ProductDetailPage = () => {
                   <div key={image.id} className="relative group">
                     <div className="aspect-square bg-gray-700 rounded-lg overflow-hidden">
                       <img
-                        src={`https://kozmetik-001-site1.qtempurl.com//${image.imageUrl}`}
+                        src={`https://kozmetik-001-site1.qtempurl.com${image.imageUrl}`}
                         alt={image.altText || `Product image ${index + 1}`}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         onError={(e) => {
@@ -416,7 +409,7 @@ const ProductDetailPage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <a
-                        href={`https://kozmetik-001-site1.qtempurl.com//${pdf.filePath}`}
+                        href={`https://kozmetik-001-site1.qtempurl.com${pdf.filePath}`}
                         download
                         className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                         title="PDF yüklə"

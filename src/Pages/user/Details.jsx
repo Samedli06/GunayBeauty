@@ -16,6 +16,7 @@ import {
   useGetRecommendedQuery,
   useGetMeQuery,
   useGetRecommendedPageQuery,
+  API_BASE_URL,
 } from '../../store/API';
 import { toast } from 'react-toastify';
 import SimilarProducts from '../../components/UI/SimilarRecommendedProducts';
@@ -207,7 +208,7 @@ function Details() {
       const headers = { 'Accept': '*/*' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(`https://kozmetik-001-site1.qtempurl.com//api/v1/product-pdfs/download/product/${product.id}`, {
+      const response = await fetch(`https://kozmetik-001-site1.qtempurl.comapi/v1/product-pdfs/download/product/${product.id}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',
@@ -345,8 +346,8 @@ function Details() {
 
   const currentProduct = translatedProduct || product;
   const features = getFeatures(currentProduct, productSpec);
-  const productImageUrl = product?.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${product.imageUrl}` : '/Icons/logo.svg';
-  const productImages = product?.images ? product.images.map(img => `https://kozmetik-001-site1.qtempurl.com/${img.imageUrl}`) : [];
+  const productImageUrl = product?.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${product.imageUrl}` : '/Icons/logo.jpeg';
+  const productImages = product?.images ? product.images.map(img => `https://kozmetik-001-site1.qtempurl.com${img.imageUrl}`) : [];
 
   const productForSEO = product ? {
     ...product,
@@ -356,9 +357,8 @@ function Details() {
     images: productImages,
     brandName: product.brandName,
     categoryName: currentProduct.categoryName,
-    prices: product.prices || [{ price: product.currentPrice || 0, discountedPrice: product.currentPrice || 0 }],
-    currentPrice: product.prices?.[0]?.discountedPrice || product.currentPrice || 0,
-    price: product.prices?.[0]?.price || product.currentPrice || 0,
+    price: product.price || 0,
+    discountedPrice: product.discountedPrice || 0,
   } : null;
 
   return (
@@ -398,10 +398,10 @@ function Details() {
 
           <div className="w-full h-full flex items-center justify-center p-8">
             <img
-              src={`https://kozmetik-001-site1.qtempurl.com/${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
+              src={`https://kozmetik-001-site1.qtempurl.com${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
               alt={product?.name}
               className="max-w-[90vw] max-h-[85vh] object-contain drop-shadow-2xl"
-              onError={(e) => { e.target.src = "/Icons/logo.svg"; }}
+              onError={(e) => { e.target.src = '/Icons/logo.jpeg' }}
             />
           </div>
         </section>
@@ -428,7 +428,7 @@ function Details() {
                   onMouseEnter={() => setHovered(null)}
                   className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${!hovered ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
                 >
-                  <img src={productImageUrl} alt="Main" className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
+                  <img src={productImageUrl} alt="Main" className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
                 </div>
 
                 {/* Additional thumbs */}
@@ -439,7 +439,7 @@ function Details() {
                     onMouseEnter={() => setHovered(img.imageUrl)}
                     className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${hovered === img.imageUrl ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
                   >
-                    <img src={`https://kozmetik-001-site1.qtempurl.com/${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.svg' }} />
+                    <img src={`https://kozmetik-001-site1.qtempurl.com${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
                   </div>
                 ))}
               </div>
@@ -447,14 +447,14 @@ function Details() {
               {/* Main Image Display */}
               <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] min-h-[300px] lg:min-h-[500px]  lg:max-h-[700px] flex items-center justify-center relative group">
                 <img
-                  src={hovered ? `https://kozmetik-001-site1.qtempurl.com/${hovered}` : productImageUrl}
+                  src={hovered ? `https://kozmetik-001-site1.qtempurl.com${hovered}` : productImageUrl}
                   alt={product.name}
                   className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
                   onClick={() => {
                     const idx = hovered ? product?.images?.findIndex(i => i.imageUrl === hovered) : -1;
                     openDetail(idx !== -1 ? idx + 1 : 0);
                   }}
-                  onError={(e) => { e.target.src = '/Icons/logo.svg' }}
+                  onError={(e) => { e.target.src = '/Icons/logo.jpeg' }}
                 />
                 {/* Floating Action Buttons */}
                 <div className="absolute top-4 right-4 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -493,11 +493,11 @@ function Details() {
 
               <div className="flex items-baseline gap-4 mb-6">
                 <span className="text-3xl lg:text-4xl font-bold text-[#C5A059]">
-                  {me ? product?.prices[me?.role - 1]?.discountedPrice : product?.prices[0]?.discountedPrice} ₼
+                  {product.discountedPrice > 0 ? product.discountedPrice : product.price} ₼
                 </span>
-                {(product?.prices[0]?.price > product?.prices[0]?.discountedPrice) && (
+                {(product.discountedPrice > 0 && product.price > product.discountedPrice) && (
                   <span className="text-lg lg:text-xl text-gray-400 line-through">
-                    {me ? product?.prices[me?.role - 1]?.price : product?.prices[0]?.price} ₼
+                    {product.price} ₼
                   </span>
                 )}
               </div>

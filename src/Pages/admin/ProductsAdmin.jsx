@@ -1,7 +1,7 @@
 import { Loader2, Pen, Trash, Package, DollarSign, Palette, Ruler, Eye, Search, X, ChevronDown, Filter } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useActivateUserMutation, useDeActivateUserMutation, useDeleteProductMutation, useGetProductsQuery, useGetProductsSummaryQuery, useGetParentCategoriesQuery } from "../../store/API";
+import { useActivateUserMutation, useDeActivateUserMutation, useDeleteProductMutation, useGetProductsQuery, useGetProductsSummaryQuery, useGetParentCategoriesQuery, API_BASE_URL } from "../../store/API";
 import Modal from "../../components/UI/Modal";
 import AddProductStatic from "../../components/admin/Product/AddProduct";
 import EditProduct from "../../components/admin/Product/EditProduct";
@@ -348,7 +348,7 @@ const ProductsUI = () => {
                   <div className="relative h-48 bg-gray-700">
                     <img
                       className="w-full h-full object-cover cursor-pointer"
-                      src={`https://kozmetik-001-site1.qtempurl.com/${product.primaryImageUrl}`}
+                      src={`https://kozmetik-001-site1.qtempurl.com${product.primaryImageUrl}`}
                       alt={product.name}
                       onClick={() => handleViewProduct(product)}
                       onError={(e) => {
@@ -421,7 +421,7 @@ const ProductsUI = () => {
                     {/* Price */}
                     <div className="mb-4">
                       <span className="text-2xl font-bold text-green-400">
-                        {product.currentPrice} AZN
+                        {product.discountedPrice > 0 ? product.discountedPrice : product.price} AZN
                       </span>
                     </div>
 

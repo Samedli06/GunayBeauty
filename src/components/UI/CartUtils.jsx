@@ -40,17 +40,15 @@ const CartUtils = {
 
     // ✅ Get product price (handles discounted price)
     getProductPrice(product) {
-        if (product.currentPrice) return Number(product.currentPrice);
-        if (!product.prices || product.prices.length === 0) return 0;
-        const price = product.prices[0];
-        return price.discountedPrice > 0 ? price.discountedPrice : price.price;
+        if (product.discountedPrice && product.discountedPrice > 0) return Number(product.discountedPrice);
+        return Number(product.price) || 0;
     },
 
     // ✅ Add or update item in cart
     addItem(product, quantity = 1) {
         const cart = this.getCart();
         const unitPrice = this.getProductPrice(product);
-        const originalPrice = product.originalPrice || unitPrice;
+        const originalPrice = Number(product.price) || unitPrice;
         const productDiscount = originalPrice - unitPrice;
 
         const existingItemIndex = cart.items.findIndex(

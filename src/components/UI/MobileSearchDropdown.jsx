@@ -236,7 +236,7 @@ const MobileSearchDropdown = ({
                     alt={product.name}
                     className="w-full h-full object-contain mix-blend-multiply"
                     onError={(e) => {
-                      e.target.src = '/Icons/logo.svg';
+                      e.target.src = '/Icons/logo.jpeg';
                     }}
                   />
                   {product.discountPercentage > 0 && (
@@ -252,15 +252,19 @@ const MobileSearchDropdown = ({
                   <h4 className="text-xs font-semibold text-gray-900 mb-1.5 line-clamp-2 min-h-[2.4em] leading-snug">
                     {product.name}
                   </h4>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm font-bold text-[#C5A059]">
-                      {product.currentPrice} ₼
-                    </span>
-                    {product.discountPercentage > 0 && (
-                      <span className="text-[10px] text-gray-300 line-through">
-                        {product.originalPrice} ₼
-                      </span>
-                    )}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {parseFloat(product.discountedPrice || 0) > 0 ? (
+                      <>
+                        <span className="text-xs font-bold text-[#C5A059]">{product.discountedPrice} ₼</span>
+                        {product.price > product.discountedPrice && (
+                          <span className="text-[9px] text-gray-300 line-through">
+                            {product.price} ₼
+                          </span>
+                        )}
+                      </>
+                    ) : parseFloat(product.price) > 0 ? (
+                      <span className="text-xs font-bold text-[#C5A059]">{product.price} ₼</span>
+                    ) : null}
                   </div>
                 </div>
               </div>

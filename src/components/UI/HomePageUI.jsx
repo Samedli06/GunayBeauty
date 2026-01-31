@@ -206,10 +206,12 @@ const HomePageUI = ({
 
           {/* Price - Pushed to bottom */}
           <div className="flex items-center flex-col gap-1 mt-auto pt-2">
-            {product.originalPrice > product.currentPrice && (
-              <span className="text-gray-400 text-sm line-through decoration-[#9E2A2B] decoration-1">{product.originalPrice} AZN</span>
+            {product.discountedPrice > 0 && product.price > product.discountedPrice && (
+              <span className="text-gray-400 text-sm line-through decoration-[#9E2A2B] decoration-1">{product.price} AZN</span>
             )}
-            <span className="text-[#4A041D] font-bold text-xl">{product.currentPrice} AZN</span>
+            <span className="text-[#4A041D] font-bold text-xl">
+              {product.discountedPrice > 0 ? product.discountedPrice : product.price} AZN
+            </span>
           </div>
         </div>
 

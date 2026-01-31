@@ -29,7 +29,7 @@ const UnauthorizedModal = ({ isOpen, onClose, action }) => {
             {t('signInRequired')}
           </h3>
           <p className="text-sm whitespace-normal text-gray-600 mb-8 leading-relaxed">
-            {t('signInRequiredMessage')}
+            {t('signInRequiredMessage', { action })}
           </p>
           <div className="flex gap-4">
             <button

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Check } from 'lucide-react';
 import { Link } from 'react-router';
-import { useGetFavoriteStatusQuery } from '../store/API';
+import { useGetFavoriteStatusQuery, API_BASE_URL } from '../store/API';
 import { translateDynamicField } from '../i18n';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,20 @@ export function ProductCard({
   isFavorite = false,
   compact = false
 }) {
-  const { id, url, name: originalName, description: originalDescription, priceOriginal, price, discountPercentage, isHotDeal } = info;
+  const { id, url, name: originalName, description: originalDescription, isHotDeal } = info;
+
+  // Use productData directly for prices to avoid mapping confusion
+  const basePrice = parseFloat(productData?.price) || 0;
+  const salePrice = parseFloat(productData?.discountedPrice) || 0;
+
+  // Core price logic
+  const hasDiscount = salePrice > 0 && salePrice < basePrice;
+  const displayPrice = hasDiscount ? salePrice : basePrice;
+  const originalPrice = hasDiscount ? basePrice : 0;
+
+  // Optional: calculate discount percentage if not provided
+  const discountPercentage = info.discountPercentage || (hasDiscount ? Math.round(((basePrice - salePrice) / basePrice) * 100) : 0);
+
   const [localFavorite, setLocalFavorite] = useState(isFavorite);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
@@ -24,25 +37,20 @@ export function ProductCard({
   const { data: favoriteStatus } = useGetFavoriteStatusQuery({ productId: id });
   const { i18n, t } = useTranslation();
 
-  const hasDiscount = priceOriginal && price && priceOriginal > price;
-
   // Translate dynamic fields on language change
   useEffect(() => {
     async function translateFields() {
       const targetLang = i18n.language;
-      // Only translate AZ → EN
       if (targetLang === "en") {
         setName(await translateDynamicField(originalName, targetLang));
         setDescription(await translateDynamicField(originalDescription, targetLang));
       } else {
-        // AZ default
         setName(originalName);
         setDescription(originalDescription);
       }
     }
     translateFields();
   }, [i18n.language, originalName, originalDescription]);
-
 
   useEffect(() => {
     if (justAdded) {
@@ -65,26 +73,52 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
     if (isTogglingFavorite || !toggleFavorite) return;
-
     try {
       await toggleFavorite(id);
     } catch (error) {
     }
   };
 
+  const PriceDisplay = ({ isCompact, isRow }) => {
+    if (displayPrice <= 0) return null;
+
+    return (
+      <div className={`${isRow ? 'flex items-center gap-3 mt-4 flex-wrap' : 'mt-auto border-t border-gray-100/50 pt-2'}`}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className={`${isCompact ? 'text-sm lg:text-lg' : isRow ? 'text-2xl' : 'text-lg md:text-xl'} font-bold text-[#C5A059]`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            {displayPrice} ₼
+          </p>
+          {hasDiscount && (
+            <p className={`${isCompact ? 'text-xs lg:text-sm' : 'text-sm'} text-gray-400 line-through`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+              {originalPrice} ₼
+            </p>
+          )}
+        </div>
+        {hasDiscount && !isRow && (
+          <p className={`${isCompact ? 'text-[10px] lg:text-xs' : 'text-xs'} text-green-600 font-medium mt-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            {t('productCard.save')} {(originalPrice - displayPrice).toFixed(2)} ₼
+          </p>
+        )}
+        {hasDiscount && isRow && (
+          <span className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
+            {t('productCard.save')} {(originalPrice - displayPrice).toFixed(2)} ₼
+          </span>
+        )}
+      </div>
+    );
+  };
+
   if (col) {
-    // Column layout (grid view)
     return (
       <div className={`bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden relative group transition-all duration-300 h-full flex flex-col hover:shadow-xl transform hover:-translate-y-1 ${compact ? 'min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] lg:min-w-[270px] lg:max-w-[270px]' : ''}`}>
         <Link to={`/details/${id}`} className="block">
           <div className={`aspect-square relative bg-transparent flex items-center justify-center ${compact ? 'p-2 lg:p-4' : 'p-4'}`}>
             <img
-              src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
+              src={`https://kozmetik-001-site1.qtempurl.com${url}`}
               alt={name || 'Product'}
               className="w-full h-full object-contain"
-              onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
+              onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
             />
-
             {isHotDeal && (
               <div className={`absolute top-2 right-2 bg-[#E60C03] text-white rounded font-semibold ${compact ? 'text-[10px] lg:text-xs px-1.5 py-0.5 lg:px-2 lg:py-1' : 'text-xs px-2 py-1'}`}>
                 {t('productCard.hotDeal')}
@@ -98,11 +132,9 @@ export function ProductCard({
           </div>
         </Link>
 
-        {/* Content Section - Flex 1 to fill space */}
         <div className={`${compact ? 'p-2 lg:p-3' : 'p-4'} pt-2 bg-white flex flex-col flex-1`}>
           <Link to={`/details/${id}`} className="block flex flex-col flex-1">
             <div className='flex gap-2 items-start justify-between'>
-              {/* Title: Fixed height */}
               <h3 className={`${compact ? 'text-xs lg:text-base h-[2rem] lg:h-[3rem]' : 'text-base h-[3rem]'} font-semibold text-gray-900 mb-1 line-clamp-2 leading-snug flex-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {name}
               </h3>
@@ -116,8 +148,6 @@ export function ProductCard({
                 />
               </button>
             </div>
-
-            {/* Description: Fixed height for 2 lines (~2.5rem/40px) - Hidden in compact mode */}
             {!compact && (
               <div className="h-[2.5rem] mb-3">
                 {description && (
@@ -127,27 +157,12 @@ export function ProductCard({
                 )}
               </div>
             )}
-
-            {/* Price section - Pushed to bottom with mt-auto */}
-            <div className={`mt-auto  border-t border-gray-100/50 ${compact ? 'pt-1.5 lg:pt-2' : 'pt-2'}`}>
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className={`${compact ? 'text-sm lg:text-lg' : 'text-lg md:text-xl'} font-bold text-[#C5A059]`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
-                {hasDiscount && (
-                  <p className={`${compact ? 'text-xs lg:text-sm' : 'text-sm'} text-gray-400 line-through`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
-                )}
-              </div>
-              {hasDiscount && (
-                <p className={`${compact ? 'text-[10px] lg:text-xs' : 'text-xs'} text-green-600 font-medium mt-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                  {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
-                </p>
-              )}
-            </div>
+            <PriceDisplay isCompact={compact} isRow={false} />
           </Link>
         </div>
       </div>
     );
   } else {
-    // Row layout (list view)
     return (
       <Link
         to={`/details/${id}`}
@@ -155,16 +170,14 @@ export function ProductCard({
       >
         <div className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-transparent overflow-hidden flex items-center justify-center">
           <img
-            src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
+            src={`https://kozmetik-001-site1.qtempurl.com${url}`}
             alt={name || 'Product'}
             className="max-w-[150px] object-contain aspect-square w-full h-full rounded-lg"
             onError={(e) => {
-              e.currentTarget.src = "/Icons/logo.svg";
-              e.currentTarget.className =
-                "object-contain aspect-square w-full h-full rounded-lg";
+              e.currentTarget.src = "/Icons/logo.jpeg";
+              e.currentTarget.className = "object-contain aspect-square w-full h-full rounded-lg";
             }}
           />
-
           {hasDiscount && discountPercentage > 0 && (
             <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
               -{discountPercentage}%
@@ -176,7 +189,6 @@ export function ProductCard({
             </div>
           )}
         </div>
-
         <div className="flex flex-col flex-1 space-y-4 py-2">
           <div className="flex justify-between items-start">
             <div className="flex-1">
@@ -184,19 +196,8 @@ export function ProductCard({
               {description && (
                 <p className="text-sm text-gray-600 mt-2 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>{description}</p>
               )}
-              <div className="flex items-center gap-3 mt-4 flex-wrap">
-                <p className="text-2xl font-bold text-[#C5A059]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{price} ₼</p>
-                {hasDiscount && (
-                  <div className='flex items-center gap-2'>
-                    <p className="text-base text-gray-400 line-through" style={{ fontFamily: 'Montserrat, sans-serif' }}>{priceOriginal} ₼</p>
-                    <span className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
-                      {t('productCard.save')} {(priceOriginal - price).toFixed(2)} ₼
-                    </span>
-                  </div>
-                )}
-              </div>
+              <PriceDisplay isCompact={false} isRow={true} />
             </div>
-
             <button
               onClick={handleFavoriteClick}
               disabled={isTogglingFavorite}

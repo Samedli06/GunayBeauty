@@ -133,7 +133,7 @@ const CategoriesDropdown = () => {
             onMouseLeave={handleMouseLeave}
         >
             {/* Categories Link - Visual Only (Parent Link handles navigation) */}
-            <div className="text-white/90 hover:text-white font-sans text-[11px] tracking-[0.25em] uppercase font-medium transition-colors cursor-pointer relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+            <div className="text-white/90 hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-medium transition-colors cursor-pointer relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
                 {t('categories')}
             </div>
 
@@ -154,8 +154,8 @@ const CategoriesDropdown = () => {
                                     onMouseEnter={() => handleParentHover(parent.id)}
                                     onClick={handleLinkClick}
                                     className={`relative px-8 py-3.5 flex items-center justify-between text-xs uppercase tracking-wider font-sans transition-all duration-200 ${hoveredParentId === parent.id
-                                            ? 'text-[#4A041D] font-bold bg-white shadow-sm border-l-4 border-l-[#4A041D]'
-                                            : 'text-[#4A041D]/70 hover:text-[#4A041D] hover:bg-gray-100'
+                                        ? 'text-[#4A041D] font-bold bg-white shadow-sm border-l-4 border-l-[#4A041D]'
+                                        : 'text-[#4A041D]/70 hover:text-[#4A041D] hover:bg-gray-100'
                                         }`}
                                 >
                                     {parent.name}

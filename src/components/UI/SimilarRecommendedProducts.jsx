@@ -167,8 +167,8 @@ const SimilarProducts = ({ products, isLoading }) => {
           const cardInfo = {
             url: product.primaryImageUrl,
             name: product.name,
-            priceOriginal: product.originalPrice,
-            price: product.currentPrice,
+            priceOriginal: product.price,
+            price: product.discountedPrice && product.discountedPrice > 0 ? product.discountedPrice : product.price,
             id: product.id,
             description: product.description || product.shortDescription,
             discountPercentage: product.discountPercentage,

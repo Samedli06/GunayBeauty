@@ -213,7 +213,7 @@ const SearchDropdown = ({
                         src={`https://kozmetik-001-site1.qtempurl.com/${product.primaryImageUrl}`}
                         alt={product.name}
                         className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => { e.target.src = '/Icons/logo.svg'; }}
+                        onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
                       />
                       {product.discountPercentage > 0 && (
                         <div className="absolute top-2 left-2 bg-[#4A041D] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -228,10 +228,16 @@ const SearchDropdown = ({
                         {product.name}
                       </h4>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-sm font-bold text-[#C5A059]">{product.currentPrice} ₼</span>
-                        {product.originalPrice > product.currentPrice && (
-                          <span className="text-xs text-gray-300 line-through decoration-gray-300">{product.originalPrice} ₼</span>
-                        )}
+                        {parseFloat(product.discountedPrice || 0) > 0 ? (
+                          <>
+                            <span className="text-sm font-bold text-[#C5A059]">{product.discountedPrice} ₼</span>
+                            {product.price > product.discountedPrice && (
+                              <span className="text-xs text-gray-300 line-through decoration-gray-300">{product.price} ₼</span>
+                            )}
+                          </>
+                        ) : parseFloat(product.price) > 0 ? (
+                          <span className="text-sm font-bold text-[#C5A059]">{product.price} ₼</span>
+                        ) : null}
                       </div>
                     </div>
                   </div>

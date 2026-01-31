@@ -41,19 +41,14 @@ const ProductFormUI = ({ setOpen }) => {
     description: "",
     shortDescription: "",
     sku: "",
+    isActive: true,
     isHotDeal: false,
     stockQuantity: 0,
     categoryId: "",
     brandId: "",
-    prices: [1, 2, 3, 4].map((role) => {
-      const price = 0;
-      return {
-        userRole: role,
-        price,
-        discountedPrice: price,
-        discountPercentage: 0
-      };
-    })
+    price: 0,
+    discountedPrice: 0,
+    detailImageUrls: [],
   });
 
 
@@ -141,35 +136,12 @@ const ProductFormUI = ({ setOpen }) => {
       shortDescription: "",
       sku: "",
       isHotDeal: false,
-      stockQuantity: 0,
+      stockQuantity: "",
       categoryId: "",
       brandId: "",
-      prices: [
-        {
-          userRole: 1,
-          price: 0,
-          discountedPrice: 0,
-          discountPercentage: 0
-        },
-        {
-          userRole: 2,
-          price: 0,
-          discountedPrice: 0,
-          discountPercentage: 0
-        },
-        {
-          userRole: 3,
-          price: 0,
-          discountedPrice: 0,
-          discountPercentage: 0
-        },
-        {
-          userRole: 4,
-          price: 0,
-          discountedPrice: 0,
-          discountPercentage: 0
-        }
-      ]
+      price: "",
+      discountedPrice: "",
+      minimumOrderQuantity: "",
     });
     setFile(null);
     setFiles([]);
@@ -189,7 +161,23 @@ const ProductFormUI = ({ setOpen }) => {
 
     try {
       const formDataToSend = new FormData();
-      const productDataString = JSON.stringify(formData);
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        shortDescription: formData.shortDescription,
+        sku: formData.sku,
+        isActive: formData.isActive,
+        isHotDeal: formData.isHotDeal,
+        stockQuantity: Number(formData.stockQuantity) || 0,
+        categoryId: formData.categoryId,
+        brandId: formData.brandId,
+        price: Number(formData.price) || 0,
+        discountedPrice: Number(formData.discountedPrice) || 0,
+        minimumOrderQuantity: Number(formData.minimumOrderQuantity) || 0,
+        detailImageUrls: [],
+      };
+
+      const productDataString = JSON.stringify(productData);
       formDataToSend.append("productData", productDataString);
       formDataToSend.append("imageFile", file, file.name);
 
@@ -248,26 +236,13 @@ const ProductFormUI = ({ setOpen }) => {
     }));
   };
 
-  const handlePriceChange = (value, field, index) => {
-    setFormData((prev) => {
-      const updatedPrices = prev.prices.map((priceObj, i) => {
-        if (i === index) {
-          const updatedObj = { ...priceObj, [field]: parseFloat(value) || 0 };
+  const handlePriceChange = (e) => {
+    const { name, value } = e.target;
 
-          const price = updatedObj.price;
-          const discountedPrice = updatedObj.discountedPrice;
-          const discountPercentage =
-            price > 0
-              ? Math.round(((price - discountedPrice) / price) * 100)
-              : 0;
-
-          return { ...updatedObj, discountPercentage };
-        }
-        return priceObj;
-      });
-
-      return { ...prev, prices: updatedPrices };
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value === "" ? 0 : Number(value)
+    }));
   };
 
   return (
@@ -377,6 +352,20 @@ const ProductFormUI = ({ setOpen }) => {
           </label>
         </div>
 
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="isActive"
+            name="isActive"
+            checked={formData.isActive}
+            onChange={handleInputChange}
+            className="w-4 h-4 text-indigo-600 bg-[#2c2c2c] border-gray-600 rounded focus:ring-indigo-500 focus:ring-2"
+          />
+          <label htmlFor="isActive" className="text-sm font-medium">
+            Aktiv
+          </label>
+        </div>
+
         {/* Description */}
         <div>
           <label className="block text-sm font-medium mb-2">Açıqlama</label>
@@ -404,49 +393,33 @@ const ProductFormUI = ({ setOpen }) => {
         </div>
 
         {/* Pricing Section */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm font-medium">İstifadəçi roluna görə qiymətlər</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-[#2c2c2c] rounded-md border border-gray-600">
+          <div>
+            <label className="block text-sm font-medium mb-2">Qiymət</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handlePriceChange}
+              min="0"
+              step="0.01"
+              className="w-full px-3 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="0.00"
+            />
           </div>
-          <div className="border border-gray-600 rounded-md">
-            {formData.prices.map((item, index) => (
-              <div key={index} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 p-4 bg-[#2c2c2c] rounded-t-md">
-                  {/* User Role */}
-                  <div className="flex items-center">
-                    <label className="block text-md font-medium mb-1">{getRoleName(index + 1)}</label>
-                  </div>
 
-                  {/* Price */}
-                  <div>
-                    <label className="block text-xs font-medium mb-1">Qiymət</label>
-                    <input
-                      type="number"
-                      value={item.price === 0 ? '' : item.price}
-                      onChange={(e) => handlePriceChange(e.target.value, 'price', index)}
-                      min="0"
-                      step="1"
-                      className="w-full px-2 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                      placeholder="0.00"
-                    />
-                  </div>
-
-                  {/* Discounted Price */}
-                  <div>
-                    <label className="block text-xs font-medium mb-1 whitespace-nowrap">Endirimli qiymət</label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={item.discountedPrice === 0 ? '' : item.discountedPrice}
-                      onChange={(e) => handlePriceChange(e.target.value, 'discountedPrice', index)}
-                      className="w-full px-2 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div>
+            <label className="block text-sm font-medium mb-2">Endirimli qiymət</label>
+            <input
+              type="number"
+              name="discountedPrice"
+              value={formData.discountedPrice}
+              onChange={handlePriceChange}
+              min="0"
+              step="0.01"
+              className="w-full px-3 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="0.00"
+            />
           </div>
         </div>
 
@@ -641,7 +614,7 @@ const ProductFormUI = ({ setOpen }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

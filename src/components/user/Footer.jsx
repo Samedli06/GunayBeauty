@@ -80,10 +80,10 @@ const Footer = () => {
                             Discover your signature scent and embrace your beauty with our luxury collection.
                         </p>
                         <div className="flex gap-4">
-                            <a href="https://www.tiktok.com/@gunaybeautystore1" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
+                            <a href="https://www.tiktok.com/@gunaybeautystore?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
                                 <FaTiktok className="w-6 h-6" />
                             </a>
-                            <a href="https://www.instagram.com/gunay_beauty_store_?igsh=MXFweW5hMDVkbjIyOA==" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
+                            <a href="https://www.instagram.com/gunaybeautystore?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity text-white hover:text-[#C5A059]">
                                 <FaInstagram className="w-6 h-6" />
                             </a>
                         </div>
@@ -98,6 +98,7 @@ const Footer = () => {
                             <Link to='/contact' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.contact")}</Link>
                             <Link to='/brands' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("admin.brands")}</Link>
                             <Link to='/login' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.login")}</Link>
+                            <Link to='/privacy-policy' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.privacyPolicy")}</Link>
                         </div>
                     </div>
 
@@ -107,13 +108,15 @@ const Footer = () => {
                         <div className="flex flex-col gap-4 md:items-end">
                             <div className="flex items-center gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse">
                                 <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-phone.svg" alt="" />
-                                <span>+994 51 520 62 63</span>
+                                <a href="tel:0702027519" className="hover:text-[#C5A059] transition-colors">{t("footer.phone")}</a>
                             </div>
                             <div className="flex items-start gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse text-right">
                                 <img className="w-5 h-5 invert mt-0.5" src="./Icons/footer-location.svg" alt="" />
-                                <div>
-                                    <p>Nərimanov rayonu. Fətəli Xan Xoyski 134</p>
-                                </div>
+                                <p>{t("footer.address1")}</p>
+                            </div>
+                            <div className="flex items-center gap-3 text-[#FDFBF8]/80 text-sm md:flex-row-reverse">
+                                <img className="w-5 h-5 invert mt-0.5" src="./Icons/contact-clock.svg" alt="" />
+                                <span>{t("footer.workingHours")}</span>
                             </div>
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
 import { Breadcrumb } from '../../products/Breadcrumb'
-import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation } from '../../store/API'
+import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation, useGetMyOrdersQuery } from '../../store/API'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
-import { LogIn } from 'lucide-react';
+import { CloudCog, LogIn } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
@@ -16,6 +16,8 @@ const Profile = () => {
   const { data: me, isLoading: isUserLoading, error: userError } = useGetMeQuery();
   const [changePass, { isLoading: isPasswordLoading, error: passwordError }] = useChangePasswordMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
+  const { data: orders = [], isLoading: isOrdersLoading } = useGetMyOrdersQuery();
+  console.log(orders)
 
   const [newPass, setNewPass] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -110,23 +112,18 @@ const Profile = () => {
       </div>
     )
   }
-
-  // Mock Data for UI Visualization
+  // Loyalty points (Static for now as API doesn't provide them yet)
   const loyaltyPoints = 1250;
   const nextTierPoints = 2000;
   const progress = (loyaltyPoints / nextTierPoints) * 100;
 
-  const mockOrders = [
-    { id: 'ORD-2024-001', date: 'Oct 24, 2024', total: '₼ 145.00', status: 'Delivered', items: 3 },
-    { id: 'ORD-2024-002', date: 'Nov 02, 2024', total: '₼ 89.50', status: 'Processing', items: 1 },
-    { id: 'ORD-2024-003', date: 'Nov 15, 2024', total: '₼ 210.00', status: 'Cancelled', items: 5 },
-  ];
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Delivered': return 'bg-green-100 text-green-700 border-green-200';
-      case 'Processing': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'Paid': return 'bg-green-100 text-green-700 border-green-200';
+      case 'Shipped': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Cancelled': return 'bg-red-100 text-red-700 border-red-200';
+      case 'Pending': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
@@ -247,7 +244,7 @@ const Profile = () => {
                     </div>
                     <span className="text-sm text-gray-600 font-sans">{t('Total Orders')}</span>
                   </div>
-                  <span className="font-bold text-[#4A041D]">12</span>
+                  <span className="font-bold text-[#4A041D]">{orders.length}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
                   <div className="flex items-center gap-3">
@@ -311,8 +308,8 @@ const Profile = () => {
               </div>
 
               <div className="space-y-4">
-                {mockOrders.length > 0 ? (
-                  mockOrders.map((order) => (
+                {orders.length > 0 ? (
+                  orders.map((order) => (
                     <div key={order.id} className="group border border-[#F3E7E1] rounded-xl p-4 lg:p-5 hover:border-[#C5A059]/50 hover:shadow-md transition-all duration-300 bg-[#FDFBF8]/50">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-start gap-4">
@@ -320,20 +317,20 @@ const Profile = () => {
                             <Package className="w-6 h-6 text-[#4A041D]" />
                           </div>
                           <div>
-                            <h4 className="font-sans font-bold text-[#4A041D] text-sm md:text-base mb-1">{order.id}</h4>
+                            <h4 className="font-sans font-bold text-[#4A041D] text-sm md:text-base mb-1">#{order.id.slice(0, 8)}</h4>
                             <div className="flex items-center gap-3 text-xs text-gray-500 font-sans">
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" /> {order.date}
+                                <Clock className="w-3 h-3" /> {new Date(order.createdAt).toLocaleDateString()}
                               </span>
                               <span>•</span>
-                              <span>{order.items} {t('Items')}</span>
+                              <span>{order.items?.length || 0} {t('Items')}</span>
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4 lg:gap-8">
                           <div className="text-right">
-                            <div className="font-sans font-bold text-[#4A041D]">{order.total}</div>
+                            <div className="font-sans font-bold text-[#4A041D]">₼ {order.totalAmount?.toFixed(2)}</div>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-xs font-sans font-medium border ${getStatusColor(order.status)}`}>
                             {order.status}

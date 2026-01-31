@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useGetCategoryQuery, useGetRecommendedPageQuery, useGetRecommendedQuery } from '../../store/API';
+import { useGetCategoryQuery, useGetRecommendedPageQuery, useGetRecommendedQuery, API_BASE_URL } from '../../store/API';
 import { Link, useLocation, useParams } from 'react-router';
 import { Breadcrumb } from '../../products/Breadcrumb';
 import SimilarProducts from '../../components/UI/SimilarRecommendedProducts';
@@ -64,7 +64,7 @@ const CategoryCard = ({ title, imageSrc = null, slug, parentCategory }) => (
       <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-50 transition-colors">
         {imageSrc ? (
           <img
-            src={`https://kozmetik-001-site1.qtempurl.com//${imageSrc}`}
+            src={`https://kozmetik-001-site1.qtempurl.com${imageSrc}`}
             alt={title}
             className="w-full h-full object-contain rounded-lg"
           />

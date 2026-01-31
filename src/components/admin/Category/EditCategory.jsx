@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Loader2, Upload, X } from "lucide-react";
-import { useEditCategoryWithImageMutation } from "../../../store/API";
+import { useEditCategoryWithImageMutation, API_BASE_URL } from "../../../store/API";
 import { toast } from "react-toastify";
 
 const EditCategoryUI = ({ item, setOpen, categories }) => {
@@ -125,7 +125,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
     }
     // If it's an existing image URL from the server
     else if (imagePreview) {
-      return `https://kozmetik-001-site1.qtempurl.com//${imagePreview}`;
+      return `https://kozmetik-001-site1.qtempurl.com${imagePreview}`;
     }
 
     return null;

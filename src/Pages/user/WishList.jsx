@@ -166,8 +166,8 @@ const WishList = () => {
               const cardInfo = {
                 url: item.product.primaryImageUrl,
                 name: item.product.name,
-                priceOriginal: item.product.originalPrice,
-                price: item.product.currentPrice,
+                priceOriginal: item.product.price,
+                price: item.product.discountedPrice && item.product.discountedPrice > 0 ? item.product.discountedPrice : item.product.price,
                 id: item.product.id,
                 description: item.product.shortDescription || item.product.description,
                 discountPercentage: item.product.discountPercentage,

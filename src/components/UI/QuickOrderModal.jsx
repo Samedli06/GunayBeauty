@@ -131,13 +131,15 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
                 alt={product?.name}
                 className="w-16 h-16 object-contain rounded-lg bg-white p-2"
                 onError={(e) => {
-                  e.target.src = "/Icons/logo.svg"
+                  e.target.src = "/Icons/logo.jpeg"
                 }}
               />
               <div className="flex-1">
                 <h4 className="font-medium text-gray-900 line-clamp-2">{product?.name}</h4>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-red-600 font-semibold">{product?.prices[me ? me?.role - 1 : 0]?.discountedPrice} AZN</span>
+                  <span className="text-red-600 font-semibold">
+                    {product.discountedPrice > 0 ? product.discountedPrice : product.price} AZN
+                  </span>
                   <span className="text-gray-500 text-sm">× {quantity}</span>
                 </div>
               </div>
@@ -193,7 +195,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 font-medium">{t('quickOrder.totalAmount')}</span>
                 <span className="text-2xl font-bold text-gray-900">
-                  {(product?.prices[me ? me?.role - 1 : 0]?.discountedPrice * quantity).toFixed(2)} AZN
+                  {((product.discountedPrice > 0 ? product.discountedPrice : product.price) * quantity).toFixed(2)} AZN
                 </span>
               </div>
             </div>

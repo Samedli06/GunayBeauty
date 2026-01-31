@@ -50,32 +50,14 @@ const EditProduct = ({ setOpen, idPr }) => {
     stockQuantity: 0,
     categoryId: '',
     brandId: '',
-    prices: [
-      { userRole: 0, price: 0, discountedPrice: 0, discountPercentage: 0 },
-      { userRole: 1, price: 0, discountedPrice: 0, discountPercentage: 0 },
-      { userRole: 2, price: 0, discountedPrice: 0, discountPercentage: 0 },
-      { userRole: 3, price: 0, discountedPrice: 0, discountPercentage: 0 }
-    ]
+    price: 0,
+    discountedPrice: 0,
   });
 
 
   // Initialize form with edit data
   useEffect(() => {
     if (edit && edit.id) {
-      const pricesArray = edit.prices && edit.prices.length > 0
-        ? edit.prices.map(p => ({
-          userRole: p.userRole,
-          price: p.price || 0,
-          discountedPrice: p.discountedPrice || 0,
-          discountPercentage: p.discountPercentage || 0
-        }))
-        : [
-          { userRole: 0, price: 0, discountedPrice: 0, discountPercentage: 0 },
-          { userRole: 1, price: 0, discountedPrice: 0, discountPercentage: 0 },
-          { userRole: 2, price: 0, discountedPrice: 0, discountPercentage: 0 },
-          { userRole: 3, price: 0, discountedPrice: 0, discountPercentage: 0 }
-        ];
-
       setFormData({
         name: edit.name || '',
         description: edit.description || '',
@@ -86,7 +68,8 @@ const EditProduct = ({ setOpen, idPr }) => {
         stockQuantity: edit.stockQuantity || 0,
         categoryId: edit.categoryId || '',
         brandId: edit.brandId || '',
-        prices: pricesArray
+        price: edit.price || 0,
+        discountedPrice: edit.discountedPrice || 0,
       });
 
       if (edit.imageUrl) setImagePreview(edit.imageUrl);
@@ -103,20 +86,12 @@ const EditProduct = ({ setOpen, idPr }) => {
     }));
   };
 
-  const handlePriceChange = (value, field, index) => {
-    setFormData(prev => {
-      const updatedPrices = prev.prices.map((priceObj, i) => {
-        if (i === index) {
-          const updated = { ...priceObj, [field]: parseFloat(value) || 0 };
-          const price = updated.price;
-          const discountedPrice = updated.discountedPrice;
-          const discountPercentage = price > 0 ? Math.round(((price - discountedPrice) / price) * 100) : 0;
-          return { ...updated, discountPercentage };
-        }
-        return priceObj;
-      });
-      return { ...prev, prices: updatedPrices };
-    });
+  const handlePriceChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Main image handlers
@@ -199,17 +174,6 @@ const EditProduct = ({ setOpen, idPr }) => {
     e.preventDefault();
 
     try {
-      if (imagesToDelete.length > 0) {
-        for (const image of imagesToDelete) {
-          try {
-            await deleteDetailImage({
-              id: image.id,
-            }).unwrap();
-          } catch (error) {
-          }
-        }
-      }
-
       const productData = {
         name: formData.name,
         description: formData.description,
@@ -217,10 +181,12 @@ const EditProduct = ({ setOpen, idPr }) => {
         sku: formData.sku,
         isActive: formData.isActive,
         isHotDeal: formData.isHotDeal,
-        stockQuantity: formData.stockQuantity,
+        stockQuantity: Number(formData.stockQuantity) || 0,
         categoryId: formData.categoryId,
         brandId: formData.brandId,
-        prices: formData.prices,
+        price: Number(formData.price) || 0,
+        discountedPrice: Number(formData.discountedPrice) || 0,
+        detailImageUrls: existingGalleryImages.map(img => img.imageUrl),
       };
 
       const formDataToSend = new FormData();
@@ -525,6 +491,19 @@ const EditProduct = ({ setOpen, idPr }) => {
             </label>
           </div>
 
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isActive"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleInputChange}
+              className="w-4 h-4 text-indigo-600 bg-[#2c2c2c] border-gray-600 rounded focus:ring-indigo-500 focus:ring-2"
+            />
+            <label htmlFor="isActive" className="text-sm font-medium">
+              Aktiv
+            </label>
+          </div>
         </div>
 
         {/* Descriptions */}
@@ -553,58 +532,33 @@ const EditProduct = ({ setOpen, idPr }) => {
         </div>
 
         {/* Pricing Section */}
-        <div>
-          <label className="block text-sm font-medium mb-4">İstifadəçi roluna görə qiymətlər</label>
-          <div className="border border-gray-600 rounded-md">
-            {formData.prices.length > 0 && userRoles ? (
-              formData.prices.map((item, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-[#2c2c2c] border-b border-gray-600 last:border-b-0">
-                  <div className="flex items-center">
-                    <label className="block text-md font-medium">
-                      {getRoleName(item.userRole)}
-                    </label>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-[#2c2c2c] rounded-md border border-gray-600">
+          <div>
+            <label className="block text-sm font-medium mb-2">Qiymət</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handlePriceChange}
+              min="0"
+              step="0.01"
+              className="w-full px-3 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="0.00"
+            />
+          </div>
 
-                  <div>
-                    <label className="block text-xs font-medium mb-1">Qiymət</label>
-                    <input
-                      type="number"
-                      value={item.price}
-                      onChange={(e) => handlePriceChange(e.target.value, 'price', index)}
-                      min="0"
-                      step="0.01"
-                      className="w-full px-2 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                      placeholder="0.00"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1">Endirimli qiymət</label>
-                    <input
-                      type="number"
-                      value={item.discountedPrice}
-                      onChange={(e) => handlePriceChange(e.target.value, 'discountedPrice', index)}
-                      min="0"
-                      step="0.01"
-                      className="w-full px-2 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                      placeholder="0.00"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1">Endirim %</label>
-                    <input
-                      type="number"
-                      value={item.discountPercentage}
-                      readOnly
-                      className="w-full px-2 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md text-sm text-gray-400"
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-gray-400">Qiymətlər yüklənir...</div>
-            )}
+          <div>
+            <label className="block text-sm font-medium mb-2">Endirimli qiymət</label>
+            <input
+              type="number"
+              name="discountedPrice"
+              value={formData.discountedPrice}
+              onChange={handlePriceChange}
+              min="0"
+              step="0.01"
+              className="w-full px-3 py-2 bg-[#1f1f1f] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="0.00"
+            />
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router';
-import { useGetBrandsAdminQuery } from '../../store/API';
+import { useGetBrandsAdminQuery, API_BASE_URL } from '../../store/API';
 import { useTranslation } from 'react-i18next';
 import { translateDynamicField } from '../../i18n';
 
@@ -108,7 +108,7 @@ const Brands = () => {
   const brands = currentBrands?.map(brand => ({
     name: brand?.name || "Brand",
     logo: brand?.logoUrl
-      ? `https://kozmetik-001-site1.qtempurl.com/${brand.logoUrl}`
+      ? `https://kozmetik-001-site1.qtempurl.com${brand.logoUrl}`
       : './Icons/banner-commercial.svg',
     products: brand?.productCount || 0,
     slug: brand?.slug

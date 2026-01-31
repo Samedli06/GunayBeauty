@@ -3,10 +3,14 @@ import {
   fetchBaseQuery
 } from '@reduxjs/toolkit/query/react';
 
+
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://gunaybeauty.com';
+
 export const API = createApi({
   reducerPath: 'API',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://kozmetik-001-site1.qtempurl.com',
+    baseUrl: API_BASE_URL,
+    credentials: 'include',
     prepareHeaders: (headers, {
       endpoint,
       body
@@ -41,7 +45,7 @@ export const API = createApi({
     },
   }),
 
-  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes'],
+  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders'],
 
   endpoints: builder => ({
     // *AUTHENTICATION*
@@ -1312,7 +1316,7 @@ export const API = createApi({
 
           // Make the request
           const response = await fetch(
-            `https://kozmetik-001-site1.qtempurl.com//api/v1/Files/download/${id}`, {
+            `https://kozmetik-001-site1.qtempurl.comapi/v1/Files/download/${id}`, {
             method: 'GET',
             headers: {
               'Authorization': token ? `Bearer ${token}` : '',
@@ -1541,6 +1545,53 @@ export const API = createApi({
         body,
       }),
     }),
+
+    // *PAYMENT & ORDERS*
+    initiatePayment: builder.mutation({
+      query: (paymentData) => ({
+        url: '/api/v1/Payment/initiate',
+        method: 'POST',
+        body: paymentData,
+      }),
+      invalidatesTags: ['Cart', 'Orders'],
+    }),
+
+    getMyOrders: builder.query({
+      query: () => ({
+        url: '/api/v1/Order/my-orders',
+        method: 'GET',
+      }),
+      providesTags: ['Orders'],
+    }),
+
+    getOrder: builder.query({
+      query: (orderId) => ({
+        url: `/api/v1/Order/${orderId}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, orderId) => [{ type: 'Orders', id: orderId }],
+    }),
+
+    getAdminOrders: builder.query({
+      query: ({ page = 1, pageSize = 20 }) => ({
+        url: '/api/v1/Order/admin/all',
+        method: 'GET',
+        params: {
+          Page: page,
+          PageSize: pageSize,
+        },
+      }),
+      providesTags: ['Orders'],
+    }),
+
+    updateOrderStatus: builder.mutation({
+      query: ({ orderId, status }) => ({
+        url: `/api/v1/Order/admin/${orderId}/status`,
+        method: 'PUT',
+        body: { status },
+      }),
+      invalidatesTags: (result, error, { orderId }) => ['Orders', { type: 'Orders', id: orderId }],
+    }),
   }),
 });
 
@@ -1669,5 +1720,10 @@ export const {
   useAddPromoCodeMutation,
   useEditPromoCodeMutation,
   useDeletePromoCodeMutation,
-  useValidatePromoCodeMutation
+  useValidatePromoCodeMutation,
+  useInitiatePaymentMutation,
+  useGetMyOrdersQuery,
+  useGetOrderQuery,
+  useGetAdminOrdersQuery,
+  useUpdateOrderStatusMutation
 } = API;

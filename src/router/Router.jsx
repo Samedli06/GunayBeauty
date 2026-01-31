@@ -36,6 +36,10 @@ import Brand from "../Pages/admin/Brand";
 import ErrorPage from "../products/ErrorPage";
 import Categories from "../Pages/user/Categories";
 import PromoCodes from "../Pages/admin/PromoCodes";
+import PrivacyPolicy from "../Pages/user/PrivacyPolicy";
+import PaymentSuccess from "../Pages/user/Payment/PaymentSuccess";
+import PaymentError from "../Pages/user/Payment/PaymentError";
+import OrdersAdmin from "../Pages/admin/Orders";
 
 const Router = () => {
 
@@ -83,6 +87,9 @@ const Router = () => {
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/:slug" element={<SubCategories />} />
             <Route path="/brands" element={<Brands />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/error" element={<PaymentError />} />
 
             {/* 404 Error Page - MUST BE LAST */}
 
@@ -108,6 +115,7 @@ const Router = () => {
             <Route path="file-management" element={<FileManagementPanel />} />
             <Route path="brands" element={<Brand />} />
             <Route path="promo-codes" element={<PromoCodes />} />
+            <Route path="orders" element={<OrdersAdmin />} />
           </Route>
         </Routes>
       </SearchProvider>

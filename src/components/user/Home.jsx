@@ -4,7 +4,7 @@ import MyMap from '../UI/googleMaps'
 import HomePageUI from '../UI/HomePageUI'
 import { Link } from 'react-router'
 import BannerSlider from '../UI/BannerSlider'
-import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery } from '../../store/API'
+import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery, useGetBrandsAdminQuery } from '../../store/API'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import InfiniteBrandSlider from '../UI/BrandSlider'
@@ -60,6 +60,7 @@ const Home = () => {
   const [activeCategorie, setActiveCategorie] = useState(null)
   const { data: hotDeals, isLoading, error, refetch } = useGetHotDealsQuery({ limit: 8 });
   const { data: recommended, isLoading: isRecommendedLoading } = useGetRecommendedQuery({ limit: 12 });
+  const { data: allBrands } = useGetBrandsAdminQuery();
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
   const { t, i18n } = useTranslation();
 
@@ -281,7 +282,7 @@ const Home = () => {
         </section>
 
         {/* 2. Shop by Category - Visual Tiles */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-16 lg:mt-24' data-aos="fade-up">
+        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-16 lg:mt-24' data-aos="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('Shop by Category')}</h2>
             <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Discover your beauty implementation')}</p>
@@ -297,7 +298,7 @@ const Home = () => {
                 <div className="aspect-[4/5] overflow-hidden bg-white border border-[#F3E7E1] rounded-sm group-hover:shadow-lg transition-all duration-500">
                   <div className="w-full h-full flex items-center justify-center overflow-hidden">
                     <img
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                      className="w-full h-full object-cover max- group-hover:scale-110 transition-transform duration-700 ease-in-out"
                       src={item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)}
                       alt={item.name}
                       onError={(e) => {
@@ -319,7 +320,7 @@ const Home = () => {
         </section>
 
         {/* 3. Darlings' Favourites (Hot Deals) */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
+        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
               <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Darlings Favourites')}</h2>
@@ -330,7 +331,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-12">
             {isLoading ? (
               <>
                 {[...Array(4)].map((_, i) => (
@@ -359,31 +360,25 @@ const Home = () => {
         {/* New Flowing Menu Section */}
         <section className='mt-20 lg:mt-32' data-aos="fade-up">
           <div className="text-center mb-12 px-4">
-            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('The Beauty Diaries')}</h2>
-            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Editorial curation of our finest collections')}</p>
+            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('World-Class Brands')}</h2>
+            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Curated luxury from our global partners')}</p>
           </div>
 
           <div className="relative border-y border-[#F3E7E1]">
+            {console.log(allBrands)}
             <FlowingMenu
-              items={(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 8).map(item => ({
-                link: `/categories/${item.slug}`,
-                text: item.name,
-                image: item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)
+              items={(allBrands)?.slice(0, 10).map(brand => ({
+                link: `/products/brand/${brand.slug}`,
+                text: brand.name,
+                image: brand.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${brand.imageUrl}` : '/Icons/logo.jpeg'
               }))}
             />
           </div>
         </section>
 
-        {/* 4. Brand Magic (Slider) */}
-        <section className="bg-[#F3E7E1] py-16 mt-20 lg:mt-32" data-aos="fade-up">
-          <div className='max-w-[1440px] mx-auto px-4 lg:px-12'>
-            <h2 className="text-center text-2xl lg:text-3xl font-sans text-[#4A041D] mb-10">{t('Our Luxury Partners')}</h2>
-            <InfiniteBrandSlider />
-          </div>
-        </section>
 
         {/* 5. Recommended For You */}
-        <section className='max-w-[1440px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
+        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
               <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Chosen For You')}</h2>
@@ -394,7 +389,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-12">
             {isRecommendedLoading ? (
               <>
                 {[...Array(8)].map((_, i) => (

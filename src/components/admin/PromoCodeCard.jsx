@@ -37,10 +37,7 @@ const PromoCodeCard = ({ promoCode, onEdit, onDelete }) => {
                             Expires: {new Date(promoCode.expirationDate).toLocaleDateString()}
                         </p>
                     </div>
-                    <div className="flex items-center justify-center bg-indigo-600/20 w-12 h-12 rounded-full border border-indigo-500/30">
-                        <Percent className="w-6 h-6 text-indigo-400" />
 
-                    </div>
                 </div>
 
                 {/* Details */}

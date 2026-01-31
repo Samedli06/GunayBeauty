@@ -18,38 +18,38 @@ import i18n from '../../i18n';
  * @param {boolean} props.noindex - Whether to prevent indexing
  */
 const SEO = ({
-  title = 'Smart Team Electronics - Azərbaycanda Premium Elektronika Mağazası',
-  description = 'Smart Team Electronics-də ən son elektronika, kompyuter, noutbuk, printer, müşahidə sistemləri və daha çoxunu alın. Azərbaycanda ən yaxşı qiymətlər, keyfiyyətli məhsullar və əla müştəri xidməti.',
-  keywords = 'elektronika, kompyuter, noutbuk, printer, müşahidə, smart team, Azərbaycan, onlayn mağaza, elektronika mağazası, electronics, computers, laptops, printers, surveillance, Azerbaijan, online store',
-  image = '/Icons/logo.svg',
+  title = 'Gunay Beauty Store - Azərbaycanda Premium Gözəllik Mağazası',
+  description = 'Gunay Beauty Store-da ən son ətirlər və gözəllik məhsullarını kəşf edin. Azərbaycanda ən yaxşı qiymətlər, keyfiyyətli məhsullar və əla müştəri xidməti.',
+  keywords = 'parfüm, kosmetika, gözəllik, gunay beauty, Azərbaycan, onlayn mağaza, gözəllik mağazası, perfumes, cosmetics, beauty, Azerbaijan, online store',
+  image = '/Icons/logo.jpeg',
   url,
   type = 'website',
   product = null,
   organization = null,
   noindex = false,
 }) => {
-  const siteUrl = typeof window !== 'undefined' 
-    ? window.location.origin 
-    : 'https://smartteam.az'; // Update with your actual domain
-  
+  const siteUrl = typeof window !== 'undefined'
+    ? window.location.origin
+    : 'https://gunaybeauty.az'; // Update with your actual domain
+
   const fullUrl = url || (typeof window !== 'undefined' ? window.location.href : siteUrl);
   const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
-  
+
   // Get current language (default to Azerbaijani for Azerbaijan market)
   const currentLang = i18n.language || 'az';
   const htmlLang = currentLang === 'az' ? 'az' : 'en';
-  
+
   // Default organization data with LocalBusiness schema for Azerbaijan
   const defaultOrganization = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': ['Organization', 'LocalBusiness'],
-    name: 'Smart Team Electronics',
+    name: 'Gunay Beauty Store',
     url: siteUrl,
-    logo: `${siteUrl}/Icons/logo.svg`,
-    description: 'Azərbaycanda premium elektronika mağazası',
+    logo: `${siteUrl}/Icons/logo.jpeg`,
+    description: 'Azərbaycanda premium gözəllik mağazası',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Qurban Abbasov 35',
+      streetAddress: '28 May, Rəşid Behbudov 66',
       addressLocality: 'Baku',
       addressRegion: 'Baku',
       addressCountry: 'AZ',
@@ -67,15 +67,14 @@ const SEO = ({
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
-      telephone: '+994 55 674 06 49',
-      email: 'info@smartteam.az',
+      telephone: '+994 70 202 75 19',
+      email: 'info@gunaybeauty.az',
       availableLanguage: ['az', 'en'],
       areaServed: 'AZ'
     },
     sameAs: [
-      'https://www.instagram.com/smart_team.az',
-      // Add other social media links here if available
-      // 'https://www.tiktok.com/@smartteam.az',
+      'https://www.instagram.com/gunaybeautystore',
+      'https://www.tiktok.com/@gunaybeautystore',
     ]
   }), [siteUrl]);
 
@@ -98,11 +97,9 @@ const SEO = ({
       '@type': 'Offer',
       url: fullUrl,
       priceCurrency: 'AZN',
-      price: product.prices && product.prices.length > 0 
-        ? product.prices[0].discountedPrice || product.prices[0].price
-        : product.currentPrice || product.price,
-      availability: product.stockQuantity > 0 
-        ? 'https://schema.org/InStock' 
+      price: product.discountedPrice > 0 ? product.discountedPrice : (product.price || 0),
+      availability: product.stockQuantity > 0
+        ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
       itemCondition: 'https://schema.org/NewCondition',
     },
@@ -200,13 +197,13 @@ const SEO = ({
     // Basic Meta Tags
     setMetaTag('name', 'description', description);
     setMetaTag('name', 'keywords', keywords);
-    setMetaTag('name', 'author', 'Smart Team Electronics');
-    setMetaTag('name', 'robots', noindex 
-      ? 'noindex, nofollow' 
+    setMetaTag('name', 'author', 'Gunay Beauty Store');
+    setMetaTag('name', 'robots', noindex
+      ? 'noindex, nofollow'
       : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
     );
     setMetaTag('httpEquiv', 'Content-Language', currentLang === 'az' ? 'az' : 'en');
-    
+
     // Geo-targeting for Azerbaijan
     setMetaTag('name', 'geo.region', 'AZ');
     setMetaTag('name', 'geo.placename', 'Baku, Azerbaijan');
@@ -215,7 +212,7 @@ const SEO = ({
 
     // Canonical URL
     setLinkTag('canonical', fullUrl);
-    
+
     // Hreflang tags for Azerbaijani and English versions
     // This tells search engines about language alternatives
     const basePath = fullUrl.replace(siteUrl, '').split('?')[0]; // Remove existing query params
@@ -230,7 +227,7 @@ const SEO = ({
       }
       element.setAttribute('href', href);
     };
-    
+
     // Set hreflang tags for both language versions
     setHreflang('az', `${siteUrl}${basePath}?lang=az`);
     setHreflang('en', `${siteUrl}${basePath}?lang=en`);
@@ -242,10 +239,10 @@ const SEO = ({
     setMetaTag('property', 'og:description', description);
     setMetaTag('property', 'og:image', fullImageUrl);
     setMetaTag('property', 'og:url', fullUrl);
-    setMetaTag('property', 'og:site_name', 'Smart Team Electronics');
+    setMetaTag('property', 'og:site_name', 'Gunay Beauty Store');
     setMetaTag('property', 'og:locale', currentLang === 'az' ? 'az_AZ' : 'en_US');
     setMetaTag('property', 'og:locale:alternate', currentLang === 'az' ? 'en_US' : 'az_AZ');
-    
+
     // Additional Open Graph tags for Azerbaijan
     setMetaTag('property', 'og:country-name', 'Azerbaijan');
 

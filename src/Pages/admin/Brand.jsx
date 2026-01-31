@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import Modal from '../../components/UI/Modal';
 import AddBrandUI from '../../components/admin/Brands/AddBrand';
 import { Loader2 } from 'lucide-react';
-import { useDeleteBrandMutation, useGetBrandsAdminQuery } from '../../store/API';
+import { useDeleteBrandMutation, useGetBrandsAdminQuery, API_BASE_URL } from '../../store/API';
 import EditBrandUI from '../../components/admin/Brands/EditBrand';
 import { useTranslation } from 'react-i18next';
 
@@ -70,7 +70,7 @@ const Brand = () => {
                   <img
                     className="w-10 h-10 rounded-full"
                     src={
-                      `https://kozmetik-001-site1.qtempurl.com/${brand.logoUrl}` ||
+                      `https://kozmetik-001-site1.qtempurl.com${brand.logoUrl}` ||
                       "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/85d1d12f-b0a5-49c0-bc81-6238cfc5d9ac/JORDAN+1+RETRO+HIGH+OG+%28PS%29.png"
                     }
                     alt=""

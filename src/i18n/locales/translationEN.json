@@ -43,9 +43,9 @@
   "location": "Location",
   "failedAddToCart": "Failed to add product to cart",
   "footer": {
-    "desc1": "Our company provides sales and installation",
-    "desc2": "services for computers, office equipment, and",
-    "desc3": "low-current systems.",
+    "desc1": "Discover your signature scent and embrace your beauty",
+    "desc2": "with our luxury collection at Gunay Beauty Store.",
+    "desc3": "Embrace your beauty.",
     "mainPages": "Main Pages",
     "auth": "Authentication",
     "home": "Home",
@@ -53,10 +53,11 @@
     "download": "Download Program",
     "contact": "Contact",
     "login": "Log In",
+    "privacyPolicy": "Privacy Policy",
     "contactUs": "Contact Us",
-    "address1": "Qurban Abbasov 35",
-    "address2": "Sadarak Mall, ",
-    "address3": "Row 5-6, Store 60",
+    "address1": "28 May, Rəşid Behbudov 66",
+    "phone": "070 202 75 19",
+    "workingHours": "11:00 – 20:00",
     "langEnglish": "English",
     "langAzerbaijani": "Azerbaijani"
   },
@@ -79,6 +80,10 @@
   "adding": "Adding...",
   "addedToCart": "Added to cart",
   "addToCart": "Add to cart",
+  "unauthorized": {
+    "favorites": "add items to Favorites",
+    "account": "access your Account"
+  },
   "brands": "Brands",
   "about": {
     "whoWeAre": "Who we are?",
@@ -319,5 +324,73 @@
     "previousPage": "Previous page",
     "page": "Page",
     "nextPage": "Next page"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated",
+    "sections": {
+      "introduction": {
+        "title": "Introduction",
+        "content": "Welcome to Gunay Beauty Store. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website (gunaybeauty.az) and use our services."
+      },
+      "informationWeCollect": {
+        "title": "Information We Collect",
+        "content": "We collect information that you provide directly to us. This includes: \n• Personal identifiers: Name, email address, and phone number.\n• Account information: Encrypted password and authentication tokens.\n• Order details: Products purchased, quantities, total amounts, and currency (AZN).\n• Technical data: Although collected automatically by many hosting services, we primarily focus on data necessary for your session, such as authentication cookies."
+      },
+      "howWeCollect": {
+        "title": "How We Collect Information",
+        "content": "Information is gathered through several methods:\n• Registration: When you create an account on our platform.\n• Checkout & Quick Order: When you provide details to facilitate a purchase.\n• Direct Interaction: When you contact us via our contact forms or customer service.\n• Automated Technologies: We use cookies and local storage to manage your shopping cart and maintain your logged-in session."
+      },
+      "howWeUse": {
+        "title": "How We Use Information",
+        "content": "Your data is used solely to provide and improve our services, including:\n• Order Processing: To handle your purchases.\n• Account Management: To maintain your profile, order history, and loyalty points.\n• Communication: To contact you regarding your orders or response to inquiries.\n• Security: To protect our website and your account from unauthorized access."
+      },
+      "cookies": {
+        "title": "Cookies and Tracking Technologies",
+        "content": "We use essential cookies and storage technologies:\n• Authentication Cookies: To keep you logged in to your account securely.\n• Local Storage: We use 'ecommerce_cart' in your browser's local storage to save your shopping cart items across sessions."
+      },
+      "thirdParty": {
+        "title": "Third-Party Services",
+        "content": "We integrate with third-party providers to enhance our services:\n• Google Fonts: Used for professional website typography."
+      },
+      "sharingSec": {
+        "title": "Data Sharing & Security",
+        "content": "We do not sell or rent your personal data to third parties. We only share information when necessary to fulfill your orders or when required by law. We implement industry-standard security measures, including password encryption and JWT (JSON Web Tokens), to protect your data."
+      },
+      "rightsRetention": {
+        "title": "User Rights & Retention",
+        "content": "You have the right to access, update, or request the deletion of your personal information through your profile page. We retain your data as long as your account is active or as needed to provide you with services and comply with legal obligations."
+      },
+      "children": {
+        "title": "Children's Privacy",
+        "content": "Our services are not directed to children under the age of 13. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will take steps to delete such information."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "desc": "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us through any of the following channels:",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address"
+      }
+    }
+  },
+  "payment": {
+    "successful": "Payment Successful!",
+    "failed": "Payment Failed",
+    "successText": "Thank you! Your order has been placed successfully and is being processed.",
+    "errorMessage": "There was an issue processing your payment. Please try again or contact support.",
+    "orderId": "Order ID",
+    "transactionId": "Transaction ID",
+    "status": "Payment Status",
+    "viewOrders": "View My Orders",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home",
+    "invalidOrder": "Invalid order information.",
+    "emailAddress": "Email Address",
+    "shippingAddress": "Shipping Address",
+    "orderNotes": "Order Notes",
+    "verifying": "Verifying...",
+    "paid": "Paid",
+    "processing": "Processing"
   }
 }
