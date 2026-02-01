@@ -77,7 +77,12 @@ const Brand = () => {
                   />
                   <div>
                     <h2 className="text-lg font-medium !text-white">{brand.name}</h2>
-                    <p className="text-sm text-gray-400">{brand.slug || "slug"}</p>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm text-gray-400">Sıra: {brand.sortOrder || 0}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${brand.isActive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                        {brand.isActive ? 'Aktiv' : 'Deaktiv'}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

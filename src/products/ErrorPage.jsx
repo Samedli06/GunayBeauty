@@ -1,138 +1,52 @@
 import React from 'react';
-import { Home, ShoppingCart } from 'lucide-react';
+import { Home, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
+
+// Reusing the button styles and colors from the main theme based on Home.jsx findings
+// Primary Color: #4A041D (Deep Burgundy/Red)
+// Secondary/Accent: #C5A059 (Gold)
+// Text/Secondary Text: #9E2A2B
+// Background: #FDFBF8
 
 export default function ErrorPage() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-pink-200 via-yellow-100 via-green-100 via-blue-100 to-purple-200 flex items-center justify-center">
-      {/* Dot Pattern */}
-      <div 
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
-          backgroundSize: '30px 30px'
-        }}
-      />
-      
-      {/* Diagonal Lines */}
-      <div 
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{
-          background: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.5) 10px, rgba(255, 255, 255, 0.5) 11px)'
-        }}
-      />
+    <div className="min-h-[70vh] flex flex-col items-center justify-center bg-[#FDFBF8] px-4 py-16 text-center">
+      {/* 404 Display */}
+      <h1 className="text-[120px] md:text-[180px] font-serif font-bold text-[#4A041D] leading-none opacity-10 select-none">
+        404
+      </h1>
 
-      {/* Floating Shapes */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-20 h-20 bg-red-500 rounded-full opacity-15 top-[10%] left-[10%] animate-float" />
-        <div className="absolute w-16 h-16 bg-gray-800 rounded-xl opacity-15 top-[70%] right-[15%] animate-float-delayed" />
-        <div className="absolute w-24 h-24 bg-gray-600 rounded-full opacity-15 bottom-[15%] left-[20%] animate-float-more-delayed" />
-      </div>
+      <div className="-mt-12 md:-mt-20 relative z-10">
+        <h2 className="text-3xl md:text-5xl font-sans text-[#4A041D] font-medium mb-6">
+          {t('errorPage.title')}
+        </h2>
 
-      {/* Main Content */}
-      <div className="relative z-10 text-center px-10 py-12 max-w-2xl animate-fade-in-up">
-        {/* 404 Code */}
-        <div className="text-[150px] font-black text-gray-800 leading-none mb-5 animate-glitch">
-          404
-        </div>
-
-        {/* Title */}
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Səhifə Tapılmadı
-        </h1>
-
-        {/* Message */}
-        <p className="text-lg text-gray-600 mb-10 leading-relaxed">
-          Üzr istəyirik, axtardığınız səhifə mövcud deyil və ya köçürülüb. 
-          Zəhmət olmasa ana səhifəyə qayıdın və ya məhsulları nəzərdən keçirin.
+        <p className="text-[#9E2A2B] text-lg md:text-xl font-sans max-w-lg mx-auto mb-10 leading-relaxed italic">
+          {t('errorPage.description')}
         </p>
 
-        {/* Buttons */}
-        <div className="flex gap-4 justify-center flex-wrap">
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
           <button
-            onClick={() => window.location.href = '/'}
-            className="flex items-center gap-3 px-10 py-4 bg-red-600 text-white font-semibold rounded-lg shadow-lg hover:bg-red-700 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300"
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 px-8 py-3 bg-[#4A041D] text-white font-sans text-sm tracking-widest uppercase hover:bg-[#C5A059] transition-all duration-300 rounded-sm shadow-sm"
           >
-            <Home className="w-5 h-5" />
-            Ana Səhifə
+            <Home className="w-4 h-4" />
+            {t('errorPage.homeButton')}
           </button>
 
           <button
-            onClick={() => window.location.href = '/products'}
-            className="flex items-center gap-3 px-10 py-4 bg-white text-gray-800 font-semibold rounded-lg shadow-lg border-2 border-gray-200 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300"
+            onClick={() => navigate('/products')}
+            className="flex items-center gap-2 px-8 py-3 bg-transparent border border-[#4A041D] text-[#4A041D] font-sans text-sm tracking-widest uppercase hover:bg-[#F3E7E1] transition-all duration-300 rounded-sm"
           >
-            <ShoppingCart className="w-5 h-5" />
-            Məhsullar
+            <ShoppingBag className="w-4 h-4" />
+            {t('errorPage.productsButton')}
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes glitch {
-          0%, 100% {
-            transform: translate(0);
-          }
-          20% {
-            transform: translate(-2px, 2px);
-          }
-          40% {
-            transform: translate(-2px, -2px);
-          }
-          60% {
-            transform: translate(2px, 2px);
-          }
-          80% {
-            transform: translate(2px, -2px);
-          }
-        }
-
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-30px) rotate(180deg);
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease;
-        }
-
-        .animate-glitch {
-          animation: glitch 3s infinite;
-        }
-
-        .animate-float {
-          animation: float 20s infinite ease-in-out;
-        }
-
-        .animate-float-delayed {
-          animation: float 20s infinite ease-in-out;
-          animation-delay: 5s;
-        }
-
-        .animate-float-more-delayed {
-          animation: float 20s infinite ease-in-out;
-          animation-delay: 10s;
-        }
-
-        @media (max-width: 768px) {
-          .text-\[150px\] {
-            font-size: 100px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -1426,18 +1426,29 @@ export const API = createApi({
       }],
     }),
 
+    // POST create brand
+    addBrand: builder.mutation({
+      query: (brandData) => ({
+        url: '/api/v1/Brands',
+        method: 'POST',
+        body: brandData,
+      }),
+      invalidatesTags: ['Brands'],
+    }),
+
     // POST create brand with image
     addBrandImage: builder.mutation({
       query: ({
         name,
         sortOrder,
+        isActive = true,
         file
       }) => {
         const formData = new FormData();
         formData.append("imageFile", file, file.name);
 
         return {
-          url: `/api/v1/Brands/with-image?name=${encodeURIComponent(name)}&sortOrder=${sortOrder}`,
+          url: `/api/v1/Brands/with-image?name=${encodeURIComponent(name)}&sortOrder=${sortOrder}&isActive=${isActive}`,
           method: 'POST',
           body: formData,
           prepareHeaders: (headers) => {
@@ -1453,11 +1464,19 @@ export const API = createApi({
     editBrand: builder.mutation({
       query: ({
         id,
-        ...data
+        name,
+        logoUrl,
+        isActive,
+        sortOrder
       }) => ({
         url: `/api/v1/Brands/${id}`,
         method: 'PUT',
-        body: data,
+        body: {
+          name,
+          logoUrl,
+          isActive,
+          sortOrder
+        },
       }),
       invalidatesTags: ['Brands'],
     }),
@@ -1573,13 +1592,9 @@ export const API = createApi({
     }),
 
     getAdminOrders: builder.query({
-      query: ({ page = 1, pageSize = 20 }) => ({
+      query: () => ({
         url: '/api/v1/Order/admin/all',
         method: 'GET',
-        params: {
-          Page: page,
-          PageSize: pageSize,
-        },
       }),
       providesTags: ['Orders'],
     }),
@@ -1602,6 +1617,7 @@ export const {
   useDeleteBrandMutation,
   useEditBrandMutation,
   useEditBrandWithImageMutation,
+  useAddBrandMutation,
   useAddBrandImageMutation,
 
   useGetProductPdfByIdQuery,

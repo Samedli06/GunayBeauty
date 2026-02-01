@@ -21,6 +21,17 @@
     "login": "Daxil ol"
   },
   "categories": "Kateqoriyalar",
+  "loading": "Yüklənir...",
+  "orderDetails": "Sifariş detalları",
+  "orderDate": "Sifariş tarixi",
+  "paymentInfo": "Ödəniş məlumatı",
+  "noSpecificNotes": "Heç bir qeyd daxil edilməyib",
+  "orderMethod": "Sifariş üsulu",
+  "quantityShort": "Say",
+  "unit": "ədəd",
+  "close": "Bağla",
+  "unpaid": "Ödənilməyib",
+  "errorLoadingOrders": "Sifariş detalları yüklənərkən xəta baş verdi",
   "noSubcategoriesAvailable": "Alt kateqoriya yoxdur",
   "hoverForSubcategories": "Alt kateqoriyaları görmək üçün kateqoriyaların üzərinə gəlin",
   "networkEquipmentTitle": "Şəbəkə avadanlıqları",
@@ -105,6 +116,7 @@
   },
   "profile": {
     "profile": "Profil",
+    "welcomeBack": "Xoş gəlmişsiniz",
     "myDetails": "Məlumatlarım",
     "personalInformation": "Şəxsi Məlumatlar",
     "personalInfoDesc": "Hesabınızı güncel saxlamaq üçün ad, e-poçt ünvanı və digər profil məlumatları kimi şəxsi məlumatlarınızı görün və yeniləyin.",
@@ -374,6 +386,12 @@
         "address": "Ünvan"
       }
     }
+  },
+  "errorPage": {
+    "title": "Səhifə Tapılmadı",
+    "description": "Axtardığınız səhifə mövcud deyil, silinib və ya adı dəyişdirilib.",
+    "homeButton": "Ana Səhifə",
+    "productsButton": "Məhsullar"
   },
   "payment": {
     "successful": "Ödəniş Uğurludur!",

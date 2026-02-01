@@ -282,7 +282,7 @@ const Home = () => {
         </section>
 
         {/* 2. Shop by Category - Visual Tiles */}
-        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-16 lg:mt-24' data-aos="fade-up">
+        <section className='max-w-[1340px]  px-6  lg:mx-0 px-4 lg:mx-auto lg:px-12 mt-10 lg:mt-24' data-aos="fade-up">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('Shop by Category')}</h2>
             <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Discover your beauty implementation')}</p>
@@ -320,7 +320,7 @@ const Home = () => {
         </section>
 
         {/* 3. Darlings' Favourites (Hot Deals) */}
-        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
+        <section className='max-w-[1340px]  px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
               <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Darlings Favourites')}</h2>
@@ -331,7 +331,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-12">
+          <div className="flex overflow-x-auto lg:grid lg:grid-cols-5  gap-6 scrollbar-hide items-stretch pb-4">
             {isLoading ? (
               <>
                 {[...Array(4)].map((_, i) => (
@@ -378,18 +378,18 @@ const Home = () => {
 
 
         {/* 5. Recommended For You */}
-        <section className='max-w-[1240px] mx-auto px-4 lg:px-12 mt-20 lg:mt-32' data-aos="fade-up">
+        <section className='max-w-[1340px]  px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
               <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Chosen For You')}</h2>
-              <p className="text-[#9E2A2B] font-sans text-xs tracking-widest uppercase mt-1">New Arrivals & Best Sellers</p>
+              <p className="text-[#9E2A2B] font-sans !text-xs tracking-wide uppercase mt-1">New Arrivals & Best Sellers</p>
             </div>
             <Link to='/products/recommended' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
               {t('View All')}
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-12">
+          <div className="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-6 scrollbar-hide items-stretch pb-4">
             {isRecommendedLoading ? (
               <>
                 {[...Array(8)].map((_, i) => (
@@ -416,7 +416,7 @@ const Home = () => {
 
 
 
-      </main>
+      </main >
     </>
   )
 }

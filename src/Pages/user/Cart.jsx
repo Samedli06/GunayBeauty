@@ -777,7 +777,7 @@ const Cart = () => {
 
   return (
     <section className="bg-[#FCFCFC] min-h-[80vh] font-sans pb-12" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      <div className="lg:hidden px-4 md:px-8 py-4 bg-white shadow-sm mb-4">
+      <div className="lg:hidden px-4 md:px-8 py-4 bg-white mb-4">
         <Breadcrumb />
       </div>
 
@@ -832,12 +832,12 @@ const Cart = () => {
 
                             <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
                               <div>
-                                <h3 className="font-semibold text-base text-[#4A041D] line-clamp-2 leading-tight mb-1">
+                                <h3 className="font-semibold !text-sm text-[#4A041D] line-clamp-2 leading-tight mb-1">
                                   {item.productName}
                                 </h3>
                               </div>
                               <div className="flex justify-between items-end">
-                                <span className="font-bold text-lg text-[#C5A059]">
+                                <span className="font-bold text-sm text-[#C5A059]">
                                   {(item.unitPrice * effectiveQuantity).toFixed(2)} ₼
                                 </span>
                               </div>

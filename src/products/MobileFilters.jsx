@@ -7,7 +7,7 @@ import { translateDynamicField } from '../i18n';
 // Move these components outside to prevent recreation on each render
 const FilterSection = ({ title, isExpanded, onToggle, children }) => (
   <div className="border-b border-gray-200">
-    <button 
+    <button
       onClick={onToggle}
       type="button"
       className="w-full px-4 py-4 flex justify-between items-center text-left"
@@ -32,9 +32,8 @@ const CheckboxItem = ({ label, checked, onChange }) => (
         onChange={onChange}
         className="sr-only"
       />
-      <div className={`w-5 h-5 border-2 rounded flex items-center justify-center ${
-        checked ? 'bg-red-500 border-red-500' : 'border-gray-300'
-      }`}>
+      <div className={`w-5 h-5 border-2 rounded flex items-center justify-center ${checked ? 'bg-red-500 border-red-500' : 'border-gray-300'
+        }`}>
         {checked && (
           <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -55,17 +54,17 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState({});
-  
+
   // Dynamic translation states
   const [translatedParentCat, setTranslatedParentCat] = useState([]);
 
   const { data: categories, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: ParentCat, isLoading: isParentCatLoading } = useGetParentCategoriesQuery();
   const { data: customFilters, isLoading: isCustomLoading } = useGetFiltersQuery();
-  
+
   const selectedCategoryId = selectedCategories.length > 0 ? selectedCategories[0] : null;
   const { data: categoryFilters, isLoading: isCategoryFiltersLoading } = useGetCategoryFiltersQuery(
-    selectedCategoryId, 
+    selectedCategoryId,
     { skip: !selectedCategoryId }
   );
 
@@ -85,7 +84,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
   useEffect(() => {
     async function translateParentCat() {
       if (!ParentCat || ParentCat.length === 0) return;
-      
+
       const targetLang = i18n.language;
       if (targetLang === 'en') {
         const translated = await Promise.all(
@@ -128,7 +127,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
           };
         }
       });
-      
+
       setSelectedFilters(prev => ({
         ...prev,
         ...initialFilters
@@ -173,7 +172,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
   const handleFilterChange = (isChecked, filterId, optionId) => {
     setSelectedFilters(prev => {
       const updatedFilters = { ...prev };
-      
+
       if (!updatedFilters[filterId]) {
         updatedFilters[filterId] = {
           filterId: filterId,
@@ -200,7 +199,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
 
   const buildFilterCriteria = () => {
     const criteria = [];
-    
+
     Object.values(selectedFilters).forEach(filter => {
       if (filter.filterOptionIds.length > 0 || filter.customValue || filter.minValue > 0 || filter.maxValue > 0) {
         criteria.push({
@@ -212,13 +211,13 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
         });
       }
     });
-    
+
     return criteria;
   };
 
   const buildActiveFilters = () => {
     const activeFilters = [];
-    
+
     if (selectedCategories.length > 0 && categories) {
       selectedCategories.forEach(categoryId => {
         const category = categories.find(cat => cat.id === categoryId);
@@ -258,12 +257,12 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
     }
 
     if (minPrice || maxPrice) {
-      const priceLabel = minPrice && maxPrice 
+      const priceLabel = minPrice && maxPrice
         ? `Price: $${minPrice} - $${maxPrice}`
-        : minPrice 
+        : minPrice
           ? `Price: $${minPrice}+`
           : `Price: up to $${maxPrice}`;
-      
+
       activeFilters.push({
         id: 'price-range',
         key: 'price-range',
@@ -280,19 +279,19 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
   const hasActiveFilters = () => {
     const hasCategories = selectedCategories.length > 0;
     const hasPrice = minPrice || maxPrice;
-    const hasCustomFilters = Object.values(selectedFilters).some(filter => 
-      filter.filterOptionIds?.length > 0 || 
-      filter.customValue || 
-      filter.minValue > 0 || 
+    const hasCustomFilters = Object.values(selectedFilters).some(filter =>
+      filter.filterOptionIds?.length > 0 ||
+      filter.customValue ||
+      filter.minValue > 0 ||
       filter.maxValue > 0
     );
-    
+
     return hasCategories || hasPrice || hasCustomFilters;
   };
 
   const applyFilters = async () => {
     const hasActiveFiltersApplied = hasActiveFilters();
-    
+
     if (!hasActiveFiltersApplied) {
       hasFiltersApplied.current = false;
       if (onFilterResults) {
@@ -472,13 +471,13 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
         </div>
 
         <div className="p-4 border-t border-gray-200 flex gap-3">
-          <button 
+          <button
             onClick={handleClearFilters}
             className="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium"
           >
             {t('productsPage.clear')}
           </button>
-          <button 
+          <button
             onClick={handleShowResults}
             className="flex-1 py-3 px-4 bg-red-500 text-white rounded-lg font-medium"
             disabled={isFiltering}
@@ -497,19 +496,19 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
               className={`${isSort && 'rounded-b-none border-b-0'} flex items-center  justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-all duration-500 w-full`}
             >
               <SlidersHorizontal className="w-4 h-4 flex-shrink-0" />
-              <span className='whitespace-nowrap'>{t('productsPage.sorting')}</span>
+              <span className='whitespace-nowrap text-sm  '>{t('productsPage.sorting')}</span>
             </button>
-            
+
             <div className={`overflow-hidden transition-all duration-500 rounded-b-lg ${isSort ? "max-h-80 opacity-100" : "max-h-0 opacity-0"}`}>
               <div className="border border-gray-300 border-t-0 rounded-b-lg bg-white shadow-lg">
                 <div className="py-2 rounded-b-lg">
                   {[
-                      { value: null, label: t('sortBy') },
-                      { value: 'price_asc', label: t('priceLowToHigh') },
-                      { value: 'price_desc', label: t('priceHighToLow') },
-                      { value: 'name_asc' , label: t('nameAToZ') },
-                      { value: 'name_desc', label: t('nameZToA') }
-                    ].map((option) => (
+                    { value: null, label: t('sortBy') },
+                    { value: 'price_asc', label: t('priceLowToHigh') },
+                    { value: 'price_desc', label: t('priceHighToLow') },
+                    { value: 'name_asc', label: t('nameAToZ') },
+                    { value: 'name_desc', label: t('nameZToA') }
+                  ].map((option) => (
                     <button
                       key={option.value}
                       className={`w-full text-start px-4 py-2 hover:bg-gray-50 transition-colors duration-200 ${currentSort === option.value ? 'bg-gray-100 font-medium' : ''}`}
@@ -533,7 +532,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
             className={`flex items-center justify-center gap-2 rounded-md bg-gray-900 text-white hover:bg-gray-800 transition-all duration-500 overflow-hidden min-w-0 ${isSort ? "flex-shrink-[999] w-0 p-0 opacity-0" : "flex-1 opacity-100"}`}
           >
             <Filter className={`w-4 h-4 flex-shrink-0 transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`} />
-            <span className={`whitespace-nowrap transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`}>
+            <span className={`whitespace-nowrap text-sm transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`}>
               {t('productsPage.filteringBtn')}
             </span>
           </button>

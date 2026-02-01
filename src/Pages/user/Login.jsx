@@ -89,7 +89,7 @@ const Login = () => {
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-16 relative bg-white">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 px-15 lg:p-16 relative bg-white">
         <Link to="/" className="absolute top-6 left-6 lg:hidden p-2 text-gray-500 hover:text-[#4A041D] transition-colors">
           <ArrowLeft size={24} />
         </Link>
@@ -117,7 +117,7 @@ const Login = () => {
                     required
                     name='email'
                     onChange={handleChange}
-                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 group-hover:bg-white group-hover:border-gray-300"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 group-hover:bg-white group-hover:border-gray-300"
                     placeholder="name@example.com"
                   />
                 </div>
@@ -137,7 +137,7 @@ const Login = () => {
                     minLength={8}
                     name='password'
                     onChange={handleChange}
-                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 pr-12 group-hover:bg-white group-hover:border-gray-300"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 pr-12 group-hover:bg-white group-hover:border-gray-300"
                     placeholder="Enter your password"
                   />
                   <button
@@ -154,7 +154,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoginLoading}
-              className="w-full bg-[#4A041D] hover:bg-[#600626] text-white py-4 rounded-xl font-bold tracking-wide transition-all duration-300 shadow-lg shadow-[#4A041D]/20 transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full bg-[#4A041D] hover:bg-[#600626] text-white text-sm py-3  rounded-xl font-bold tracking-wide transition-all duration-300 shadow-lg shadow-[#4A041D]/20 transform hover:-translate-y-0.5 active:translate-y-0"
             >
               {isLoginLoading ? (
                 <div className="flex items-center justify-center gap-2">

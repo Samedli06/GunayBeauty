@@ -461,7 +461,7 @@ function Products() {
 
 
 
-            <div className="grid grid-cols-2 lg:grid-cols-5  gap-4 lg:gap-6">
+            <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-6 items-stretch pb-4">
               {shouldShowLoading ? (
                 skeletonArray.map((_, index) => (
                   <ProductCardSkeleton key={index} />

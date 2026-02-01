@@ -136,7 +136,7 @@ const HomePageUI = ({
   const renderButton = () => {
     if (isLoading) {
       return (
-        <button disabled className="w-full cursor-not-allowed flex justify-center items-center text-xs lg:text-sm bg-[#9E2A2B] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
+        <button disabled className="w-full cursor-not-allowed flex justify-center items-center !text-[10px] lg:text-xs bg-[#9E2A2B] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
           {t('adding')}
         </button>
@@ -145,7 +145,7 @@ const HomePageUI = ({
 
     if (showSuccess) {
       return (
-        <button disabled className="w-full cursor-default flex justify-center items-center text-xs lg:text-sm bg-[#4A041D] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
+        <button disabled className="w-full cursor-default flex justify-center items-center !text-[10px] lg:text-xs bg-[#4A041D] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Check className="w-4 h-4 mr-2" />
           {t('addedToCart')}
         </button>
@@ -155,7 +155,7 @@ const HomePageUI = ({
     return (
       <button
         onClick={(e) => onAddToCart(e, product)}
-        className="w-full cursor-pointer flex justify-center items-center text-xs lg:text-sm bg-[#4A041D] hover:bg-[#9E2A2B] text-white py-3 rounded-none font-medium uppercase tracking-widest transition-colors duration-300"
+        className="w-full cursor-pointer flex justify-center items-center !text-[10px] lg:text-xs bg-[#4A041D] hover:bg-[#9E2A2B] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-300"
       >
         {t('addToCart')}
       </button>
@@ -172,7 +172,7 @@ const HomePageUI = ({
 
       <Link
         to={`/details/${product.id}`}
-        className="group flex flex-col h-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
+        className="group flex flex-col flex-1 min-w-[200px] h-full max-h-[400px] min-h-[400px] lg:min-w-0 h-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
       >
 
         {/* Image Container - Added padding to match ProductCard style */}
@@ -187,7 +187,7 @@ const HomePageUI = ({
 
 
           <img
-            className="w-full aspect-square h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
+            className="w-full aspect-square   h-[150px] mb-10 object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
             src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
             alt={product.name}
             onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
@@ -195,12 +195,12 @@ const HomePageUI = ({
         </div>
 
         {/* Content */}
-        <div className="flex flex-col flex-1 px-4 pb-4 items-center text-center">
+        <div className="flex flex-1 flex-col px-4 pb-4 items-center  text-center">
 
           {/* Brand/Category Placeholder */}
-          <p className="text-[#9E2A2B] text-[10px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
+          <p className="text-[#9E2A2B] !text-[12px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
 
-          <h3 className="font-sans text-[#4A041D] text-lg leading-tight line-clamp-2 h-[3rem] w-full flex items-center justify-center">
+          <h3 className="font-sans text-[#4A041D] !text-sm leading-tight line-clamp-2 h-[3rem] w-full flex items-center justify-center">
             {translatedProductName}
           </h3>
 
@@ -212,6 +212,10 @@ const HomePageUI = ({
             <span className="text-[#4A041D] font-bold text-xl">
               {product.discountedPrice > 0 ? product.discountedPrice : product.price} AZN
             </span>
+          </div>
+
+          <div className="w-full mt-4">
+            {renderButton()}
           </div>
         </div>
 

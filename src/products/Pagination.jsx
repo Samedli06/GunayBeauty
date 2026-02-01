@@ -90,7 +90,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
                 key={page}
                 onClick={() => onPageChange(page)}
                 disabled={currentPage === page}
-                className={`w-10 h-10 rounded-full text-sm font-sans font-semibold transition-all duration-300
+                className={`w-7 h-7 rounded-full text-sm font-sans font-semibold transition-all duration-300
                   ${currentPage === page
                     ? 'bg-[#4A041D] text-white shadow-md shadow-[#4A041D]/20 transform scale-110'
                     : 'text-[#4A041D] hover:text-[#C5A059] hover:bg-[#4A041D]/5 cursor-pointer'}`}

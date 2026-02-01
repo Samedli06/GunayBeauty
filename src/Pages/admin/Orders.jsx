@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useGetAdminOrdersQuery, useUpdateOrderStatusMutation } from '../../store/API';
-import { Loader2, Eye, ShoppingBag, User, Calendar, CreditCard, ChevronLeft, ChevronRight, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react';
+import { Loader2, Eye, ShoppingBag, User, Calendar, CreditCard, ChevronLeft, ChevronRight, CheckCircle, Clock, XCircle, AlertCircle, Search, RefreshCw, CheckCheck, Undo2, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import AdminOrderDetailsModal from '../../components/admin/Orders/AdminOrderDetailsModal';
 
 const OrdersAdmin = () => {
     const { t } = useTranslation();
-    const [page, setPage] = useState(1);
-    const pageSize = 15;
 
-    const { data: ordersData, isLoading, isFetching } = useGetAdminOrdersQuery({
-        page,
-        pageSize
-    });
+    const { data: ordersData, isLoading, isFetching } = useGetAdminOrdersQuery();
     const [updateStatus, { isLoading: isUpdating }] = useUpdateOrderStatusMutation();
+
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
@@ -22,6 +22,11 @@ const OrdersAdmin = () => {
         } catch (error) {
             toast.error(error?.data?.message || 'Statusu yeniləmək mümkün olmadı');
         }
+    };
+
+    const handleViewDetails = (order) => {
+        setSelectedOrder(order);
+        setIsDetailsOpen(true);
     };
 
     const getStatusStyle = (status) => {
@@ -34,6 +39,16 @@ const OrdersAdmin = () => {
                 return 'bg-red-500/10 text-red-500 border-red-500/20';
             case 'Shipped':
                 return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+            case 'PaymentInitiated':
+                return 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20';
+            case 'Processing':
+                return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
+            case 'Delivered':
+                return 'bg-teal-500/10 text-teal-500 border-teal-500/20';
+            case 'Refunded':
+                return 'bg-gray-500/10 text-gray-500 border-gray-500/20';
+            case 'Failed':
+                return 'bg-rose-500/10 text-rose-500 border-rose-500/20';
             default:
                 return 'bg-gray-500/10 text-gray-500 border-gray-500/20';
         }
@@ -45,6 +60,11 @@ const OrdersAdmin = () => {
             case 'Pending': return <Clock size={14} />;
             case 'Cancelled': return <XCircle size={14} />;
             case 'Shipped': return <AlertCircle size={14} />;
+            case 'PaymentInitiated': return <CreditCard size={14} />;
+            case 'Processing': return <RefreshCw size={14} />;
+            case 'Delivered': return <CheckCheck size={14} />;
+            case 'Refunded': return <Undo2 size={14} />;
+            case 'Failed': return <AlertTriangle size={14} />;
             default: return null;
         }
     };
@@ -57,8 +77,16 @@ const OrdersAdmin = () => {
         );
     }
 
-    const orders = ordersData?.items || [];
-    const totalPages = ordersData?.totalPages || 1;
+    // Filter orders based on search query (client-side since API doesn't support it)
+    const filteredOrders = (Array.isArray(ordersData) ? ordersData : []).filter(order => {
+        const query = searchQuery.toLowerCase();
+        return (
+            order.customerName?.toLowerCase().includes(query) ||
+            order.orderNumber?.toLowerCase().includes(query) ||
+            order.id?.toLowerCase().includes(query) ||
+            order.customerPhone?.includes(query)
+        );
+    });
 
     return (
         <div className="p-6">
@@ -66,6 +94,16 @@ const OrdersAdmin = () => {
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Sifarişlər</h1>
                     <p className="text-gray-400">Mağaza üzərindən gələn bütün sifarişlərin idarə edilməsi</p>
+                </div>
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                    <input
+                        type="text"
+                        placeholder="Müştəri və ya Sifariş # axtar..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="bg-[#1f1f1f] border border-gray-800 text-white text-sm rounded-xl pl-10 pr-4 py-2 outline-none focus:ring-1 focus:ring-[#C5A059] w-64 transition-all"
+                    />
                 </div>
             </div>
 
@@ -84,11 +122,11 @@ const OrdersAdmin = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-800">
-                            {orders.length > 0 ? (
-                                orders.map((order) => (
+                            {filteredOrders.length > 0 ? (
+                                filteredOrders.map((order) => (
                                     <tr key={order.id} className="hover:bg-white/5 transition-colors group">
                                         <td className="px-6 py-4">
-                                            <span className="text-white font-mono font-bold">#{order.id.slice(0, 8)}...</span>
+                                            <span className="text-white font-mono font-bold">#{order.orderNumber || order.id.slice(0, 8)}</span>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
@@ -117,17 +155,29 @@ const OrdersAdmin = () => {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="px-6 py-4 text-right flex justify-end gap-2">
+                                            <button
+                                                onClick={() => handleViewDetails(order)}
+                                                className="p-1.5 bg-gray-800 text-gray-400 hover:text-white rounded-lg transition-all"
+                                                title="Detallara bax"
+                                            >
+                                                <Eye size={16} />
+                                            </button>
                                             <select
                                                 value={order.status}
                                                 onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                 disabled={isUpdating}
                                                 className="bg-[#2c2c2c] border border-gray-700 text-white text-xs rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-[#C5A059] transition-all disabled:opacity-50"
                                             >
-                                                <option value="Pending">Gözləmədə</option>
-                                                <option value="Paid">Ödənilib</option>
-                                                <option value="Shipped">Göndərilib</option>
-                                                <option value="Cancelled">Ləğv edilib</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="PaymentInitiated">Payment Initiated</option>
+                                                <option value="Paid">Paid</option>
+                                                <option value="Processing">Processing</option>
+                                                <option value="Shipped">Shipped</option>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                                <option value="Refunded">Refunded</option>
+                                                <option value="Failed">Failed</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -142,32 +192,13 @@ const OrdersAdmin = () => {
                         </tbody>
                     </table>
                 </div>
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="px-6 py-4 bg-[#2c2c2c] border-t border-gray-800 flex items-center justify-between">
-                        <span className="text-sm text-gray-400 font-medium">
-                            Səhifə {page} / {totalPages}
-                        </span>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={page === 1 || isFetching}
-                                className="p-2 rounded-lg bg-[#1f1f1f] text-white hover:bg-[#3c3c3c] disabled:opacity-30 transition-all border border-gray-700"
-                            >
-                                <ChevronLeft size={18} />
-                            </button>
-                            <button
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages || isFetching}
-                                className="p-2 rounded-lg bg-[#1f1f1f] text-white hover:bg-[#3c3c3c] disabled:opacity-30 transition-all border border-gray-700"
-                            >
-                                <ChevronRight size={18} />
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
+
+            <AdminOrderDetailsModal
+                order={selectedOrder}
+                isOpen={isDetailsOpen}
+                onClose={() => setIsDetailsOpen(false)}
+            />
         </div>
     );
 };

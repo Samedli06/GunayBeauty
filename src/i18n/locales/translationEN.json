@@ -21,6 +21,17 @@
     "login": "Login"
   },
   "categories": "Categories",
+  "loading": "Loading...",
+  "orderDetails": "Order Details",
+  "orderDate": "Order Date",
+  "paymentInfo": "Payment Information",
+  "noSpecificNotes": "No notes provided",
+  "orderMethod": "Order Method",
+  "quantityShort": "Qty",
+  "unit": "unit",
+  "close": "Close",
+  "unpaid": "Unpaid",
+  "errorLoadingOrders": "Error loading order details",
   "noSubcategoriesAvailable": "No subcategories available",
   "hoverForSubcategories": "Hover over a category to see subcategories",
   "networkEquipmentTitle": "Network Equipment",
@@ -107,6 +118,7 @@
   "profile": {
     "profile": "Profile",
     "myDetails": "My details",
+    "welcomeBack": "Welcome back",
     "personalInformation": "Personal Information",
     "personalInfoDesc": "View and update your personal details such as name, email address and other profile information to keep your account up to date.",
     "firstName": "First Name",
@@ -373,6 +385,12 @@
         "address": "Address"
       }
     }
+  },
+  "errorPage": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for does not exist, has been deleted, or renamed.",
+    "homeButton": "Home",
+    "productsButton": "Products"
   },
   "payment": {
     "successful": "Payment Successful!",

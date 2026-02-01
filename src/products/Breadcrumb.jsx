@@ -89,7 +89,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
     const currentCategoryData = translatedCategoryData || categoryData;
     console.log(currentCategoryData)
     return (
-      <nav className="flex items-center space-x-2 text-sm text-[#8B96A5] inter overflow-x-auto scrollbar-hide whitespace-nowrap">
+      <nav className="flex items-center lg:mt-10 space-x-2 text-sm text-[#8B96A5] inter overflow-x-auto scrollbar-hide whitespace-nowrap">
         <Link
           to="/"
           className="hover:text-gray-900 transition-colors text-sm lg:text-lg flex-shrink-0"

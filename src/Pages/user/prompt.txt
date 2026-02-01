@@ -1,0 +1,3 @@
+cat edit prompt
+
+also on categories section on adminpanel I need you to add slug edit field on modal and also on its rtk query payload

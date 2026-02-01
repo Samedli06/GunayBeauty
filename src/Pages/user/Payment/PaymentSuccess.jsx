@@ -13,7 +13,7 @@ const PaymentSuccess = () => {
 
     // Filter params
     const searchParams = new URLSearchParams(location.search);
-    const orderId = searchParams.get('order_id');
+    const orderId = searchParams.get('orderId');
     const transactionId = searchParams.get('transactionId');
 
     const { data: order, isLoading, isError } = useGetOrderQuery(orderId, {

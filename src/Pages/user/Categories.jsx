@@ -107,7 +107,7 @@ const Categories = () => {
                                 {/* Content Area */}
                                 <div className="p-6 lg:p-8 flex-1 flex flex-col">
                                     <Link to={`/categories/${category.slug}`} className="block">
-                                        <h2 className="text-xl lg:text-2xl font-sans text-[#4A041D] group-hover:text-[#C5A059] transition-colors mb-4 flex items-center justify-between">
+                                        <h2 className="!text-sm lg:text-2xl font-sans text-[#4A041D] group-hover:text-[#C5A059] transition-colors mb-4 flex items-center justify-between">
                                             {category.name}
                                             <ChevronRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-[#C5A059]" />
                                         </h2>
@@ -135,7 +135,7 @@ const Categories = () => {
                                                                     }}
                                                                 />
                                                             </div>
-                                                            <span className="text-[14px]  text-center font-sans font-medium text-[#4A041D] leading-tight line-clamp-2 px-1">
+                                                            <span className="!text-xs md:!text-sm lg:!text-base  text-center font-sans font-medium text-[#4A041D] leading-tight line-clamp-2 px-1">
                                                                 {sub.name}
                                                             </span>
                                                         </Link>

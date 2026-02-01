@@ -84,7 +84,7 @@ const Register = () => {
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-16 relative bg-white overflow-y-auto">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 px-15 lg:p-16 relative bg-white overflow-y-auto">
         <Link to="/" className="absolute top-6 left-6 lg:hidden p-2 text-gray-500 hover:text-[#4A041D] transition-colors">
           <ArrowLeft size={24} />
         </Link>
@@ -111,7 +111,7 @@ const Register = () => {
                   required
                   name='firstName'
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
                   placeholder="Jane"
                 />
               </div>
@@ -122,7 +122,7 @@ const Register = () => {
                   required
                   name='lastName'
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
                   placeholder="Doe"
                 />
               </div>
@@ -135,7 +135,7 @@ const Register = () => {
                 required
                 name='email'
                 onChange={handleChange}
-                className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300"
                 placeholder="name@example.com"
               />
             </div>
@@ -143,7 +143,7 @@ const Register = () => {
             <div className="group space-y-1.5">
               <label className="block text-sm font-medium text-gray-700 ml-1">Phone Number</label>
               <div className="flex relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl overflow-hidden">
-                <div className="flex items-center px-4 py-3.5 bg-gray-100 border border-r-0 border-gray-200 text-gray-600 text-sm font-medium">
+                <div className="flex items-center px-4 min-w-[80px] py-2.5 bg-gray-100 border border-r-0 border-gray-200 text-gray-600 text-xs font-medium whitespace-nowrap">
                   🇦🇿 +994
                 </div>
                 <input
@@ -151,7 +151,7 @@ const Register = () => {
                   required
                   name='phoneNumber'
                   onChange={handleChange}
-                  className="flex-1 px-5 py-3.5 bg-gray-50 border border-gray-200 outline-none transition-all placeholder:text-gray-400 text-gray-900 hover:bg-white hover:border-gray-300"
+                  className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 outline-none transition-all placeholder:text-gray-400 text-gray-900 hover:bg-white hover:border-gray-300"
                   placeholder="XX XXX XX XX"
                 />
               </div>
@@ -167,7 +167,7 @@ const Register = () => {
                     minLength={8}
                     name='password'
                     onChange={handleChange}
-                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
                     placeholder="Create password"
                   />
                   <button
@@ -189,7 +189,7 @@ const Register = () => {
                     minLength={8}
                     name='confirmPassword'
                     onChange={handleChange}
-                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
                     placeholder="Confirm password"
                   />
                   <button
@@ -207,7 +207,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={isSignLoading}
-                className="w-full bg-[#4A041D] hover:bg-[#600626] text-white py-4 rounded-xl font-bold tracking-wide transition-all duration-300 shadow-lg shadow-[#4A041D]/20 transform hover:-translate-y-0.5 active:translate-y-0"
+                className="w-full bg-[#4A041D] hover:bg-[#600626] text-white text-sm py-3  rounded-xl font-bold tracking-wide transition-all duration-300 shadow-lg shadow-[#4A041D]/20 transform hover:-translate-y-0.5 active:translate-y-0"
               >
                 {isSignLoading ? (
                   <div className="flex items-center justify-center gap-2">

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import { Gift, Package, Clock, CheckCircle, ChevronRight, CreditCard, Award, User as UserIcon } from 'lucide-react';
+import OrderDetailsModal from '../../components/UI/OrderDetailsModal';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -29,6 +30,10 @@ const Profile = () => {
 
   // Logout confirmation modal state
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Order Details Modal state
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
 
   // Animation state
   const [isVisible, setIsVisible] = useState(false);
@@ -97,6 +102,11 @@ const Profile = () => {
     }
   };
 
+  const handleOrderClick = (orderId) => {
+    setSelectedOrderId(orderId);
+    setIsOrderModalOpen(true);
+  };
+
   if (isUserLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh] bg-[#FDFBF8]">
@@ -124,6 +134,11 @@ const Profile = () => {
       case 'Shipped': return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Cancelled': return 'bg-red-100 text-red-700 border-red-200';
       case 'Pending': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'PaymentInitiated': return 'bg-indigo-100 text-indigo-700 border-indigo-200';
+      case 'Processing': return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'Delivered': return 'bg-teal-100 text-teal-700 border-teal-200';
+      case 'Refunded': return 'bg-gray-100 text-gray-700 border-gray-200';
+      case 'Failed': return 'bg-rose-100 text-rose-700 border-rose-200';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
@@ -310,7 +325,11 @@ const Profile = () => {
               <div className="space-y-4">
                 {orders.length > 0 ? (
                   orders.map((order) => (
-                    <div key={order.id} className="group border border-[#F3E7E1] rounded-xl p-4 lg:p-5 hover:border-[#C5A059]/50 hover:shadow-md transition-all duration-300 bg-[#FDFBF8]/50">
+                    <div
+                      key={order.id}
+                      onClick={() => handleOrderClick(order.id)}
+                      className="group border border-[#F3E7E1] rounded-xl p-4 lg:p-5 hover:border-[#C5A059]/50 hover:shadow-md transition-all duration-300 bg-[#FDFBF8]/50 cursor-pointer"
+                    >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-start gap-4">
                           <div className="p-3 bg-[#4A041D]/5 rounded-lg group-hover:bg-[#4A041D]/10 transition-colors">
@@ -364,6 +383,11 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <OrderDetailsModal
+        orderId={selectedOrderId}
+        isOpen={isOrderModalOpen}
+        onClose={() => setIsOrderModalOpen(false)}
+      />
     </section>
   )
 }

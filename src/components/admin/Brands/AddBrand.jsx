@@ -3,28 +3,30 @@ import { useAddBrandImageMutation } from "../../../store/API";
 import { Loader2, Trash2, Upload } from "lucide-react";
 import { toast } from "react-toastify";
 
-const AddBrandUI = ({setOpen}) => {
-  const [addBrandImage, { isLoading: isBrandImageLoading }] = useAddBrandImageMutation(); 
+const AddBrandUI = ({ setOpen }) => {
+  const [addBrandImage, { isLoading: isBrandImageLoading }] = useAddBrandImageMutation();
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
     sortOrder: 1,
+    isActive: true,
   });
 
   const handleFileUpload = (e) => {
-    const selectedFile = e.target.files[0]; 
+    const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
     setFile(selectedFile);
-    e.target.value = ""; 
+    e.target.value = "";
   };
 
   const close = () => {
     setFormData({
       name: "",
       sortOrder: 1,
+      isActive: true,
     });
     setFile(null);
     setOpen(false);
@@ -52,31 +54,19 @@ const AddBrandUI = ({setOpen}) => {
     }
 
     try {
-      // Build the brand data object
-      const brandData = {
+      const result = await addBrandImage({
         name: formData.name,
         sortOrder: formData.sortOrder,
-      };
-
-
-      // Create FormData and append fields
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("sortOrder", formData.sortOrder);
-      formDataToSend.append("imageFile", file, file.name);
-
-
-      const result = await addBrandImage({
-          name: formData.name,
-          sortOrder: formData.sortOrder,
-          file,
-        }).unwrap();
+        isActive: formData.isActive,
+        file,
+      }).unwrap();
 
       toast.success("Brend uğurla əlavə edildi");
 
       setFormData({
         name: "",
-        sortOrder: 1
+        sortOrder: 1,
+        isActive: true,
       });
       setFile(null);
       setOpen();
@@ -87,14 +77,17 @@ const AddBrandUI = ({setOpen}) => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
   return (
-    <form 
+    <form
       onSubmit={handleBrand}
-      className="flex flex-col gap-6 p-6 bg-[#1f1f1f] rounded-lg w-96"
+      className="flex flex-col gap-6 p-6 bg-[#1f1f1f] rounded-lg w-96 max-h-[90vh] overflow-y-auto"
     >
       {/* Name Field */}
       <div className="flex flex-col">
@@ -107,6 +100,7 @@ const AddBrandUI = ({setOpen}) => {
           name="name"
           type="text"
           required
+          value={formData.name}
           placeholder="Brend adını daxil edin"
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
         />
@@ -125,6 +119,21 @@ const AddBrandUI = ({setOpen}) => {
           value={formData.sortOrder}
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
         />
+      </div>
+
+      {/* Is Active Field */}
+      <div className="flex items-center gap-3">
+        <input
+          id="isActive"
+          onChange={handleChange}
+          name="isActive"
+          type="checkbox"
+          checked={formData.isActive}
+          className="w-5 h-5 rounded border-gray-700 bg-[#2a2a2a] text-white focus:ring-white"
+        />
+        <label className="text-white text-sm cursor-pointer" htmlFor="isActive">
+          Aktivdir
+        </label>
       </div>
 
       {/* Image Upload */}
@@ -153,7 +162,7 @@ const AddBrandUI = ({setOpen}) => {
         </div>
 
         {/* Image Preview */}
-        {file && 
+        {file &&
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div className="relative group">
               <img
@@ -163,7 +172,7 @@ const AddBrandUI = ({setOpen}) => {
               />
               <button
                 type="button"
-                onClick={() => {setFile(null)}}
+                onClick={() => { setFile(null) }}
                 className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <Trash2 className="w-3 h-3" />

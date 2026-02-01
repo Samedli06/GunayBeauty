@@ -316,7 +316,8 @@ function Details() {
       currentProductSpec.specificationGroups.forEach(group => {
         if (group.items && Array.isArray(group.items)) {
           group.items.forEach(item => {
-            const duplicateFields = ['sku', 'category', 'stock status', 'availability'];
+            console.log(item.name.toLowerCase());
+            const duplicateFields = ['sku', 'category', 'stock status', 'availability', 'hot deal'];
             if (!duplicateFields.includes(item.name.toLowerCase())) {
               const value = item.unit ? `${item.value} ${item.unit}` : item.value;
               features.push({ label: item.name, value: value });
@@ -449,7 +450,7 @@ function Details() {
                 <img
                   src={hovered ? `https://kozmetik-001-site1.qtempurl.com${hovered}` : productImageUrl}
                   alt={product.name}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
+                  className="w h-full !max-h-[470px] object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
                   onClick={() => {
                     const idx = hovered ? product?.images?.findIndex(i => i.imageUrl === hovered) : -1;
                     openDetail(idx !== -1 ? idx + 1 : 0);
@@ -520,7 +521,7 @@ function Details() {
                   <button
                     onClick={handleAddToCart}
                     disabled={!isInStock || isAddingToCart}
-                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-md shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-xs shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={21} />}
                     {t('addToCart')}
@@ -528,7 +529,7 @@ function Details() {
                   <button
                     onClick={() => setShowQuickOrderModal(true)}
                     disabled={!isInStock}
-                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-md transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-xs transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {t('buyNow')}
                   </button>
@@ -538,14 +539,14 @@ function Details() {
 
             {/* Description & Features (Moved to Right Column) */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-50">
-              <h3 className="text-xl font-bold text-[#4A041D] mb-6 border-b border-gray-100 pb-2">{t('features.title')}</h3>
+              <h3 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-6 border-b border-gray-100 pb-2">{t('features.title')}</h3>
 
               {features.length > 0 ? (
                 <div className="flex flex-col gap-4">
                   {features.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 px-2 rounded-lg transition-colors">
-                      <span className="text-gray-500 font-medium">{item.label}</span>
-                      <span className="text-gray-900 font-semibold text-right">{item.value}</span>
+                    <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0 px-2 rounded-lg transition-colors">
+                      <span className="!text-sm text-gray-500 font-medium">{item.label}</span>
+                      <span className="!text-sm text-gray-900 font-semibold text-right">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -555,8 +556,8 @@ function Details() {
 
               {currentProduct.description && (
                 <div className="mt-8 pt-6 border-t border-gray-100">
-                  <h4 className="font-bold text-[#4A041D] mb-3">Product Description</h4>
-                  <div className="prose prose-stone text-gray-600 leading-relaxed">
+                  <h4 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-3">Product Description</h4>
+                  <div className="!text-sm md:!text-base lg:!text-lg prose prose-stone text-gray-600 leading-relaxed">
                     {currentProduct.description}
                   </div>
                 </div>

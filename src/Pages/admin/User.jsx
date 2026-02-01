@@ -185,47 +185,6 @@ const Users = () => {
                     </div>
                 </div>
 
-                <div className="bg-green-500 rounded-xl p-6 relative overflow-hidden">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="!text-white text-sm font-medium">Topdan istifadəçilər</h3>
-                            <p className="text-3xl font-bold text-white mt-2">
-                                {userStatistics?.retailUsers}
-                            </p>
-                        </div>
-                        <div className="text-white/60">
-                            <FaStore className="text-2xl" />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-yellow-500 rounded-xl p-6 relative overflow-hidden">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="!text-white text-sm font-medium">Diller istifadəçilər</h3>
-                            <p className="text-3xl font-bold text-white mt-2">
-                                {userStatistics?.wholesaleUsers}
-                            </p>
-                        </div>
-                        <div className="text-white/60">
-                            <FaBoxes className="text-2xl" />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-pink-600 rounded-xl p-6 relative overflow-hidden">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="!text-white text-sm font-medium">Ekslüziv istifadəçilər</h3>
-                            <p className="text-3xl font-bold text-white mt-2">
-                                {userStatistics?.vipUsers}
-                            </p>
-                        </div>
-                        <div className="text-white/60">
-                            <FaCrown className="text-2xl" />
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <Modal open={modalType === 'edit'} setOpen={handleCloseModal}>

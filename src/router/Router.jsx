@@ -92,9 +92,8 @@ const Router = () => {
             <Route path="/payment/error" element={<PaymentError />} />
 
             {/* 404 Error Page - MUST BE LAST */}
-
+            <Route path="*" element={<ErrorPage />} />
           </Route>
-          <Route path="*" element={<ErrorPage />} />
 
           {/* Admin layout with Auth wrapper */}
           <Route

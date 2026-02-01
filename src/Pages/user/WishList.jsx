@@ -161,7 +161,7 @@ const WishList = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="flex overflow-x-scroll lg:grid lg:grid-cols-4 gap-6 scrollbar-hide items-stretch pb-4">
             {(translatedFavorites.length > 0 ? translatedFavorites : favorites).map((item) => {
               const cardInfo = {
                 url: item.product.primaryImageUrl,

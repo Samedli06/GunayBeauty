@@ -8,6 +8,8 @@ const EditBrandUI = ({ item, setOpen }) => {
 
   const [formData, setFormData] = useState({
     name: "",
+    sortOrder: 0,
+    isActive: true,
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -17,6 +19,8 @@ const EditBrandUI = ({ item, setOpen }) => {
     if (item) {
       setFormData({
         name: item.name || "",
+        sortOrder: item.sortOrder || 0,
+        isActive: item.isActive !== undefined ? item.isActive : true,
       });
 
       // Set existing image preview
@@ -31,8 +35,9 @@ const EditBrandUI = ({ item, setOpen }) => {
     try {
       const brandData = {
         name: formData.name,
-        isActive: true,
-        sortOrder: 0,
+        isActive: formData.isActive,
+        sortOrder: Number(formData.sortOrder),
+        logoUrl: item.logoUrl,
       };
 
       await editBrand({
@@ -50,8 +55,11 @@ const EditBrandUI = ({ item, setOpen }) => {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
   const handleImageChange = (e) => {
@@ -76,7 +84,7 @@ const EditBrandUI = ({ item, setOpen }) => {
   return (
     <form
       onSubmit={handleBrand}
-      className="flex flex-col gap-6 p-6 bg-[#1f1f1f] rounded-lg w-96"
+      className="flex flex-col gap-6 p-6 bg-[#1f1f1f] rounded-lg w-96 max-h-[90vh] overflow-y-auto"
     >
       {/* Name Field */}
       <div className="flex flex-col">
@@ -92,6 +100,36 @@ const EditBrandUI = ({ item, setOpen }) => {
           value={formData.name}
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
         />
+      </div>
+
+      {/* Sort Order Field */}
+      <div className="flex flex-col">
+        <label className="text-white text-sm mb-1" htmlFor="sortOrder">
+          Sıra nömrəsi
+        </label>
+        <input
+          id="sortOrder"
+          onChange={handleChange}
+          name="sortOrder"
+          type="number"
+          value={formData.sortOrder}
+          className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+        />
+      </div>
+
+      {/* Is Active Field */}
+      <div className="flex items-center gap-3">
+        <input
+          id="isActive"
+          onChange={handleChange}
+          name="isActive"
+          type="checkbox"
+          checked={formData.isActive}
+          className="w-5 h-5 rounded border-gray-700 bg-[#2a2a2a] text-white focus:ring-white"
+        />
+        <label className="text-white text-sm cursor-pointer" htmlFor="isActive">
+          Aktivdir
+        </label>
       </div>
 
       {/* Image Upload Field */}
