@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, Users, CreditCard, Sparkles, Star, Heart } from 'lucide-react';
+import { ShieldCheck, Users, CreditCard, Sparkles, Star, Heart, Gift } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import SEO from '../../components/SEO/SEO';
+import { useGetLoyaltySettingsQuery } from '../../store/API';
 
 const About = () => {
   const { t } = useTranslation();
+  const { data: loyaltySettings } = useGetLoyaltySettingsQuery();
 
   useEffect(() => {
     AOS.init({
@@ -146,6 +148,21 @@ const About = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Peşəkar Komanda</h3>
                 <p className="text-gray-600 leading-relaxed text-sm">
                   Təcrübəli komandamız seçim zamanı sizə fərdi yanaşma ilə kömək edir və ehtiyaclarınıza ən uyğun məhsulları tövsiyə edir.
+                </p>
+              </div>
+
+              {/* Loyalty Bonus Feature */}
+              <div
+                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-[#C5A059]"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
+                <div className="w-14 h-14 bg-[#C5A059]/10 rounded-xl flex items-center justify-center mb-6">
+                  <Gift className="w-8 h-8 text-[#C5A059]" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{t('Earn Rewards')}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  {t('Join our loyalty program and earn')} <span className="font-bold text-[#4A041D]">{loyaltySettings?.bonusPercentage}%</span> {t('bonus on every purchase. Redeem points for exclusive discounts.')}
                 </p>
               </div>
 

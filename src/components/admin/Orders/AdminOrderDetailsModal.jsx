@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { X, Package, Clock, MapPin, CreditCard, ShoppingBag, User, Mail, Phone, Hash } from 'lucide-react';
+import { X, Package, Clock, MapPin, CreditCard, ShoppingBag, User, Mail, Phone, Hash, RefreshCw, Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useUpdateOrderStatusMutation } from '../../../store/API';
+import { toast } from 'react-toastify';
 
 const AdminOrderDetailsModal = ({ order, isOpen, onClose }) => {
     const { t } = useTranslation();
+    const [updateStatus, { isLoading: isUpdating }] = useUpdateOrderStatusMutation();
+
+    const handleStatusChange = async (newStatus) => {
+        if (!order) return;
+        try {
+            await updateStatus({ id: order.id, status: parseInt(newStatus) }).unwrap();
+            toast.success('Status yeniləndi');
+            // Optional: Close modal or keep open
+        } catch (error) {
+            toast.error('Xəta baş verdi');
+        }
+    };
 
     if (!isOpen || !order) return null;
 
@@ -60,7 +74,25 @@ const AdminOrderDetailsModal = ({ order, isOpen, onClose }) => {
                             </div>
                             <div>
                                 <p className="text-[10px] text-gray-500 uppercase tracking-widest">Status</p>
-                                <p className="text-sm font-bold text-white uppercase">{order.status}</p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-bold text-white uppercase">{order.status}</p>
+                                    <select
+                                        onChange={(e) => handleStatusChange(e.target.value)}
+                                        className="ml-2 bg-[#1f1f1f] text-white text-xs border border-gray-700 rounded px-1 py-0.5"
+                                        defaultValue=""
+                                    >
+                                        <option value="" disabled>...</option>
+                                        <option value="0">Pending</option>
+                                        <option value="1">Payment Initiated</option>
+                                        <option value="2">Paid</option>
+                                        <option value="3">Processing</option>
+                                        <option value="4">Shipped</option>
+                                        <option value="5">Delivered</option>
+                                        <option value="6">Cancelled</option>
+                                        <option value="7">Refunded</option>
+                                        <option value="8">Failed</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

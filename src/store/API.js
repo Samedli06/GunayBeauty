@@ -45,7 +45,7 @@ export const API = createApi({
     },
   }),
 
-  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders'],
+  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders', 'Loyalty', 'Wallet'],
 
   endpoints: builder => ({
     // *AUTHENTICATION*
@@ -797,6 +797,42 @@ export const API = createApi({
         method: 'DELETE',
       }),
       invalidatesTags: ['Banners'],
+    }),
+
+    // *WALLET & LOYALTY*
+    getWalletTransactions: builder.query({
+      query: () => ({
+        url: '/api/v1/wallet/transactions',
+        method: 'GET',
+      }),
+      providesTags: ['Wallet'],
+    }),
+
+    getWalletBalance: builder.query({
+      query: () => ({
+        url: '/api/v1/wallet',
+        method: 'GET',
+      }),
+      providesTags: ['Wallet'],
+    }),
+
+    getLoyaltySettings: builder.query({
+      query: () => ({
+        url: '/api/v1/Loyalty/settings',
+        method: 'GET',
+      }),
+      providesTags: ['Loyalty'],
+    }),
+
+    updateLoyaltySettings: builder.mutation({
+      query: ({ bonusPercentage }) => ({
+        url: '/api/v1/Loyalty/settings',
+        method: 'PUT',
+        body: {
+          bonusPercentage
+        },
+      }),
+      invalidatesTags: ['Loyalty'],
     }),
 
     addBanner: builder.mutation({
@@ -1607,6 +1643,14 @@ export const API = createApi({
       }),
       invalidatesTags: (result, error, { orderId }) => ['Orders', { type: 'Orders', id: orderId }],
     }),
+    updateOrderStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/api/v1/Order/${id}/status`,
+        method: 'PUT',
+        body: { status },
+      }),
+      invalidatesTags: ['Orders'],
+    }),
   }),
 });
 
@@ -1741,5 +1785,9 @@ export const {
   useGetMyOrdersQuery,
   useGetOrderQuery,
   useGetAdminOrdersQuery,
-  useUpdateOrderStatusMutation
+  useUpdateOrderStatusMutation,
+  useGetLoyaltySettingsQuery,
+  useUpdateLoyaltySettingsMutation,
+  useGetWalletBalanceQuery,
+  useGetWalletTransactionsQuery
 } = API;

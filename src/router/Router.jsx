@@ -40,6 +40,7 @@ import PrivacyPolicy from "../Pages/user/PrivacyPolicy";
 import PaymentSuccess from "../Pages/user/Payment/PaymentSuccess";
 import PaymentError from "../Pages/user/Payment/PaymentError";
 import OrdersAdmin from "../Pages/admin/Orders";
+import Loyalty from "../Pages/admin/Loyalty";
 
 const Router = () => {
 
@@ -114,6 +115,7 @@ const Router = () => {
             <Route path="file-management" element={<FileManagementPanel />} />
             <Route path="brands" element={<Brand />} />
             <Route path="promo-codes" element={<PromoCodes />} />
+            <Route path="loyalty" element={<Loyalty />} />
             <Route path="orders" element={<OrdersAdmin />} />
           </Route>
         </Routes>

@@ -15,9 +15,11 @@ const OrdersAdmin = () => {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
+
+
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            await updateStatus({ orderId, status: newStatus }).unwrap();
+            await updateStatus({ id: orderId, status: parseInt(newStatus) }).unwrap();
             toast.success('Sifariş statusu yeniləndi');
         } catch (error) {
             toast.error(error?.data?.message || 'Statusu yeniləmək mümkün olmadı');
@@ -164,20 +166,22 @@ const OrdersAdmin = () => {
                                                 <Eye size={16} />
                                             </button>
                                             <select
-                                                value={order.status}
+                                                // value={statusMap[order.status] ?? order.status} // Complex matching, simplified below
+                                                defaultValue=""
                                                 onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                 disabled={isUpdating}
                                                 className="bg-[#2c2c2c] border border-gray-700 text-white text-xs rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-[#C5A059] transition-all disabled:opacity-50"
                                             >
-                                                <option value="Pending">Pending</option>
-                                                <option value="PaymentInitiated">Payment Initiated</option>
-                                                <option value="Paid">Paid</option>
-                                                <option value="Processing">Processing</option>
-                                                <option value="Shipped">Shipped</option>
-                                                <option value="Delivered">Delivered</option>
-                                                <option value="Cancelled">Cancelled</option>
-                                                <option value="Refunded">Refunded</option>
-                                                <option value="Failed">Failed</option>
+                                                <option value="" disabled>Dəyişdir</option>
+                                                <option value="0">Pending</option>
+                                                <option value="1">Payment Initiated</option>
+                                                <option value="2">Paid</option>
+                                                <option value="3">Processing</option>
+                                                <option value="4">Shipped</option>
+                                                <option value="5">Delivered</option>
+                                                <option value="6">Cancelled</option>
+                                                <option value="7">Refunded</option>
+                                                <option value="8">Failed</option>
                                             </select>
                                         </td>
                                     </tr>

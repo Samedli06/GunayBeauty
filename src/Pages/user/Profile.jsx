@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
 import { Breadcrumb } from '../../products/Breadcrumb'
-import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation, useGetMyOrdersQuery } from '../../store/API'
+import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation, useGetMyOrdersQuery, useGetWalletBalanceQuery, useGetWalletTransactionsQuery } from '../../store/API'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
-import { CloudCog, LogIn } from 'lucide-react';
+import { CloudCog, LogIn, History, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
@@ -37,6 +37,10 @@ const Profile = () => {
 
   // Animation state
   const [isVisible, setIsVisible] = useState(false);
+  // Wallet and Loyalty Data
+  const { data: walletData, isLoading: isWalletLoading } = useGetWalletBalanceQuery();
+  console.log(walletData)
+  const { data: walletTransactions = [], isLoading: isTransactionsLoading } = useGetWalletTransactionsQuery();
 
   // Trigger animations on mount
   useEffect(() => {
@@ -122,10 +126,13 @@ const Profile = () => {
       </div>
     )
   }
-  // Loyalty points (Static for now as API doesn't provide them yet)
-  const loyaltyPoints = 1250;
+
+
+
+  const loyaltyPoints = walletData?.balance || 0;
+  // TODO: Fetch next tier points dynamically if available, otherwise keep static or calculate
   const nextTierPoints = 2000;
-  const progress = (loyaltyPoints / nextTierPoints) * 100;
+  const progress = Math.min((loyaltyPoints / nextTierPoints) * 100, 100);
 
 
   const getStatusColor = (status) => {
@@ -141,6 +148,11 @@ const Profile = () => {
       case 'Failed': return 'bg-rose-100 text-rose-700 border-rose-200';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
+  };
+
+  // Date formatter helper
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
   };
 
   return (
@@ -225,18 +237,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-xs font-sans tracking-wider uppercase opacity-80">
-                    <span>{t('Member')}</span>
-                    <span>{t('Gold')}</span>
-                  </div>
-                  <div className="w-full bg-black/20 rounded-full h-2 overflow-hidden">
-                    <div className="bg-[#C5A059] h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
-                  </div>
-                  <div className="text-xs opacity-70 text-right font-sans">
-                    {nextTierPoints - loyaltyPoints} {t('points to Gold Tier')}
-                  </div>
-                </div>
+
 
                 <button className="w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl font-sans text-sm font-medium transition-colors border border-white/10 flex items-center justify-center gap-2 backdrop-blur-md">
                   <Gift className="w-4 h-4" />
