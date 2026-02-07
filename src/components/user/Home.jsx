@@ -35,7 +35,7 @@ const SubCategorySkeleton = () => (
 );
 
 const ProductCardSkeleton = () => (
-  <div className="bg-white rounded-lg border border-gray-200 p-3 animate-pulse">
+  <div className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[260px] h-[400px] bg-white rounded-lg border border-gray-200 p-3 animate-pulse">
     <div className="aspect-square bg-gray-300 rounded-lg mb-3"></div>
     <div className="space-y-2">
       <div className="h-4 bg-gray-300 rounded w-3/4"></div>
@@ -302,8 +302,8 @@ const Home = () => {
                       src={item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)}
                       alt={item.name}
                       onError={(e) => {
-                        e.target.src = getCategoryIcon(item.slug);
-                        e.target.className = "w-12 h-12 lg:w-16 lg:h-16 object-contain opacity-20 grayscale";
+                        e.target.src = '/Icons/logo2.jpeg';
+                        e.target.className = "w-12 h-12 lg:w-16 lg:h-16 object-contain opacity-70 ";
                       }}
                     />
                   </div>
@@ -331,7 +331,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="flex overflow-x-auto lg:grid lg:grid-cols-5  gap-6 scrollbar-hide items-stretch pb-4">
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 scrollbar-hide items-stretch pb-4">
             {isLoading ? (
               <>
                 {[...Array(4)].map((_, i) => (
@@ -389,7 +389,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-6 scrollbar-hide items-stretch pb-4">
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 scrollbar-hide items-stretch pb-4">
             {isRecommendedLoading ? (
               <>
                 {[...Array(8)].map((_, i) => (

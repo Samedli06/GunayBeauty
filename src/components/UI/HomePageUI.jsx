@@ -172,7 +172,7 @@ const HomePageUI = ({
 
       <Link
         to={`/details/${product.id}`}
-        className="group flex flex-col flex-1 min-w-[200px] h-full max-h-[400px] min-h-[400px] lg:min-w-0 h-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
+        className="group flex flex-col flex-shrink-0 w-[200px] md:w-[240px] lg:w-[260px] h-full max-h-[400px] min-h-[400px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
       >
 
         {/* Image Container - Added padding to match ProductCard style */}

@@ -130,10 +130,8 @@ const Profile = () => {
 
 
   const loyaltyPoints = walletData?.balance || 0;
-  // TODO: Fetch next tier points dynamically if available, otherwise keep static or calculate
   const nextTierPoints = 2000;
   const progress = Math.min((loyaltyPoints / nextTierPoints) * 100, 100);
-
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -150,7 +148,6 @@ const Profile = () => {
     }
   };
 
-  // Date formatter helper
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
   };

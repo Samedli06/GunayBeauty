@@ -160,7 +160,7 @@ const SimilarProducts = ({ products, isLoading }) => {
       {/* Product List */}
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-scroll items-stretch flex-1 gap-4 pb-8 px-4 md:px-0 scrollbar-hide snap-x snap-mandatory"
+        className="flex overflow-x-scroll items-stretch  gap-4 pb-8 px-4 md:px-0 scrollbar-hide snap-x snap-mandatory"
         style={{ scrollBehavior: 'smooth' }}
       >
         {products.map((product) => {

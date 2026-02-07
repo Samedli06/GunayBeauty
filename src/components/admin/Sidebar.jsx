@@ -95,8 +95,8 @@ const SideBar = () => {
         <div className="flex items-center justify-between p-4 border-b border-gray-700 sticky top-0 bg-black z-10">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <img className=' w-6 h-6 ' src="/Icons/logo2.png" alt="" />
+              <div className="w-8 h-8  rounded-lg flex items-center justify-center">
+                <img className=' w-6 h-6 rounded-xl' src="/Icons/logo2.jpeg" alt="" />
               </div>
               <h1 className="text-xl font-bold !text-white">Admin Paneli</h1>
             </div>
@@ -180,7 +180,7 @@ const SideBar = () => {
                 <Users size={20} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">Bextiyar</p>
+                <p className="text-sm font-medium text-white truncate">Günay</p>
               </div>
             </div>
           )}

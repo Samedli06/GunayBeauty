@@ -80,10 +80,10 @@ const Router = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/favorites" element={<WishList />} />
             <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="download" element={<Download />} />
-            <Route path="secure" element={<Software />} />
-            <Route path="software" element={<Secure />} />
+            {/* <Route path="contact" element={<Contact />} /> */}
+            {/* <Route path="download" element={<Download />} /> */}
+            {/* <Route path="secure" element={<Software />} /> */}
+            {/* <Route path="software" element={<Secure />} /> */}
             <Route path="profile" element={<Profile />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/:slug" element={<SubCategories />} />
@@ -118,6 +118,8 @@ const Router = () => {
             <Route path="loyalty" element={<Loyalty />} />
             <Route path="orders" element={<OrdersAdmin />} />
           </Route>
+
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </SearchProvider>
     </BrowserRouter>

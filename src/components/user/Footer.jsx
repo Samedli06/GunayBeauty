@@ -95,8 +95,7 @@ const Footer = () => {
                         <div className="flex flex-col gap-3 items-center">
                             <Link to='/' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.home")}</Link>
                             <Link to='/about' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.about")}</Link>
-                            <Link to='/contact' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.contact")}</Link>
-                            <Link to='/brands' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("admin.brands")}</Link>
+                            <Link to='/brands'  className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("admin.brands")}</Link>
                             <Link to='/login' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.login")}</Link>
                             <Link to='/privacy-policy' className="text-[#FDFBF8]/70 hover:text-[#C5A059] text-sm transition-colors">{t("footer.privacyPolicy")}</Link>
                         </div>
