@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useEditProductWithImageMutation, useGetCategoriesQuery, useGetBrandsQuery, useGetProductQuery, useGetUserRolesQuery, useDeleteDetailImageMutation, useDeleteProductImageMutation } from '../../../store/API';
+import { useEditProductWithImageMutation, useGetCategoriesQuery, useGetBrandsQuery, useGetProductQuery, useGetUserRolesQuery, useDeleteDetailImageMutation, useDeleteProductImageMutation, API_BASE_URL } from '../../../store/API';
 import { toast } from 'react-toastify';
 import { ClockFading } from 'lucide-react';
 
@@ -50,8 +50,8 @@ const EditProduct = ({ setOpen, idPr }) => {
     stockQuantity: 0,
     categoryId: '',
     brandId: '',
-    price: 0,
-    discountedPrice: 0,
+    price: '',
+    discountedPrice: '',
   });
 
 
@@ -68,8 +68,8 @@ const EditProduct = ({ setOpen, idPr }) => {
         stockQuantity: edit.stockQuantity || 0,
         categoryId: edit.categoryId || '',
         brandId: edit.brandId || '',
-        price: edit.price || 0,
-        discountedPrice: edit.discountedPrice || 0,
+        price: edit.price === 0 ? '' : edit.price,
+        discountedPrice: edit.discountedPrice === 0 ? '' : edit.discountedPrice,
       });
 
       if (edit.imageUrl) setImagePreview(edit.imageUrl);
@@ -247,7 +247,7 @@ const EditProduct = ({ setOpen, idPr }) => {
             {imagePreview ? (
               <div className="relative">
                 <img
-                  src={imageFile ? imagePreview : `https://kozmetik-001-site1.qtempurl.com/${imagePreview}`}
+                  src={imageFile ? imagePreview : `${API_BASE_URL}/${imagePreview}`}
                   alt="Product preview"
                   className="w-32 h-32 object-cover rounded-md border border-gray-600"
                 />
@@ -289,7 +289,7 @@ const EditProduct = ({ setOpen, idPr }) => {
           <div className="flex items-center gap-4">
             {edit?.pdfUrl && !pdfFile && (
               <a
-                href={`https://kozmetik-001-site1.qtempurl.com/${edit.pdfUrl}`}
+                href={`${API_BASE_URL}/${edit.pdfUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-indigo-400 hover:text-indigo-300 text-sm underline"
@@ -337,7 +337,7 @@ const EditProduct = ({ setOpen, idPr }) => {
                   return (
                     <div key={image.id} className="relative">
                       <img
-                        src={`https://kozmetik-001-site1.qtempurl.com/${image.imageUrl}`}
+                        src={`${API_BASE_URL}/${image.imageUrl}`}
                         alt={`Detail ${index + 1}`}
                         className="w-full h-32 object-cover rounded-md border border-gray-600"
                       />
@@ -538,7 +538,7 @@ const EditProduct = ({ setOpen, idPr }) => {
             <input
               type="number"
               name="price"
-              value={formData.price}
+              value={formData.price === 0 ? "" : formData.price}
               onChange={handlePriceChange}
               min="0"
               step="0.01"
@@ -552,7 +552,7 @@ const EditProduct = ({ setOpen, idPr }) => {
             <input
               type="number"
               name="discountedPrice"
-              value={formData.discountedPrice}
+              value={formData.discountedPrice === 0 ? "" : formData.discountedPrice}
               onChange={handlePriceChange}
               min="0"
               step="0.01"
@@ -581,7 +581,7 @@ const EditProduct = ({ setOpen, idPr }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

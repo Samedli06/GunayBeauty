@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router';
 import { CheckCircle2, ChevronRight, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
 import { useGetOrderQuery, useRemoveCartMutation } from '../../../store/API';
-import { useTranslation } from 'react-i18next';
 
 const PaymentSuccess = () => {
-    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const [removeCart] = useRemoveCartMutation();
@@ -57,10 +55,10 @@ const PaymentSuccess = () => {
     if (!orderId) {
         return (
             <div className="min-h-[70vh] flex flex-col items-center justify-center p-4">
-                <p className="text-gray-500 mb-4">{t('payment.invalidOrder') || 'Invalid order information.'}</p>
+                <p className="text-gray-500 mb-4">Yanlış sifariş məlumatı.</p>
                 <Link to="/" className="flex items-center gap-2 text-[#4A041D] font-medium">
                     <ArrowLeft className="w-4 h-4" />
-                    {t('payment.backToHome') || 'Back to Home'}
+                    Ana Səhifəyə Qayıt
                 </Link>
             </div>
         );
@@ -81,10 +79,10 @@ const PaymentSuccess = () => {
                         </div>
 
                         <h1 className="text-3xl md:text-4xl font-bold text-[#4A041D] mb-4">
-                            {t('payment.successful') || 'Payment Successful!'}
+                            Ödəniş Uğurludur!
                         </h1>
                         <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                            {t('payment.successText') || 'Thank you! Your order has been placed successfully and is being processed.'}
+                            Təşəkkür edirik! Sifarişiniz uğurla yerləşdirildi və hazırda emal olunur.
                         </p>
 
                         {/* Order Details Card */}
@@ -92,39 +90,39 @@ const PaymentSuccess = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                                 <div>
                                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                        {t('payment.orderId') || 'Order ID'}
+                                        Sifariş ID
                                     </p>
                                     <p className="font-bold text-[#4A041D]">#{orderId}</p>
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                        {t('payment.transactionId') || 'Transaction ID'}
+                                        Tranzaksiya ID
                                     </p>
                                     <p className="font-medium text-gray-700 truncate">{transactionId || '---'}</p>
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                        {t('payment.status') || 'Payment Status'}
+                                        Ödəniş Statusu
                                     </p>
                                     <div className="flex items-center gap-2">
                                         {isLoading ? (
                                             <div className="flex items-center gap-2 text-blue-500">
                                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                                <span className="font-bold">{t('payment.verifying') || 'Verifying...'}</span>
+                                                <span className="font-bold">Yoxlanılır...</span>
                                             </div>
                                         ) : order?.status === 'Paid' ? (
                                             <div className="flex items-center gap-2 text-green-500">
                                                 <CheckCircle2 className="w-4 h-4" />
-                                                <span className="font-bold">{t('payment.paid') || 'Paid'}</span>
+                                                <span className="font-bold">Ödənilib</span>
                                             </div>
                                         ) : (
-                                            <span className="font-bold text-orange-500">{order?.status || t('payment.processing') || 'Processing'}</span>
+                                            <span className="font-bold text-orange-500">{order?.status === 'Processing' ? 'Emal olunur' : (order?.status || 'Emal olunur')}</span>
                                         )}
                                     </div>
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                        {t('totalAmount') || 'Total Amount'}
+                                        Yekun məbləğ
                                     </p>
                                     <p className="font-bold text-[#4A041D]">
                                         {order?.totalAmount ? `${order.totalAmount.toFixed(2)} AZN` : '---'}
@@ -140,13 +138,13 @@ const PaymentSuccess = () => {
                                 className="flex-1 bg-[#4A041D] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#2D0212] transition-colors shadow-lg shadow-[#4a041d33]"
                             >
                                 <ShoppingBag className="w-5 h-5" />
-                                {t('payment.viewOrders') || 'View My Orders'}
+                                Sifarişlərimə Bax
                             </Link>
                             <Link
                                 to="/"
                                 className="flex-1 bg-white border-2 border-[#4A041D] text-[#4A041D] py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#4A041D05] transition-colors"
                             >
-                                {t('continueShopping') || 'Continue Shopping'}
+                                Alış-verişə davam et
                                 <ChevronRight className="w-5 h-5" />
                             </Link>
                         </div>

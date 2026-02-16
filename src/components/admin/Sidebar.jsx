@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Package, ShoppingBag, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket, ChevronDown, Gift } from 'lucide-react';
+import { Menu, X, Package, CreditCard, ShoppingBag, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket, ChevronDown, Gift } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router';
 import { useLogoutMutation } from '../../store/API';
 import { PiFlagBanner } from 'react-icons/pi';
@@ -29,7 +29,6 @@ const SideBar = () => {
     { icon: PiFlagBanner, label: 'Bannerlər', to: 'banners' },
     { icon: Filter, label: 'Filterlər', to: 'filters' },
     { icon: Tags, label: 'Filter Təyinatı', to: 'product-filters' },
-    { icon: File, label: 'Fayl Təyinatı', to: 'file-management' },
     { icon: Store, label: 'Brendlər', to: 'brands' },
     {
       icon: Ticket,
@@ -40,6 +39,7 @@ const SideBar = () => {
       ]
     },
     { icon: ShoppingBag, label: 'Sifarişlər', to: 'orders' },
+    { icon: CreditCard, label: 'Hissəli Ödəniş', to: 'payment' },
   ];
 
 

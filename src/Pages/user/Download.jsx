@@ -1,45 +1,43 @@
 import { DownloadIcon, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useGetFilesUserQuery, useDownloadFileMutation } from '../../store/API';
-import { useTranslation } from 'react-i18next';
 
 const Download = () => {
-  const { t } = useTranslation();
   const { data: files, isLoading, error } = useGetFilesUserQuery();
   const [downloadFile, { isLoading: isDownloading }] = useDownloadFileMutation();
   const [downloadingId, setDownloadingId] = useState(null);
 
- const handleDownload = async (fileId, fileName) => {
-  try {
-    setDownloadingId(fileId);
+  const handleDownload = async (fileId, fileName) => {
+    try {
+      setDownloadingId(fileId);
 
-    // Call the download mutation
-    const result = await downloadFile(fileId).unwrap();
+      // Call the download mutation
+      const result = await downloadFile(fileId).unwrap();
 
-    // Use backend-provided filename, fallback to original name or default
-    const finalFilename = result.originalFileName || fileName || "download.pdf";
+      // Use backend-provided filename, fallback to original name or default
+      const finalFilename = result.originalFileName || fileName || "download.pdf";
 
-    // Create link and trigger download
-    const link = document.createElement("a");
-    link.href = result.url;
-    link.download = finalFilename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      // Create link and trigger download
+      const link = document.createElement("a");
+      link.href = result.url;
+      link.download = finalFilename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-    setDownloadingId(null);
-  } catch (err) {
-    console.error("Download failed:", err);
-    alert(t('download.downloadFailed'));
-    setDownloadingId(null);
-  }
-};
+      setDownloadingId(null);
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert("Fayl yüklənə bilmədi. Zəhmət olmasa yenidən cəhd edin.");
+      setDownloadingId(null);
+    }
+  };
 
   return (
     <section className='bg-[#f7fafc] inter pb-18 min-h-[80vh]'>
       <div className='md:max-w-[90vw] mx-auto'>
         <h1 className='text-2xl font-semibold text-center p-5 py-7 md:px-0 bg-white border-1 border-[#dee2e6] md:text-start md:bg-transparent md:border-0'>
-          {t('downloadPage')}
+          Proqram yüklə
         </h1>
       </div>
 
@@ -50,11 +48,11 @@ const Download = () => {
           </div>
         ) : error ? (
           <div className='col-span-full text-center py-12'>
-            <p className='text-red-600 text-lg'>{t('download.failedToLoad')}</p>
+            <p className='text-red-600 text-lg'>Fayllar yüklənə bilmədi. Zəhmət olmasa daha sonra yenidən cəhd edin.</p>
           </div>
         ) : files?.length === 0 ? (
           <div className='col-span-full text-center py-12'>
-            <p className='text-gray-600 text-lg'>{t('download.noFilesAvailable')}</p>
+            <p className='text-gray-600 text-lg'>Hələ yüklənəcək fayl yoxdur.</p>
           </div>
         ) : (
           files?.map((file, index) => (
@@ -69,10 +67,10 @@ const Download = () => {
             >
               <div className='flex flex-col gap-2 text-left'>
                 <h1 className='font-semibold text-xl lg:text-2xl'>
-                  {file.originalFileName || file.fileName || file.category || t('download.download')}
+                  {file.originalFileName || file.fileName || file.category || "Yüklə"}
                 </h1>
                 <p className='text-[#4E4E4E] lg:text-lg'>
-                  {file.description || t('download.clickToDownload')}
+                  {file.description || "Yükləmək üçün klikləyin"}
                 </p>
               </div>
               <div className='border-1 border-[#BEBEBE] p-3 rounded-full hover:bg-gray-50 transition-colors'>

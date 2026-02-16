@@ -11,13 +11,13 @@ import {
   useApplyPromoCartMutation,
   useRemovePromoCartMutation,
   API_BASE_URL,
-  useInitiatePaymentMutation
+  useInitiatePaymentMutation,
+  useGetInstallmentConfigurationQuery,
+  useGetInstallmentOptionsQuery,
+  useCalculateInstallmentQuery
 } from '../../store/API';
-import { Ticket, Tag } from 'lucide-react';
+import { Ticket, Tag, CreditCard, ChevronRight, Calculator } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
-
 import { Breadcrumb } from '../../products/Breadcrumb'
 
 const AuthUtils = {
@@ -227,7 +227,6 @@ const EmptyCartSkeleton = () => (
 
 // Checkout Modal Component
 const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isSuccess }) => {
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -250,19 +249,19 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
   const validateForm = () => {
     if (!formData.customerName.trim()) {
-      setError('Please enter your full name');
+      setError('Zəhmət olmasa tam adınızı daxil edin');
       return false;
     }
     if (!formData.customerPhone.trim()) {
-      setError('Please enter your phone number');
+      setError('Zəhmət olmasa telefon nömrənizi daxil edin');
       return false;
     }
     if (!formData.customerEmail.trim()) {
-      setError('Please enter your email address');
+      setError('Zəhmət olmasa e-poçt ünvanınızı daxil edin');
       return false;
     }
     if (!formData.shippingAddress.trim()) {
-      setError('Please enter your shipping address');
+      setError('Zəhmət olmasa çatdırılma ünvanınızı daxil edin');
       return false;
     }
     return true;
@@ -305,7 +304,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             <div className="p-2 bg-gray-50 rounded-lg">
               <ShoppingBag className="w-5 h-5 text-[#4A041D]" />
             </div>
-            <h3 className="text-xl font-semibold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('checkout') || 'Checkout'}</h3>
+            <h3 className="text-xl font-semibold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>Sifarişi rəsmiləşdir</h3>
           </div>
           <button
             onClick={handleClose}
@@ -319,13 +318,13 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
         {/* Cart Items Preview */}
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 max-h-60 overflow-y-auto">
           <h4 className="text-sm font-medium text-gray-700 mb-3">
-            {t('orderSummary') || 'Order Summary'} ({cartItems?.items?.length || 0} items)
+            Sifariş xülasəsi ({cartItems?.items?.length || 0} məhsul)
           </h4>
           <div className="space-y-2">
             {cartItems?.items?.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
                 <img
-                  src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
+                  src={`${API_BASE_URL}${item?.productImageUrl}`}
                   alt={item?.productName}
                   className="w-12 h-12 object-contain rounded bg-gray-50 p-1"
                   onError={(e) => {
@@ -334,7 +333,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">{item.productName}</p>
-                  <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                  <p className="text-xs text-gray-500">Sayı: {item.quantity}</p>
                 </div>
                 <span className="text-sm font-semibold text-gray-900">
                   {(item.unitPrice * item.quantity).toFixed(2)} AZN
@@ -343,7 +342,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             ))}
             {cartItems?.items?.length > 3 && (
               <p className="text-sm text-gray-500 text-center py-1">
-                +{cartItems.items.length - 3} more items
+                +{cartItems.items.length - 3} daha çox məhsul
               </p>
             )}
           </div>
@@ -354,7 +353,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
           <div className="space-y-4">
             <div>
               <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('fullName') || 'Full Name'} <span className="text-red-500">*</span>
+                Ad və Soyad <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -363,14 +362,14 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 value={formData.customerName}
                 onChange={handleInputChange}
                 disabled={isSubmitting || isSuccess}
-                placeholder="Enter your full name"
+                placeholder="Ad və soyadınızı daxil edin"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
             </div>
 
             <div>
               <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('phoneNumber') || 'Phone Number'} <span className="text-red-500">*</span>
+                Telefon nömrəsi <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -386,7 +385,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
             <div>
               <label htmlFor="customerEmail" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('payment.emailAddress') || 'Email Address'} <span className="text-red-500">*</span>
+                E-poçt ünvanı <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -402,7 +401,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
             <div>
               <label htmlFor="shippingAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('payment.shippingAddress') || 'Shipping Address'} <span className="text-red-500">*</span>
+                Çatdırılma ünvanı <span className="text-red-500">*</span>
               </label>
               <textarea
                 id="shippingAddress"
@@ -410,7 +409,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 value={formData.shippingAddress}
                 onChange={handleInputChange}
                 disabled={isSubmitting || isSuccess}
-                placeholder="Enter your full shipping address"
+                placeholder="Çatdırılma ünvanınızı daxil edin"
                 rows="2"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
               />
@@ -418,7 +417,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
             <div>
               <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('payment.orderNotes') || 'Order Notes'}
+                Sifariş qeydləri
               </label>
               <textarea
                 id="notes"
@@ -426,7 +425,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                 value={formData.notes}
                 onChange={handleInputChange}
                 disabled={isSubmitting || isSuccess}
-                placeholder="Any special instructions for delivery?"
+                placeholder="Çatdırılma üçün hər hansı xüsusi qeydiniz?"
                 rows="2"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
               />
@@ -443,23 +442,23 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm text-gray-600">
-                <span>{t('subtotal') || 'Subtotal'}:</span>
+                <span>Məbləğ:</span>
                 <span>{(cartItems?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
               </div>
               {(cartItems?.totalDiscount || 0) > 0 && (
                 <div className="flex items-center justify-between text-sm text-[#C5A059]">
-                  <span>{t('discount') || 'Discount'}:</span>
+                  <span>Endirim:</span>
                   <span>- {(cartItems?.totalDiscount || 0).toFixed(2)} AZN</span>
                 </div>
               )}
               {(cartItems?.promoCodeDiscountAmount || 0) > 0 && (
                 <div className="flex items-center justify-between text-sm text-green-600">
-                  <span>{t('promoDiscount') || 'Promo Discount'} ({cartItems.appliedPromoCode}):</span>
+                  <span>Promo endirim ({cartItems.appliedPromoCode}):</span>
                   <span>- {(cartItems?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
                 </div>
               )}
               <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                <span className="font-medium text-gray-900">{t('total') || 'Total Amount'}:</span>
+                <span className="font-medium text-gray-900">Yekun məbləğ:</span>
                 <span className="text-2xl font-bold text-gray-900">
                   {(cartItems?.finalAmount || cartItems?.totalAmount || 0).toFixed(2)} AZN
                 </span>
@@ -481,17 +480,17 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
             {isSubmitting ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                {t('processing') || 'Processing...'}
+                Gözləyin...
               </>
             ) : isSuccess ? (
               <>
                 <Check className="w-5 h-5" />
-                {t('orderPlaced') || 'Order Placed Successfully!'}
+                Sifariş uğurla yerləşdirildi!
               </>
             ) : (
               <>
                 <ShoppingCart className="w-5 h-5" />
-                {t('placeOrder') || 'Place Order'}
+                Sifarişi tamamla
               </>
             )}
           </button>
@@ -501,9 +500,210 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
   );
 };
 
+const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubmitting }) => {
+  const [selectedOptionId, setSelectedOptionId] = useState(null);
+  const [step, setStep] = useState(1); // 1: Options, 2: Calculation/Form
+  const [formData, setFormData] = useState({
+    customerName: '',
+    customerPhone: '',
+    customerEmail: '',
+    shippingAddress: '',
+    notes: ''
+  });
+
+  const { data: options, isLoading: isOptionsLoading } = useGetInstallmentOptionsQuery(amount, { skip: !isOpen });
+  const { data: calculation, isLoading: isCalculating } = useCalculateInstallmentQuery(
+    { amount, optionId: selectedOptionId },
+    { skip: !selectedOptionId || step !== 2 }
+  );
+
+  useEffect(() => {
+    if (!isOpen) {
+      setStep(1);
+      setSelectedOptionId(null);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleOptionSelect = (id) => {
+    setSelectedOptionId(id);
+    setStep(2);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.customerName || !formData.customerPhone || !formData.shippingAddress) {
+      toast.error('Zəhmət olmasa tələb olunan xanaları doldurun');
+      return;
+    }
+    onSubmit({ ...formData, installmentOptionId: selectedOptionId });
+  };
+
+  return (
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/40 z-[9999] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-[#FDF2F5] rounded-xl">
+              <CreditCard className="w-6 h-6 text-[#4A041D]" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#4A041D]">Hissə-hissə ödəniş</h3>
+              <p className="text-xs text-gray-500">Bank seçimi edin və şərtlərlə tanış olun</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="max-h-[75vh] overflow-y-auto">
+          {step === 1 ? (
+            <div className="p-6 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Mövcud Bank Seçimləri</h4>
+              {isOptionsLoading ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="w-10 h-10 animate-spin text-[#4A041D]" />
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {options?.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleOptionSelect(option.id)}
+                      className="group flex items-center justify-between p-5 bg-white border-2 border-gray-100 rounded-2xl hover:border-[#4A041D] transition-all hover:shadow-lg text-left"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center font-bold text-[#4A041D] group-hover:bg-[#4A041D] group-hover:text-white transition-colors uppercase">
+                          {option.bankName.slice(0, 2)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-gray-900 group-hover:text-[#4A041D] transition-colors">{option.bankName}</p>
+                          <p className="text-sm text-gray-500">{option.installmentPeriod} ay / {option.interestPercentage}% faiz</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#4A041D] transition-colors" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="p-6">
+              <button
+                onClick={() => setStep(1)}
+                className="flex items-center gap-2 text-sm text-[#4A041D] font-semibold mb-6 hover:underline"
+              >
+                <ArrowLeft size={16} /> Bank seçimini dəyiş
+              </button>
+
+              {isCalculating ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="w-10 h-10 animate-spin text-[#4A041D]" />
+                </div>
+              ) : calculation && (
+                <div className="space-y-6">
+                  {/* Calculation Summary */}
+                  <div className="bg-[#4A041D] text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                      <Calculator size={80} />
+                    </div>
+                    <div className="relative z-10">
+                      <p className="text-sm opacity-80 mb-1">Aylıq ödəniş</p>
+                      <h4 className="text-4xl font-black mb-4">{calculation.monthlyPayment.toFixed(2)} ₼</h4>
+
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                        <div>
+                          <p className="text-[10px] opacity-60 uppercase">Ümumi məbləğ</p>
+                          <p className="font-bold">{calculation.totalAmount.toFixed(2)} ₼</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] opacity-60 uppercase">Faiz məbləği</p>
+                          <p className="font-bold">{calculation.interestAmount.toFixed(2)} ₼</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 mt-4 text-[11px] opacity-70 font-medium">
+                        <span className="bg-white/10 px-2 py-1 rounded">Müddət: {calculation.installmentPeriod} ay</span>
+                        <span className="bg-white/10 px-2 py-1 rounded">Faiz: {calculation.interestPercentage}%</span>
+                        <span className="bg-white/10 px-2 py-1 rounded">Əsas: {calculation.originalAmount.toFixed(2)} ₼</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Checkout Form */}
+                  <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+                    <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Məlumatları tamamlayın</h4>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-500 ml-1">AD SOYAD</label>
+                        <input
+                          required
+                          name="customerName"
+                          value={formData.customerName}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-500 ml-1">TELEFON</label>
+                        <input
+                          required
+                          name="customerPhone"
+                          value={formData.customerPhone}
+                          onChange={handleInputChange}
+                          placeholder="+994"
+                          className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-gray-500 ml-1">ÇATDIRILMA ÜNVANI</label>
+                      <textarea
+                        required
+                        name="shippingAddress"
+                        value={formData.shippingAddress}
+                        onChange={handleInputChange}
+                        rows="2"
+                        className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-4 bg-[#C5A059] text-white font-black rounded-2xl shadow-lg hover:bg-[#A68648] transition-all transform active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        "ÖDƏNİŞİ TƏSDİQLƏ"
+                      )}
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Cart = () => {
-  const { t, i18n } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInstallmentModalOpen, setIsInstallmentModalOpen] = useState(false);
+  const { data: installmentConfig } = useGetInstallmentConfigurationQuery();
   const [localCart, setLocalCart] = useState({
     items: [],
     totalPriceBeforeDiscount: 0,
@@ -511,7 +711,6 @@ const Cart = () => {
     totalAmount: 0
   });
 
-  const [translatedCartItems, setTranslatedCartItems] = useState(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
   const [isOrderSuccess, setIsOrderSuccess] = useState(false);
@@ -560,32 +759,7 @@ const Cart = () => {
   const cartItems = isAuthenticated ? cartItemsD : localCart;
   const isLoading = isAuthenticated ? apiLoading : false;
 
-  useEffect(() => {
-    async function translateCartItems() {
-      if (!cartItems?.items || cartItems.items.length === 0) {
-        setTranslatedCartItems({ items: [], totalPriceBeforeDiscount: 0, totalDiscount: 0, totalAmount: 0 });
-        return;
-      }
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = {
-          ...cartItems,
-          items: await Promise.all(
-            cartItems.items.map(async (item) => ({
-              ...item,
-              productName: await translateDynamicField(item.productName, targetLang),
-              productDescription: item.productDescription ? await translateDynamicField(item.productDescription, targetLang) : item.productDescription
-            }))
-          )
-        };
-        setTranslatedCartItems(translated);
-      } else {
-        setTranslatedCartItems(cartItems);
-      }
-    }
-    translateCartItems();
-  }, [i18n.language, cartItems]);
 
   const handleCheckoutSubmit = async (formData) => {
     console.log("🔥 checkout submit triggered");
@@ -614,7 +788,7 @@ const Cart = () => {
 
     } catch (error) {
       console.error('❌ Payment Initiation Error:', error);
-      toast.error(error?.data?.message || 'Failed to initiate payment. Please try again.');
+      toast.error(error?.data?.message || 'Ödəniş başlana bilmədi. Zəhmət olmasa yenidən cəhd edin.');
       setIsOrderSubmitting(false);
     }
   };
@@ -743,10 +917,10 @@ const Cart = () => {
     try {
       setIsApplyingPromo(true);
       await applyPromo({ promoCode: promoCodeInput }).unwrap();
-      toast.success(t('promoApplied') || 'Promo code applied!');
+      toast.success('Promo kod tətbiq edildi!');
       setPromoCodeInput('');
     } catch (error) {
-      toast.error(error?.data?.message || t('promoFailed') || 'Invalid promo code');
+      toast.error(error?.data?.message || 'Yanlış promo kod');
     } finally {
       setIsApplyingPromo(false);
     }
@@ -756,9 +930,9 @@ const Cart = () => {
     try {
       setIsRemovingPromo(true);
       await removePromo().unwrap();
-      toast.success(t('promoRemoved') || 'Promo code removed');
+      toast.success('Promo kod silindi');
     } catch (error) {
-      toast.error(t('promoRemoveFailed') || 'Failed to remove promo code');
+      toast.error('Promo kodu silmək mümkün olmadı');
     } finally {
       setIsRemovingPromo(false);
     }
@@ -768,8 +942,8 @@ const Cart = () => {
     return (
       <section className="inter bg-[#f7fafc] min-h-[80vh] flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('errorLoadingCart')}</h2>
-          <p className="text-gray-600">{t('pleaseTryAgainLater')}</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Səbəti yükləmək mümkün olmadı</h2>
+          <p className="text-gray-600">Zəhmət olmasa bir az sonra yenidən cəhd edin.</p>
         </div>
       </section>
     );
@@ -790,7 +964,7 @@ const Cart = () => {
           {isLoading ? (
             <div className="h-8 bg-gray-200 rounded w-48 animate-pulse"></div>
           ) : (
-            <h1>{t('myCart')} <span className="text-gray-400 font-normal text-lg">({(translatedCartItems || cartItems)?.items?.length || 0} {t('items')})</span></h1>
+            <h1>Səbətim <span className="text-gray-400 font-normal text-lg">({cartItems?.items?.length || 0} məhsul)</span></h1>
           )}
         </div>
 
@@ -803,13 +977,13 @@ const Cart = () => {
           ) : (
             <>
               <div className='flex-5 flex gap-5 p-4 flex-col bg-white lg:rounded-2xl shadow-sm'>
-                {(translatedCartItems || cartItems)?.items?.length === 0 ? (
+                {cartItems?.items?.length === 0 ? (
                   <div className="text-center py-12">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('yourCartIsEmpty')}</h3>
-                    <p className="text-gray-600">{t('addItemsToStart')}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Səbətiniz boşdur</h3>
+                    <p className="text-gray-600">Alış-verişə başlamaq üçün məhsul əlavə edin</p>
                   </div>
                 ) : (
-                  (translatedCartItems || cartItems)?.items?.map((item, index) => {
+                  cartItems?.items?.map((item, index) => {
                     const effectiveQuantity = getEffectiveQuantity(item);
                     const isItemUpdating = updatingItems.has(item.id);
                     const isItemRemoving = removingItems.has(item.id);
@@ -822,7 +996,7 @@ const Cart = () => {
                             <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center">
                               <img
                                 className='w-full h-full object-contain'
-                                src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
+                                src={`${API_BASE_URL}${item?.productImageUrl}`}
                                 alt={item?.productName || 'Product'}
                                 onError={(e) => {
                                   e.target.src = "/Icons/logo.jpeg"
@@ -869,7 +1043,7 @@ const Cart = () => {
                               onClick={() => handleRemoveItem(item.id)}
                               className="p-2 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50 hover:bg-red-50 rounded-lg"
                               disabled={isItemRemoving || isItemUpdating}
-                              title={t('remove')}
+                              title="Sil"
                             >
                               <Trash2 size={18} />
                             </button>
@@ -881,7 +1055,7 @@ const Cart = () => {
                           <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center border border-gray-100">
                             <img
                               className="w-full h-full object-contain"
-                              src={`https://kozmetik-001-site1.qtempurl.com${item?.productImageUrl}`}
+                              src={`${API_BASE_URL}${item?.productImageUrl}`}
                               alt={item?.productName || "Product"}
                               onError={(e) => {
                                 e.currentTarget.src = "/Icons/logo.jpeg";
@@ -926,7 +1100,7 @@ const Cart = () => {
                             </div>
                             {effectiveQuantity > 1 && (
                               <div className="text-xs text-gray-400 mt-1">
-                                {item.unitPrice.toFixed(2)} ₼ / pc
+                                {item.unitPrice.toFixed(2)} ₼ / ədəd
                               </div>
                             )}
                           </div>
@@ -936,7 +1110,7 @@ const Cart = () => {
                             className='p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-4 disabled:opacity-50'
                             onClick={() => handleRemoveItem(item.id)}
                             disabled={isItemRemoving || isItemUpdating}
-                            title={t('remove')}
+                            title="Sil"
                           >
                             {(isItemRemoving) ? <Loader2 size={20} className="animate-spin" /> : <Trash2 size={20} />}
                           </button>
@@ -946,20 +1120,20 @@ const Cart = () => {
                   })
                 )}
 
-                {(translatedCartItems || cartItems)?.items?.length > 0 && (
+                {cartItems?.items?.length > 0 && (
                   <>
                     <hr className="mx-2 border-[#dee2e6] hidden lg:block" />
                     <div className='justify-between hidden lg:flex'>
                       <Link to='/' className='flex items-center gap-2 text-white bg-black inter p-2 rounded-lg'>
                         <ArrowLeft size={20} />
-                        <p>{t('backToShop')}</p>
+                        <p>Mağazaya qayıt</p>
                       </Link>
                       <button
                         onClick={() => handleRemoveCart()}
                         className='px-3 bg-white hover:bg-gray-100 cursor-pointer text-red-500 rounded-lg border-1 border-[#bfc2c6] disabled:opacity-50 disabled:cursor-not-allowed'
                         disabled={isRemovingCart}
                       >
-                        {isRemovingCart ? t('removingAll') : t('removeAll')}
+                        {isRemovingCart ? "Hamısı silinir..." : "Hamısını sil"}
                       </button>
                     </div>
                   </>
@@ -969,26 +1143,26 @@ const Cart = () => {
               <div className='bg-white p-6 shadow-sm rounded-2xl h-fit border border-gray-100'>
                 <div className="border-b border-gray-100 pb-6 space-y-4">
                   <div className="flex justify-between text-gray-600 text-base font-medium">
-                    <span>{t('subtotal')}:</span>
-                    <span>{((translatedCartItems || cartItems)?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
+                    <span>Məbləğ:</span>
+                    <span>{(cartItems?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
                   </div>
-                  {((translatedCartItems || cartItems)?.totalDiscount || 0) > 0 && (
+                  {(cartItems?.totalDiscount || 0) > 0 && (
                     <div className="flex justify-between text-[#C5A059] text-base font-medium">
-                      <span>{t('discount')}:</span>
-                      <span>- {((translatedCartItems || cartItems)?.totalDiscount || 0).toFixed(2)} AZN</span>
+                      <span>Endirim:</span>
+                      <span>- {(cartItems?.totalDiscount || 0).toFixed(2)} AZN</span>
                     </div>
                   )}
 
                   {/* Promo Code Section */}
                   {isAuthenticated && (
                     <div className="pt-2">
-                      {!(translatedCartItems || cartItems)?.appliedPromoCode ? (
+                      {!cartItems?.appliedPromoCode ? (
                         <div className="flex gap-2">
                           <div className="relative flex-1">
                             <Ticket className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input
                               type="text"
-                              placeholder={t('enterPromo') || "Promo code"}
+                              placeholder="Promo kod daxil edin"
                               value={promoCodeInput}
                               onChange={(e) => setPromoCodeInput(e.target.value)}
                               className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg min-w-[150px] text-sm focus:outline-none focus:ring-1 focus:ring-[#4A041D]"
@@ -999,7 +1173,7 @@ const Cart = () => {
                             disabled={isApplyingPromo || !promoCodeInput.trim()}
                             className="px-4 py-2 bg-[#4A041D] text-white rounded-lg text-sm font-semibold hover:bg-[#6D082D] transition-colors disabled:opacity-50"
                           >
-                            {isApplyingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : t('apply') || 'Apply'}
+                            {isApplyingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : "Tətbiq et"}
                           </button>
                         </div>
                       ) : (
@@ -1007,8 +1181,8 @@ const Cart = () => {
                           <div className="flex items-center gap-2">
                             <Tag className="w-4 h-4 text-green-600" />
                             <div>
-                              <p className="text-xs text-green-600 font-bold uppercase">{(translatedCartItems || cartItems)?.appliedPromoCode}</p>
-                              <p className="text-[10px] text-green-500">{(translatedCartItems || cartItems)?.promoCodeDiscountPercentage}% {t('discountApplied') || 'discount applied'}</p>
+                              <p className="text-xs text-green-600 font-bold uppercase">{cartItems?.appliedPromoCode}</p>
+                              <p className="text-[10px] text-green-500">{cartItems?.promoCodeDiscountPercentage}% endirim tətbiq edildi</p>
                             </div>
                           </div>
                           <button
@@ -1023,32 +1197,74 @@ const Cart = () => {
                     </div>
                   )}
 
-                  {((translatedCartItems || cartItems)?.promoCodeDiscountAmount || 0) > 0 && (
+                  {(cartItems?.promoCodeDiscountAmount || 0) > 0 && (
                     <div className="flex justify-between text-green-600 text-base font-medium">
-                      <span>{t('promoDiscount') || 'Promo Discount'}:</span>
-                      <span>- {((translatedCartItems || cartItems)?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
+                      <span>Promo endirim:</span>
+                      <span>- {(cartItems?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-lg font-bold text-[#4A041D] pt-4">
-                    <span>{t('total')}:</span>
-                    <span>{((translatedCartItems || cartItems)?.finalAmount || (translatedCartItems || cartItems)?.totalAmount || 0).toFixed(2)} AZN</span>
+                    <span>Yekun məbləğ:</span>
+                    <span>{(cartItems?.finalAmount || cartItems?.totalAmount || 0).toFixed(2)} AZN</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setIsCheckoutModalOpen(true)}
                   className="w-full mt-6 cursor-pointer bg-[#4A041D] hover:bg-[#6D082D] text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
-                  disabled={!(translatedCartItems || cartItems)?.items?.length}
+                  disabled={!cartItems?.items?.length}
                 >
                   <ShoppingCart size={20} />
-                  <span>{t('buyNow')}</span>
+                  <span>Sifarişi tamamla</span>
                 </button>
+
+                {installmentConfig?.isEnabled && (cartItems?.finalAmount || cartItems?.totalAmount || 0) >= installmentConfig?.minimumAmount && (
+                  <button
+                    onClick={() => setIsInstallmentModalOpen(true)}
+                    className="w-full mt-3 cursor-pointer bg-white border-2 border-[#4A041D] text-[#4A041D] hover:bg-[#FDF2F5] font-semibold py-4 px-6 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
+                    disabled={!cartItems?.items?.length}
+                  >
+                    <CreditCard size={20} />
+                    <span>Hissə-hissə ödəniş</span>
+                  </button>
+                )}
               </div>
             </>
           )}
         </div>
       </div>
+
+      <InstallmentModal
+        isOpen={isInstallmentModalOpen}
+        onClose={() => setIsInstallmentModalOpen(false)}
+        amount={cartItems?.finalAmount || cartItems?.totalAmount || 0}
+        cartItems={cartItems}
+        onSubmit={async (formData) => {
+          setIsOrderSubmitting(true);
+          try {
+            const payload = {
+              customerName: formData.customerName,
+              customerEmail: formData.customerEmail || me?.email,
+              customerPhone: formData.customerPhone.replace(/\D/g, ''),
+              shippingAddress: formData.shippingAddress,
+              notes: formData.notes,
+              installmentOptionId: formData.installmentOptionId
+            };
+            const response = await initiatePayment(payload).unwrap();
+            if (response.redirect_url) {
+              setIsOrderSuccess(true);
+              setTimeout(() => {
+                window.location.href = response.redirect_url;
+              }, 1000);
+            }
+          } catch (error) {
+            toast.error(error?.data?.message || 'Xəta baş verdi');
+            setIsOrderSubmitting(false);
+          }
+        }}
+        isSubmitting={isOrderSubmitting}
+      />
 
       {/* Checkout Modal */}
       <CheckoutModal
@@ -1058,7 +1274,7 @@ const Cart = () => {
             setIsCheckoutModalOpen(false);
           }
         }}
-        cartItems={translatedCartItems || cartItems}
+        cartItems={cartItems}
         onSubmit={handleCheckoutSubmit}
         isSubmitting={isOrderSubmitting}
         isSuccess={isOrderSuccess}

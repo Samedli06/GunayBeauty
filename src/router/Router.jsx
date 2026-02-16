@@ -26,7 +26,6 @@ import BannersUI from "../components/admin/Banner/BannerUi";
 import FilterUi from "../Pages/admin/FilterUi";
 import ProductSpec from "../Pages/admin/ProductSpec"
 import AssignFilter from "../Pages/admin/AssignFilter"
-import FileManagementPanel from "../components/admin/FileUpload/FIleUI";
 import { SearchProvider } from "./Context";
 import WP from '../components/UI/WP'
 import BottomNavigation from "../components/user/BottomNavigation";
@@ -41,6 +40,8 @@ import PaymentSuccess from "../Pages/user/Payment/PaymentSuccess";
 import PaymentError from "../Pages/user/Payment/PaymentError";
 import OrdersAdmin from "../Pages/admin/Orders";
 import Loyalty from "../Pages/admin/Loyalty";
+import ReturnPolicy from "../Pages/user/ReturnPolicy";
+import PaymentAdmin from "../Pages/admin/PaymentAdmin";
 
 const Router = () => {
 
@@ -89,6 +90,7 @@ const Router = () => {
             <Route path="/categories/:slug" element={<SubCategories />} />
             <Route path="/brands" element={<Brands />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/return-policy" element={<ReturnPolicy />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/error" element={<PaymentError />} />
 
@@ -112,11 +114,11 @@ const Router = () => {
             <Route path="banners" element={<BannersUI />} />
             <Route path="filters" element={<FilterUi />} />
             <Route path="product-filters" element={<AssignFilter />} />
-            <Route path="file-management" element={<FileManagementPanel />} />
             <Route path="brands" element={<Brand />} />
             <Route path="promo-codes" element={<PromoCodes />} />
             <Route path="loyalty" element={<Loyalty />} />
             <Route path="orders" element={<OrdersAdmin />} />
+            <Route path="payment" element={<PaymentAdmin />} />
           </Route>
 
           <Route path="*" element={<ErrorPage />} />

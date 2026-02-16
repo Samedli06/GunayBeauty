@@ -4,7 +4,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://gunaybeauty.com';
+export const API_BASE_URL = 'https://gunaybeauty.com';
 
 export const API = createApi({
   reducerPath: 'API',
@@ -45,7 +45,7 @@ export const API = createApi({
     },
   }),
 
-  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders', 'Loyalty', 'Wallet'],
+  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders', 'Loyalty', 'Wallet', 'Installment'],
 
   endpoints: builder => ({
     // *AUTHENTICATION*
@@ -782,9 +782,10 @@ export const API = createApi({
 
     // *BANNERS*
     getBanners: builder.query({
-      query: () => ({
+      query: (type) => ({
         url: '/api/v1/Admin/banners',
         method: 'GET',
+        params: type !== undefined ? { type } : {},
       }),
       providesTags: ['Banners'],
     }),
@@ -1352,10 +1353,10 @@ export const API = createApi({
 
           // Make the request
           const response = await fetch(
-            `https://kozmetik-001-site1.qtempurl.comapi/v1/Files/download/${id}`, {
+            `${API_BASE_URL}api/v1/Files/download/${id}`, {
             method: 'GET',
             headers: {
-              'Authorization': token ? `Bearer ${token}` : '',
+              'Authorization': token ? `Bearer ${token} ` : '',
             },
           }
           );
@@ -1651,10 +1652,88 @@ export const API = createApi({
       }),
       invalidatesTags: ['Orders'],
     }),
+    // *INSTALLMENT*
+    getInstallmentOptions: builder.query({
+      query: (amount) => ({
+        url: '/api/v1/Installment/options',
+        method: 'GET',
+        params: { amount },
+      }),
+      providesTags: ['Installment'],
+    }),
+
+    calculateInstallment: builder.query({
+      query: ({ amount, optionId }) => ({
+        url: '/api/v1/Installment/calculate',
+        method: 'GET',
+        params: { amount, optionId },
+      }),
+      providesTags: ['Installment'],
+    }),
+
+    getInstallmentConfiguration: builder.query({
+      query: () => ({
+        url: '/api/v1/Installment/configuration',
+        method: 'GET',
+      }),
+      providesTags: ['Installment'],
+    }),
+
+    updateInstallmentConfiguration: builder.mutation({
+      query: (body) => ({
+        url: '/api/v1/Installment/configuration',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Installment'],
+    }),
+
+    getAdminInstallmentOptions: builder.query({
+      query: () => ({
+        url: '/api/v1/Installment/admin/options',
+        method: 'GET',
+      }),
+      providesTags: ['Installment'],
+    }),
+
+    addInstallmentOption: builder.mutation({
+      query: (body) => ({
+        url: '/api/v1/Installment/admin/options',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Installment'],
+    }),
+
+    updateInstallmentOption: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/api/v1/Installment/admin/options/${id}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Installment'],
+    }),
+
+    deleteInstallmentOption: builder.mutation({
+      query: (id) => ({
+        url: `/api/v1/Installment/admin/options/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Installment'],
+    }),
   }),
 });
 
 export const {
+  useGetInstallmentOptionsQuery,
+  useCalculateInstallmentQuery,
+  useGetInstallmentConfigurationQuery,
+  useUpdateInstallmentConfigurationMutation,
+  useGetAdminInstallmentOptionsQuery,
+  useAddInstallmentOptionMutation,
+  useUpdateInstallmentOptionMutation,
+  useDeleteInstallmentOptionMutation,
+
   useGetBrandByIdQuery,
   useGetBrandBySlugQuery,
   useGetBrandsAdminQuery,

@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { ChevronRight, CloudCog } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { translateDynamicField } from "../i18n";
 
 export function Breadcrumb({ productData = null, categoryData = null }) {
-  const { i18n, t } = useTranslation();
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   console.log(categoryData)
@@ -13,9 +10,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
 
 
 
-  // Dynamic translation states
-  const [translatedProductData, setTranslatedProductData] = useState(null);
-  const [translatedCategoryData, setTranslatedCategoryData] = useState(null);
+
 
   const formatName = (value) =>
     value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -25,59 +20,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
     /^[a-f0-9]{24}$/i.test(value) ||
     /^[0-9a-f-]{36}$/i.test(value);
 
-  // Dynamic translation effect for product data
-  useEffect(() => {
-    async function translateProductData() {
-      if (!productData) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...productData };
-
-        if (productData.name) {
-          translated.name = await translateDynamicField(productData.name, targetLang);
-        }
-        if (productData.parentCategoryName) {
-          translated.parentCategoryName = await translateDynamicField(productData.parentCategoryName, targetLang);
-        }
-        if (productData.subCategoryName) {
-          translated.subCategoryName = await translateDynamicField(productData.subCategoryName, targetLang);
-        }
-        if (productData.categoryName) {
-          translated.categoryName = await translateDynamicField(productData.categoryName, targetLang);
-        }
-
-        setTranslatedProductData(translated);
-      } else {
-        setTranslatedProductData(productData);
-      }
-    }
-    translateProductData();
-  }, [i18n.language, productData]);
-
-  // Dynamic translation effect for category data
-  useEffect(() => {
-    async function translateCategoryData() {
-      if (!categoryData) return;
-
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...categoryData };
-
-        if (categoryData.parentCategoryName) {
-          translated.parentCategoryName = await translateDynamicField(categoryData.parentCategoryName, targetLang);
-        }
-        if (categoryData.categoryName) {
-          translated.categoryName = await translateDynamicField(categoryData.categoryName, targetLang);
-        }
-
-        setTranslatedCategoryData(translated);
-      } else {
-        setTranslatedCategoryData(categoryData);
-      }
-    }
-    translateCategoryData();
-  }, [i18n.language, categoryData]);
 
   const isProductPage =
     pathnames.includes("product") ||
@@ -86,7 +29,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
 
   // ✅ Category breadcrumb (Home > Parent Category > Sub Category)
   if (isProductPage && categoryData && !productData) {
-    const currentCategoryData = translatedCategoryData || categoryData;
+    const currentCategoryData = categoryData;
     console.log(currentCategoryData)
     return (
       <nav className="flex items-center space-x-2 text-sm text-[#8B96A5] inter overflow-x-auto scrollbar-hide whitespace-nowrap">
@@ -94,7 +37,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
           to="/"
           className="hover:text-gray-900 transition-colors text-sm lg:text-lg flex-shrink-0"
         >
-          {t('productsPage.home')}
+          Ana Səhifə
         </Link>
 
         {/* Parent Category */}
@@ -127,14 +70,14 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
 
   // ✅ Product breadcrumb (Home > Category > Subcategory > Product Name)
   if (isProductPage && productData) {
-    const currentProductData = translatedProductData || productData;
+    const currentProductData = productData;
     return (
       <nav className="flex items-center space-x-2 text-sm text-[#8B96A5] inter overflow-x-auto scrollbar-hide whitespace-nowrap">
         <Link
           to="/"
           className="hover:text-gray-900 transition-colors text-sm lg:text-lg flex-shrink-0"
         >
-          {t('productsPage.home')}
+          Ana Səhifə
         </Link>
 
         {/* Parent Category */}
@@ -201,7 +144,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
         to="/"
         className="hover:text-gray-900 transition-colors text-sm lg:text-lg flex-shrink-0"
       >
-        {t('productsPage.home')}
+        Ana Səhifə
       </Link>
 
       {pathnames.map((value, index) => {

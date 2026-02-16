@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router';
 import { useGetBrandsAdminQuery, API_BASE_URL } from '../../store/API';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 
 // Skeleton Components
 const BrandCardSkeleton = () => (
@@ -73,42 +71,17 @@ const SkeletonLoader = () => (
 );
 
 const Brands = () => {
-  const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLetter, setSelectedLetter] = useState('All');
   const { data: brandsD, isLoading, error, refetch } = useGetBrandsAdminQuery();
 
-  // Dynamic translation states
-  const [translatedBrands, setTranslatedBrands] = useState([]);
-
-
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateBrands() {
-      if (!brandsD || brandsD.length === 0) return;
-
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          brandsD.map(async (brand) => ({
-            ...brand,
-            name: await translateDynamicField(brand.name, targetLang)
-          }))
-        );
-        setTranslatedBrands(translated);
-      } else {
-        setTranslatedBrands(brandsD);
-      }
-    }
-    translateBrands();
-  }, [i18n.language, brandsD]);
 
   // Transform API data to include all necessary properties
-  const currentBrands = translatedBrands.length > 0 ? translatedBrands : brandsD;
+  const currentBrands = brandsD;
   const brands = currentBrands?.map(brand => ({
     name: brand?.name || "Brand",
     logo: brand?.logoUrl
-      ? `https://kozmetik-001-site1.qtempurl.com${brand.logoUrl}`
+      ? `${API_BASE_URL}${brand.logoUrl}`
       : './Icons/banner-commercial.svg',
     products: brand?.productCount || 0,
     slug: brand?.slug
@@ -136,13 +109,13 @@ const Brands = () => {
                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
               </svg>
             </div>
-            <h3 className='text-xl font-semibold text-gray-900 mb-2'>{t('brandsSection.errorTitle')}</h3>
-            <p className='text-[#505050] mb-4'>{t('brandsSection.errorMessage')}</p>
+            <h3 className='text-xl font-semibold text-gray-900 mb-2'>Xəta baş verdi</h3>
+            <p className='text-[#505050] mb-4'>Brendləri yükləmək mümkün olmadı. Zəhmət olmasa yenidən cəhd edin.</p>
             <button
               onClick={() => refetch()}
               className='bg-[#4A041D] text-white px-6 py-2 rounded-lg hover:bg-[#6D082D] transition-colors'
             >
-              {t('brandsSection.retry')}
+              Yenidən cəhd et
             </button>
           </div>
         </div>
@@ -163,7 +136,7 @@ const Brands = () => {
             <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C5A059]' size={22} />
             <input
               type='text'
-              placeholder={t('brandsSection.searchPlaceholder')}
+              placeholder="Brendləri axtarın..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className='w-full pl-12 pr-4 py-4 bg-transparent border-none rounded-2xl focus:ring-2 focus:ring-[#4A041D]/20 placeholder-gray-400 text-gray-700 text-lg transition-all'
@@ -173,10 +146,9 @@ const Brands = () => {
 
 
 
-        {/* Brands Count */}
         <div className='mb-6'>
           <p className='text-[#505050]'>
-            {t('brandsSection.showing')} <span className='font-semibold text-black'>{filteredBrands.length}</span> {t('brandsSection.brandCountLabel')}
+            Göstərilir <span className='font-semibold text-black'>{filteredBrands.length}</span> brend
           </p>
         </div>
 
@@ -186,7 +158,7 @@ const Brands = () => {
             {filteredBrands.map((brand, index) => (
               <Link
                 key={index}
-                to={`/products/brand/${brand.slug || brand.name.toLowerCase()}`}
+                to={`/ products / brand / ${brand.slug || brand.name.toLowerCase()} `}
                 className='group bg-white rounded-xl border border-gray-100 p-6 hover:border-[#4A041D] hover:shadow-[0_8px_30px_rgba(74,4,29,0.1)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between h-full'
               >
                 <div className='flex flex-col items-center flex-1'>
@@ -207,15 +179,13 @@ const Brands = () => {
                     {brand.name}
                   </h3>
 
-                  {/* Product Count */}
                   <p className='text-sm text-gray-500 text-center mb-4'>
-                    {brand.products} {brand.products === 1 ? 'product' : 'products'}
+                    {brand.products} məhsul
                   </p>
                 </div>
 
-                {/* View Button */}
                 <div className='flex items-center justify-center gap-2 text-[#C5A059] text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0'>
-                  View Products
+                  Məhsullara bax
                   <ChevronRight size={16} />
                 </div>
               </Link>
@@ -228,9 +198,9 @@ const Brands = () => {
               alt='No results'
               className='w-24 h-24 mx-auto mb-4 opacity-50'
             />
-            <h3 className='text-xl font-semibold mb-2'>No brands found</h3>
+            <h3 className='text-xl font-semibold mb-2'>Brend tapılmadı</h3>
             <p className='text-[#505050]'>
-              Try adjusting your search or filter criteria
+              Axtarışınızı və ya filtr meyarlarınızı tənzimləməyə çalışın
             </p>
           </div>
         )}

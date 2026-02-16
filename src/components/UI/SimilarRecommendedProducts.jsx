@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import CartUtils from './CartUtils';
 import AuthUtils from './AuthUtils';
 import UnauthorizedModal from './UnauthorizedModal';
-import { useTranslation } from 'react-i18next';
 import { ProductCard } from '../../products/ProductCard';
 
 // Skeleton Component matching the site's design
@@ -28,7 +27,6 @@ const SimilarProducts = ({ products, isLoading }) => {
   const [toggleFavorite] = useToggleFavoriteMutation();
   const [addingIds, setAddingIds] = useState(new Set());
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { t } = useTranslation();
 
   useEffect(() => {
     setIsAuthenticated(AuthUtils.isAuthenticated());
@@ -46,14 +44,14 @@ const SimilarProducts = ({ products, isLoading }) => {
         CartUtils.addItem(productData, 1);
         window.dispatchEvent(new Event("cartUpdated"));
       }
-      toast.success(t('addedToCart'));
+      toast.success("Səbətə əlavə edildi");
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction('add items to cart');
+        setUnauthorizedAction('məhsulları səbətə əlavə etmək');
         setShowUnauthorizedModal(true);
       } else {
-        toast.error(t('failedAddToCart'));
+        toast.error("Məhsulu səbətə əlavə etmək alınmadı");
       }
     } finally {
       setTimeout(() => {
@@ -64,7 +62,7 @@ const SimilarProducts = ({ products, isLoading }) => {
         });
       }, 500);
     }
-  }, [isAuthenticated, addCartItem, t]);
+  }, [isAuthenticated, addCartItem]);
 
   const handleToggleFavorite = useCallback(async (id) => {
     if (!id) return;
@@ -74,10 +72,10 @@ const SimilarProducts = ({ products, isLoading }) => {
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction('add items to favorites');
+        setUnauthorizedAction('məhsulları sevimlilərə əlavə etmək');
         setShowUnauthorizedModal(true);
       } else {
-        toast.error("Failed to update favorites");
+        toast.error("Sevimliləri yeniləmək mümkün olmadı");
       }
     }
   }, [toggleFavorite]);
@@ -137,7 +135,7 @@ const SimilarProducts = ({ products, isLoading }) => {
 
       <div className="flex items-center justify-between mb-8 px-4 md:px-0">
         <h2 className="text-2xl md:text-3xl font-bold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          {t('similarProd')}
+          Oxşar məhsullar
         </h2>
 
         {/* Navigation Buttons */}

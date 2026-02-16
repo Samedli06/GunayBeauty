@@ -18,7 +18,7 @@ const Category = () => {
   const [deleteCategory] = useDeleteCategoryMutation();
 
 
-  // ✅ Group categories by parentId
+  // ✅ Group categories by parentId and sort by sortOrder
   const groupedCategories = useMemo(() => {
     if (!categories) return {};
     const map = {};
@@ -27,6 +27,12 @@ const Category = () => {
       if (!map[parentId]) map[parentId] = [];
       map[parentId].push(cat);
     });
+
+    // Sort each group by sortOrder
+    Object.keys(map).forEach(key => {
+      map[key].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    });
+
     return map;
   }, [categories]);
 
@@ -76,7 +82,7 @@ const Category = () => {
             <img
               className="w-10 h-10 rounded-full"
               src={
-                `https://kozmetik-001-site1.qtempurl.com${cat.imageUrl}` ||
+                `${API_BASE_URL}${cat.imageUrl}` ||
                 "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/85d1d12f-b0a5-49c0-bc81-6238cfc5d9ac/JORDAN+1+RETRO+HIGH+OG+%28PS%29.png"
               }
               alt=""

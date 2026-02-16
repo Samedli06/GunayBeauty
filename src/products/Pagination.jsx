@@ -1,10 +1,8 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { current } from '@reduxjs/toolkit';
-import { useTranslation } from 'react-i18next';
 
 export function Pagination({ currentPage, totalPages, onPageChange }) {
-  const { t } = useTranslation();
   const getPageNumbers = () => {
     const pages = [];
     const showPages = 5;
@@ -62,7 +60,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <nav className="flex items-center justify-center mt-12 mb-8" aria-label={t('pagination.navigation')}>
+    <nav className="flex items-center justify-center mt-12 mb-8" aria-label="Səhifələmə">
       <div className="flex items-center gap-2">
         <button
           onClick={handlePrevious}
@@ -71,7 +69,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
             ${currentPage === 1
               ? 'text-gray-300 cursor-not-allowed'
               : 'text-[#4A041D] hover:text-white hover:bg-[#4A041D] cursor-pointer'}`}
-          aria-label={t('pagination.previousPage')}
+          aria-label="Əvvəlki səhifə"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -94,7 +92,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
                   ${currentPage === page
                     ? 'bg-[#4A041D] text-white shadow-md shadow-[#4A041D]/20 transform scale-110'
                     : 'text-[#4A041D] hover:text-[#C5A059] hover:bg-[#4A041D]/5 cursor-pointer'}`}
-                aria-label={`${t('pagination.page')} ${page}`}
+                aria-label={`Səhifə ${page}`}
                 aria-current={currentPage === page ? 'page' : undefined}
               >
                 {page}
@@ -110,7 +108,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
             ${currentPage === totalPages
               ? 'text-gray-300 cursor-not-allowed'
               : 'text-[#4A041D] hover:text-white hover:bg-[#4A041D] cursor-pointer'}`}
-          aria-label={t('pagination.nextPage')}
+          aria-label="Növbəti səhifə"
         >
           <ChevronRight className="w-5 h-5" />
         </button>

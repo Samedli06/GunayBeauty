@@ -1,15 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useGetBrandsAdminQuery, useGetBrandsQuery } from '../../store/API';
-import { useTranslation } from 'react-i18next';
 
 const InfiniteBrandSlider = () => {
-  const { t } = useTranslation();
   const { data: brands, isLoading: isBrandsLoading } = useGetBrandsAdminQuery();
 
 
 
   const brandsImg = brands?.map(brand => ({
-    src: `https://kozmetik-001-site1.qtempurl.com/${brand?.logoUrl}`,
+    src: `${API_BASE_URL}/${brand?.logoUrl}`,
     alt: brand?.name || "Brand",
     slug: brand?.slug
   })) || [];
@@ -140,7 +138,7 @@ const InfiniteBrandSlider = () => {
   return (
     <>
       <div className="text-xl hidden md:block font-semibold mb-6">
-        <h1>{t('featuredBrands')}</h1>
+        <h1>Populyar Brendlər</h1>
       </div>
 
       <div className="relative overflow-hidden bg-white rounded-lg border border-gray-200 py-3 md:p-6">

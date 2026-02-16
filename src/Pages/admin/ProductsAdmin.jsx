@@ -348,7 +348,7 @@ const ProductsUI = () => {
                   <div className="relative h-48 bg-gray-700">
                     <img
                       className="w-full h-full object-cover cursor-pointer"
-                      src={`https://kozmetik-001-site1.qtempurl.com${product.primaryImageUrl}`}
+                      src={`${API_BASE_URL}${product.primaryImageUrl}`}
                       alt={product.name}
                       onClick={() => handleViewProduct(product)}
                       onError={(e) => {

@@ -5,10 +5,7 @@ import { LoaderIcon } from 'lucide-react';
 import EditUserUi from '../../components/admin/User/editUser'
 import Modal from '../../components/UI/Modal'
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-
 const Users = () => {
-    const { t } = useTranslation();
     const { data: users, error, isLoading, refetch } = useGetUsersQuery();
     const { data: userRoles, isRolesLoading } = useGetUserRolesQuery();
     const { data: userStatistics, error: Serror, isLoading: SisLoading, refetch: refetchStatistics } = useGetUserStaticsQuery();
@@ -138,8 +135,8 @@ const Users = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold !text-white">{t('admin.users')}</h1>
-                    <p className="text-gray-400 mt-1">{t('admin.manageUsers')}</p>
+                    <h1 className="text-2xl font-bold !text-white">İstifadəçilər</h1>
+                    <p className="text-gray-400 mt-1">İstifadəçi hesabları və icazələri idarə edin</p>
                 </div>
             </div>
 
@@ -148,7 +145,7 @@ const Users = () => {
                 <div className="bg-blue-600 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="!text-white text-sm font-medium">{t('admin.totalUsers')}</h3>
+                            <h3 className="!text-white text-sm font-medium">Ümumi İstifadəçilər</h3>
                             <p className="text-3xl font-bold text-white mt-2">{userStatistics?.totalUsers}</p>
                         </div>
                         <div className="text-white/60">
@@ -160,7 +157,7 @@ const Users = () => {
                 <div className="bg-purple-600 rounded-xl p-6 relative overflow-hidden">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="!text-white text-sm font-medium">{t('admin.admins')}</h3>
+                            <h3 className="!text-white text-sm font-medium">Adminlər</h3>
                             <p className="text-3xl font-bold text-white mt-2">
                                 {userStatistics?.adminUsers}
                             </p>

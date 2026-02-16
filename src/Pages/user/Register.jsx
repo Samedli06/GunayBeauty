@@ -36,15 +36,15 @@ const Register = () => {
         confirmPassword: formData.confirmPassword.trim()
       }).unwrap();
 
-      toast.success("Signed up successfully!");
+      toast.success("Qeydiyyat uğurla tamamlandı!");
       navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error);
 
       if (error?.status === 400) {
-        toast.error(error?.data || "Email or phone already exists");
+        toast.error(error?.data || "E-poçt və ya telefon artıq mövcuddur");
       } else {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
       }
     }
   };
@@ -70,16 +70,16 @@ const Register = () => {
         </div>
 
         <div className="relative z-10 max-w-lg text-white/90 animate-fade-in-up delay-100">
-          <h2 className="text-5xl font-light mb-6 leading-tight">Join the<br /><span className="font-bold text-[#C5A059]">Revolution.</span></h2>
+          <h2 className="text-5xl font-light mb-6 leading-tight">Gözəllik dünyasına<br /><span className="font-bold text-[#C5A059]">qoşulun.</span></h2>
           <p className="text-lg opacity-80 leading-relaxed font-light">
-            Create your account today to unlock exclusive rewards, faster checkout, and personalized beauty recommendations.
+            Eksklüziv mükafatlar, daha sürətli alış-veriş və fərdi gözəllik tövsiyələri üçün bu gün hesabınızı yaradın.
           </p>
         </div>
 
         <div className="relative z-10 text-white/50 text-sm font-light flex items-center gap-4 animate-fade-in-up delay-200">
-          <span>© {new Date().getFullYear()} Gunay Beauty Store</span>
+          <span>© {new Date().getFullYear()} Gunay Beauty</span>
           <div className="h-px w-8 bg-white/20"></div>
-          <span>Terms & Conditions</span>
+          <span>Şərtlər və Qaydalar</span>
         </div>
       </div>
 
@@ -98,14 +98,14 @@ const Register = () => {
           </div>
 
           <div className="text-center lg:text-left space-y-2">
-            <h2 className="text-3xl font-bold text-[#4A041D]">Create Account</h2>
-            <p className="text-gray-500">Please fill in your details to register</p>
+            <h2 className="text-3xl font-bold text-[#4A041D]">Hesab Yaradın</h2>
+            <p className="text-gray-500">Qeydiyyatdan keçmək üçün məlumatlarınızı daxil edin</p>
           </div>
 
           <form onSubmit={handleSignUp} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="group space-y-1.5">
-                <label className="block text-sm font-medium text-gray-700 ml-1">First Name</label>
+                <label className="block text-sm font-medium text-gray-700 ml-1">Ad</label>
                 <input
                   type="text"
                   required
@@ -116,7 +116,7 @@ const Register = () => {
                 />
               </div>
               <div className="group space-y-1.5">
-                <label className="block text-sm font-medium text-gray-700 ml-1">Last Name</label>
+                <label className="block text-sm font-medium text-gray-700 ml-1">Soyad</label>
                 <input
                   type="text"
                   required
@@ -129,7 +129,7 @@ const Register = () => {
             </div>
 
             <div className="group space-y-1.5">
-              <label className="block text-sm font-medium text-gray-700 ml-1">Email Address</label>
+              <label className="block text-sm font-medium text-gray-700 ml-1">E-poçt ünvanı</label>
               <input
                 type="email"
                 required
@@ -141,7 +141,7 @@ const Register = () => {
             </div>
 
             <div className="group space-y-1.5">
-              <label className="block text-sm font-medium text-gray-700 ml-1">Phone Number</label>
+              <label className="block text-sm font-medium text-gray-700 ml-1">Telefon nömrəsi</label>
               <div className="flex relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl overflow-hidden">
                 <div className="flex items-center px-4 min-w-[80px] py-2.5 bg-gray-100 border border-r-0 border-gray-200 text-gray-600 text-xs font-medium whitespace-nowrap">
                   🇦🇿 +994
@@ -159,7 +159,7 @@ const Register = () => {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="group space-y-1.5">
-                <label className="block text-sm font-medium text-gray-700 ml-1">Password</label>
+                <label className="block text-sm font-medium text-gray-700 ml-1">Şifrə</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -168,7 +168,7 @@ const Register = () => {
                     name='password'
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
-                    placeholder="Create password"
+                    placeholder="Şifrə yaradın"
                   />
                   <button
                     type="button"
@@ -181,7 +181,7 @@ const Register = () => {
               </div>
 
               <div className="group space-y-1.5">
-                <label className="block text-sm font-medium text-gray-700 ml-1">Confirm Password</label>
+                <label className="block text-sm font-medium text-gray-700 ml-1">Şifrəni təsdiqləyin</label>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -190,7 +190,7 @@ const Register = () => {
                     name='confirmPassword'
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 focus:ring-1 focus:ring-[#C5A059] focus:border-[#C5A059] hover:bg-white hover:border-gray-300 pr-12"
-                    placeholder="Confirm password"
+                    placeholder="Şifrəni təsdiqləyin"
                   />
                   <button
                     type="button"
@@ -212,23 +212,23 @@ const Register = () => {
                 {isSignLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="animate-spin" size={20} />
-                    <span>Creating Account...</span>
+                    <span>Hesab yaradılır...</span>
                   </div>
-                ) : 'Sign Up'}
+                ) : 'Qeydiyyat'}
               </button>
             </div>
           </form>
 
           <div className="pt-2 text-center text-sm text-gray-500">
-            Already have an account?{' '}
+            Artıq hesabınız var?{' '}
             <Link to="/login" className="font-bold text-[#4A041D] hover:text-[#C5A059] transition-colors">
-              Log In
+              Daxil Ol
             </Link>
           </div>
 
           <div className="text-center">
             <Link to="/" className="text-xs font-medium text-gray-400 hover:text-[#4A041D] transition-colors decoration-slice">
-              Continue as Guest
+              Qonaq olaraq davam et
             </Link>
           </div>
         </div>

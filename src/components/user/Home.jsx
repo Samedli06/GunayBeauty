@@ -1,19 +1,13 @@
 import React, { act, useEffect, useRef, useState } from 'react'
-import MyMap from '../UI/googleMaps'
-
 import HomePageUI from '../UI/HomePageUI'
 import { Link } from 'react-router'
 import BannerSlider from '../UI/BannerSlider'
-import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery, useGetBrandsAdminQuery } from '../../store/API'
+import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery, useGetBrandsAdminQuery, useGetProductsCategorySlugQuery, API_BASE_URL } from '../../store/API'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
-import InfiniteBrandSlider from '../UI/BrandSlider'
-import { useTranslation } from 'react-i18next'
-import { translateDynamicField } from '../../i18n'
 import SEO from '../SEO/SEO'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import FlowingMenu from '../UI/FlowingMenu'
 
 // Skeleton Components
 const CategorySkeleton = () => (
@@ -62,7 +56,13 @@ const Home = () => {
   const { data: recommended, isLoading: isRecommendedLoading } = useGetRecommendedQuery({ limit: 12 });
   const { data: allBrands } = useGetBrandsAdminQuery();
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
-  const { t, i18n } = useTranslation();
+
+  const { data: bannersD, isLoading: isBannersLoading } = useGetBannersQuery();
+  const { data: giftSets, isLoading: isGiftSetsLoading } = useGetProductsCategorySlugQuery('skin-care');
+  const { data: skinCare, isLoading: isSkinCareLoading } = useGetProductsCategorySlugQuery('skin-care');
+  const heroBanners = bannersD?.filter(b => b.sortOrder === 0 && b.isActive) || [];
+  const middleBanner = bannersD?.find(b => b.sortOrder === 2 && b.isActive);
+  const bottomBanners = bannersD?.filter(b => b.sortOrder === 3 && b.isActive) || [];
 
   useEffect(() => {
     AOS.init({
@@ -72,9 +72,7 @@ const Home = () => {
     });
   }, []);
 
-  // Dynamic translation states
-  const [translatedParentCategories, setTranslatedParentCategories] = useState([]);
-  const [translatedSubCategories, setTranslatedSubCategories] = useState([]);
+
   const scrollRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -165,56 +163,10 @@ const Home = () => {
 
   // Get the parent category object for breadcrumb navigation
   const parentCategory = hoveredCategorie
-    ? (translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.find(cat => cat.id === hoveredCategorie)
+    ? parentCategories?.find(cat => cat.id === hoveredCategorie)
     : null;
 
-  // Dynamic translation effect for parent categories
-  useEffect(() => {
-    async function translateParentCategories() {
-      if (!parentCategories || parentCategories.length === 0) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          parentCategories.map(async (category) => ({
-            ...category,
-            name: await translateDynamicField(category.name, targetLang),
-            subCategories: category.subCategories ? await Promise.all(
-              category.subCategories.map(async (subCategory) => ({
-                ...subCategory,
-                name: await translateDynamicField(subCategory.name, targetLang)
-              }))
-            ) : category.subCategories
-          }))
-        );
-        setTranslatedParentCategories(translated);
-      } else {
-        setTranslatedParentCategories(parentCategories);
-      }
-    }
-    translateParentCategories();
-  }, [i18n.language, parentCategories]);
-
-  // Dynamic translation effect for sub categories
-  useEffect(() => {
-    async function translateSubCategories() {
-      if (!subCategories || subCategories.length === 0) return;
-
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          subCategories.map(async (subCategory) => ({
-            ...subCategory,
-            name: await translateDynamicField(subCategory.name, targetLang)
-          }))
-        );
-        setTranslatedSubCategories(translated);
-      } else {
-        setTranslatedSubCategories(subCategories);
-      }
-    }
-    translateSubCategories();
-  }, [i18n.language, subCategories]);
 
 
   const handleAddToCart = async (id) => {
@@ -234,10 +186,10 @@ const Home = () => {
       console.error('Failed to add product to cart:', err);
 
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction('add items to cart');
+        setUnauthorizedAction('məhsulları səbətə əlavə etmək');
         setShowUnauthorizedModal(true);
       } else {
-        toast.error(t('failedAddToCart'));
+        toast.error("Məhsulu səbətə əlavə etmək alınmadı");
       }
     }
   };
@@ -268,28 +220,30 @@ const Home = () => {
   return (
     <>
       <SEO
-        title="GunayBeauty - Luxury Cosmetics & Beauty"
-        description="Discover the magic of GunayBeauty. Shop the finest cosmetics, skincare, and beauty products."
-        keywords="beauty, cosmetics, luxury, makeup, skincare, GunayBeauty"
+        title="Gunay Beauty - Lüks Kosmetika və Gözəllik"
+        description="Gunay Beauty-nin sehrini kəşf edin. Ən yaxşı kosmetika, dəriyə qulluq və gözəllik məhsullarını əldə edin."
+        keywords="gözəllik, kosmetika, lüks, makiyaj, dəriyə qulluq, Gunay Beauty"
         image="/Icons/logo.jpeg"
         type="website"
       />
       <main className='bg-[#FDFBF8] pb-20'>
 
         {/* 1. Hero Section - Full Width */}
-        <section className='w-full  lg:h-[70vh] relative'>
-          <BannerSlider />
+        <section className='w-full lg:h-[70vh] relative'>
+          <BannerSlider banners={heroBanners} isLoading={isBannersLoading} />
         </section>
+
+
 
         {/* 2. Shop by Category - Visual Tiles */}
         <section className='max-w-[1340px]  px-6  lg:mx-0 px-4 lg:mx-auto lg:px-12 mt-10 lg:mt-24' data-aos="fade-up">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('Shop by Category')}</h2>
-            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Discover your beauty implementation')}</p>
+            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">Kategoriyaya görə alış-veriş</h2>
+            <p className="text-[#9E2A2B] font-sans italic text-lg">Gözəlliyini kəşf et</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            {(translatedParentCategories.length > 0 ? translatedParentCategories : parentCategories)?.slice(0, 4).map((item) => (
+            {parentCategories?.slice(0, 4).map((item) => (
               <Link
                 key={item.id}
                 to={`/categories/${item.slug}`}
@@ -299,11 +253,11 @@ const Home = () => {
                   <div className="w-full h-full flex items-center justify-center overflow-hidden">
                     <img
                       className="w-full h-full object-cover max- group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                      src={item.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.imageUrl}` : getCategoryIcon(item.slug)}
+                      src={item.imageUrl ? `${API_BASE_URL}/${item.imageUrl}` : getCategoryIcon(item.slug)}
                       alt={item.name}
                       onError={(e) => {
                         e.target.src = '/Icons/logo2.jpeg';
-                        e.target.className = "w-12 h-12 lg:w-16 lg:h-16 object-contain opacity-70 ";
+                        e.target.className = "w-full h-full object-cover opacity-70 ";
                       }}
                     />
                   </div>
@@ -323,15 +277,15 @@ const Home = () => {
         <section className='max-w-[1340px]  px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
-              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Darlings Favourites')}</h2>
-              <p className="text-[#9E2A2B] font-sans text-xs tracking-widest uppercase mt-1">Exclusive Offers</p>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>Hamının sevimlisi</h2>
+              <p className="text-[#9E2A2B] font-sans text-xs tracking-widest uppercase mt-1">Xüsusi təkliflər</p>
             </div>
             <Link to='/products/hot-deals' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
-              {t('View All Offers')}
+              Bütün təkliflərə bax
             </Link>
           </div>
 
-          <div className="flex overflow-x-auto gap-4 lg:gap-6 scrollbar-hide items-stretch pb-4">
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 luxury-scrollbar items-stretch pb-4">
             {isLoading ? (
               <>
                 {[...Array(4)].map((_, i) => (
@@ -357,22 +311,86 @@ const Home = () => {
           </div>
         </section>
 
-        {/* New Flowing Menu Section */}
-        <section className='mt-20 lg:mt-32' data-aos="fade-up">
-          <div className="text-center mb-12 px-4">
-            <h2 className="text-3xl lg:text-4xl font-sans text-[#4A041D] mb-3">{t('World-Class Brands')}</h2>
-            <p className="text-[#9E2A2B] font-sans italic text-lg">{t('Curated luxury from our global partners')}</p>
-          </div>
+        {/* Middle Banner Section */}
+        {middleBanner && (
+          <section className="max-w-[1340px] px-4 lg:px-12 mx-auto mt-20 lg:mt-32" data-aos="fade-up">
+            <Link to={middleBanner.linkUrl || "#"} className="block group">
+              <div className="relative aspect-[21/9] md:aspect-[25/9] overflow-hidden rounded-2xl shadow-xl">
+                <img
+                  src={`${API_BASE_URL}${middleBanner.imageUrl}`}
+                  alt={middleBanner.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex flex-col justify-center p-8 lg:p-16">
+                  {middleBanner.titleVisible && (
+                    <h3 className="text-white text-3xl lg:text-5xl font-bold mb-4 max-w-xl leading-tight">
+                      {middleBanner.title}
+                    </h3>
+                  )}
+                  {middleBanner.descriptionVisible && (
+                    <p className="text-white/90 text-lg lg:text-xl italic max-w-lg mb-8">
+                      {middleBanner.description}
+                    </p>
+                  )}
+                  {middleBanner.buttonVisible && middleBanner.buttonText && (
+                    <div>
+                      <span className="inline-block px-8 py-3 bg-white text-[#4A041D] font-bold rounded-full uppercase tracking-wider text-sm hover:bg-[#C5A059] hover:text-white transition-colors">
+                        {middleBanner.buttonText}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Link>
+          </section>
+        )}
 
-          <div className="relative border-y border-[#F3E7E1]">
-            {console.log(allBrands)}
-            <FlowingMenu
-              items={(allBrands)?.slice(0, 10).map(brand => ({
-                link: `/products/brand/${brand.slug}`,
-                text: brand.name,
-                image: brand.imageUrl ? `https://kozmetik-001-site1.qtempurl.com/${brand.imageUrl}` : '/Icons/logo.jpeg'
-              }))}
-            />
+        {/* Brand Section Side-by-Side */}
+        <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-10 lg:gap-16">
+            {/* Left Side: Header */}
+            <div className="lg:w-[320px] shrink-0">
+              <h2 className='text-2xl lg:text-3xl font-bold text-[#1a1a1a] mb-3' style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                Brendlərimizə baxın
+              </h2>
+              <p className="text-gray-500 text-sm lg:text-base leading-relaxed" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                Gözəllik dünyasının ən populyar və sevilən markalarını kəşf edin.
+              </p>
+            </div>
+
+            {/* Right Side: Cards Row */}
+            <div className="flex-1 w-full overflow-x-auto pb-6 luxury-scrollbar">
+              <div className="flex gap-4 min-w-max">
+                {allBrands?.map((brand) => (
+                  <Link
+                    key={brand.id}
+                    to={`/products/brand/${brand.slug}`}
+                    className="group bg-white w-[140px] h-[160px] lg:w-[160px] lg:h-[180px] rounded-xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {/* Brand Logo Container */}
+                    <div className="flex-1 flex items-center justify-center mb-3">
+                      <div className="w-full h-full flex items-center justify-center">
+                        <img
+                          src={brand.logoUrl ? `${API_BASE_URL}${brand.logoUrl}` : './Icons/logo2.jpeg'}
+                          alt={brand.name}
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = './Icons/logo2.jpeg';
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Brand Name - Small text below logo */}
+                    <div className="text-center">
+                      <span className="text-[10px] lg:text-xs font-semibold text-gray-600 uppercase tracking-wide leading-tight group-hover:text-[#4A041D] transition-colors line-clamp-2">
+                        {brand.name}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -381,15 +399,15 @@ const Home = () => {
         <section className='max-w-[1340px]  px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
           <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
             <div>
-              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>{t('Chosen For You')}</h2>
-              <p className="text-[#9E2A2B] font-sans !text-xs tracking-wide uppercase mt-1">New Arrivals & Best Sellers</p>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>Sizin üçün seçilmiş</h2>
+              <p className="text-[#9E2A2B] font-sans !text-xs tracking-wide uppercase mt-1">Yeni məhsullar və Ən çox satılanlar</p>
             </div>
             <Link to='/products/recommended' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
-              {t('View All')}
+              Bütün təkliflərə bax
             </Link>
           </div>
 
-          <div className="flex overflow-x-auto gap-4 lg:gap-6 scrollbar-hide items-stretch pb-4">
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 luxury-scrollbar items-stretch pb-4">
             {isRecommendedLoading ? (
               <>
                 {[...Array(8)].map((_, i) => (
@@ -413,6 +431,121 @@ const Home = () => {
             )}
           </div>
         </section>
+
+        {/* Gift Sets Slider */}
+        <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
+          <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
+            <div>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>Hədiyyə Dəstləri</h2>
+              <p className="text-[#9E2A2B] font-sans !text-xs tracking-wide uppercase mt-1">Gözəl hədiyyə seçimləri</p>
+            </div>
+            <Link to='/products/gift-sets' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
+              Bütün dəstlərə bax
+            </Link>
+          </div>
+
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 luxury-scrollbar items-stretch pb-4">
+            {isGiftSetsLoading ? (
+              <>
+                {[...Array(4)].map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </>
+            ) : (
+              giftSets?.map(item => (
+                <HomePageUI
+                  key={item.id}
+                  deal={false}
+                  product={item}
+                  url={item.primaryImageUrl}
+                  handleAddToCart={handleAddToCart}
+                  isAddingToCart={isAddingToCart}
+                  showUnauthorizedModal={showUnauthorizedModal}
+                  setShowUnauthorizedModal={setShowUnauthorizedModal}
+                  unauthorizedAction={unauthorizedAction}
+                  setUnauthorizedAction={setUnauthorizedAction}
+                />
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* Bottom Banners Section */}
+        {bottomBanners.length > 0 && (
+          <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-48 pb-10' data-aos="fade-up">
+            <div className="flex overflow-x-auto gap-6 pb-6 luxury-scrollbar">
+              {bottomBanners.map((banner) => (
+                <Link
+                  key={banner.id}
+                  to={banner.linkUrl || "#"}
+                  className="flex-shrink-0 w-[300px] md:w-[450px] group"
+                >
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <img
+                      src={`${API_BASE_URL}${banner.imageUrl}`}
+                      alt={banner.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
+                      {banner.titleVisible && (
+                        <h4 className="text-white text-xl font-bold mb-2 group-hover:text-[#C5A059] transition-colors line-clamp-2">
+                          {banner.title}
+                        </h4>
+                      )}
+                      {banner.buttonVisible && banner.buttonText && (
+                        <div>
+                          <span className="text-white text-xs font-bold uppercase tracking-widest border-b border-white pb-1 group-hover:border-[#C5A059] group-hover:text-[#C5A059] transition-all">
+                            {banner.buttonText}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Skin Care Slider */}
+        <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
+          <div className='flex justify-between items-end mb-10 border-b border-[#F3E7E1] pb-4'>
+            <div>
+              <h2 className='text-2xl lg:text-3xl font-sans text-[#4A041D]'>Dəriyə Qulluq</h2>
+              <p className="text-[#9E2A2B] font-sans !text-xs tracking-wide uppercase mt-1">Sağlam və gözəl dəri üçün</p>
+            </div>
+            <Link to='/products/skin-care' className='text-[#4A041D] hover:text-[#C5A059] font-sans text-sm font-medium border-b border-[#4A041D] pb-1 transition-colors'>
+              Bütün məhsullara bax
+            </Link>
+          </div>
+
+          <div className="flex overflow-x-auto gap-4 lg:gap-6 luxury-scrollbar items-stretch pb-4">
+            {isSkinCareLoading ? (
+              <>
+                {[...Array(4)].map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </>
+            ) : (
+              skinCare?.map(item => (
+                <HomePageUI
+                  key={item.id}
+                  deal={false}
+                  product={item}
+                  url={item.primaryImageUrl}
+                  handleAddToCart={handleAddToCart}
+                  isAddingToCart={isAddingToCart}
+                  showUnauthorizedModal={showUnauthorizedModal}
+                  setShowUnauthorizedModal={setShowUnauthorizedModal}
+                  unauthorizedAction={unauthorizedAction}
+                  setUnauthorizedAction={setUnauthorizedAction}
+                />
+              ))
+            )}
+          </div>
+        </section>
+
+
 
 
 

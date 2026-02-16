@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Package, Tag, Grid, ChevronRight } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 
 // Skeleton Components
 const CategorySkeletonMobile = () => (
@@ -40,52 +38,6 @@ const MobileSearchDropdown = ({
   onBrandClick,
   onViewAllProducts
 }) => {
-  const { t, i18n } = useTranslation();
-  const [translatedSearchResult, setTranslatedSearchResult] = useState(null);
-
-  useEffect(() => {
-    async function translateSearchResult() {
-      if (!searchResult) return;
-
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...searchResult };
-
-        if (searchResult.categories) {
-          translated.categories = await Promise.all(
-            searchResult.categories.map(async (category) => ({
-              ...category,
-              name: await translateDynamicField(category.name, targetLang)
-            }))
-          );
-        }
-
-        if (searchResult.brands) {
-          translated.brands = await Promise.all(
-            searchResult.brands.map(async (brand) => ({
-              ...brand,
-              name: await translateDynamicField(brand.name, targetLang)
-            }))
-          );
-        }
-
-        if (searchResult.products) {
-          translated.products = await Promise.all(
-            searchResult.products.map(async (product) => ({
-              ...product,
-              name: await translateDynamicField(product.name, targetLang),
-              categoryName: product.categoryName ? await translateDynamicField(product.categoryName, targetLang) : product.categoryName
-            }))
-          );
-        }
-
-        setTranslatedSearchResult(translated);
-      } else {
-        setTranslatedSearchResult(searchResult);
-      }
-    }
-    translateSearchResult();
-  }, [i18n.language, searchResult]);
 
   const containerStyle = { fontFamily: 'Montserrat, sans-serif' };
 
@@ -96,9 +48,9 @@ const MobileSearchDropdown = ({
         <div className="w-14 h-14 bg-[#4A041D]/5 rounded-full flex items-center justify-center mx-auto mb-4">
           <Search className="w-6 h-6 text-[#4A041D]/40" />
         </div>
-        <p className="text-[#4A041D] font-medium mb-1">{t('search')}</p>
+        <p className="text-[#4A041D] font-medium mb-1">Axtar</p>
         <p className="text-gray-400 text-sm">
-          Type to search...
+          Axtarmaq üçün yazın...
         </p>
       </div>
     );
@@ -110,7 +62,7 @@ const MobileSearchDropdown = ({
       <div className="space-y-8 pb-8" style={containerStyle}>
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Grid className="w-3 h-3" /> CATEGORIES
+            <Grid className="w-3 h-3" /> KATEQORİYALAR
           </h3>
           <div className="space-y-1">
             {[1, 2].map(i => <CategorySkeletonMobile key={i} />)}
@@ -119,7 +71,7 @@ const MobileSearchDropdown = ({
 
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Tag className="w-3 h-3" /> BRANDS
+            <Tag className="w-3 h-3" /> BRENDLƏR
           </h3>
           <div className="flex flex-wrap gap-2">
             {[1, 2, 3].map(i => <BrandSkeletonMobile key={i} />)}
@@ -128,7 +80,7 @@ const MobileSearchDropdown = ({
 
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Package className="w-3 h-3" /> PRODUCTS
+            <Package className="w-3 h-3" /> MƏHSULLAR
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {[1, 2, 3, 4].map(i => <ProductSkeletonMobile key={i} />)}
@@ -138,26 +90,23 @@ const MobileSearchDropdown = ({
     );
   }
 
-  const currentSearchResult = translatedSearchResult || searchResult;
-
-  // No results state
-  if (!currentSearchResult || (!currentSearchResult.categories?.length && !currentSearchResult.brands?.length && !currentSearchResult.products?.length)) {
+  if (!searchResult || (!searchResult.categories?.length && !searchResult.brands?.length && !searchResult.products?.length)) {
     return (
       <div className="py-12 text-center" style={containerStyle}>
         <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
           <Search className="w-6 h-6 text-gray-300" />
         </div>
-        <p className="text-gray-900 font-medium mb-1">No results found</p>
+        <p className="text-gray-900 font-medium mb-1">Nəticə tapılmadı</p>
         <p className="text-gray-500 text-sm">
-          Check spelling or try new keywords
+          Yazılışı yoxlayın və ya yeni açar sözləri sınayın
         </p>
       </div>
     );
   }
 
-  const hasCategories = currentSearchResult.categories && currentSearchResult.categories.length > 0;
-  const hasBrands = currentSearchResult.brands && currentSearchResult.brands.length > 0;
-  const hasProducts = currentSearchResult.products && currentSearchResult.products.length > 0;
+  const hasCategories = searchResult.categories && searchResult.categories.length > 0;
+  const hasBrands = searchResult.brands && searchResult.brands.length > 0;
+  const hasProducts = searchResult.products && searchResult.products.length > 0;
 
   return (
     <div className="space-y-8 pb-20" style={containerStyle}>
@@ -165,10 +114,10 @@ const MobileSearchDropdown = ({
       {hasCategories && (
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Grid className="w-3 h-3" /> CATEGORIES ({currentSearchResult.categories.length})
+            <Grid className="w-3 h-3" /> KATEQORİYALAR ({searchResult.categories.length})
           </h3>
           <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
-            {currentSearchResult.categories.slice(0, 4).map((category, idx) => (
+            {searchResult.categories.slice(0, 4).map((category, idx) => (
               <div
                 key={category.id}
                 onClick={() => onCategoryClick(category.id, category.name)}
@@ -191,10 +140,10 @@ const MobileSearchDropdown = ({
       {hasBrands && (
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Tag className="w-3 h-3" /> {t('brandsSection.brandsLabel')} ({currentSearchResult.brands.length})
+            <Tag className="w-3 h-3" /> BRENDLƏR ({searchResult.brands.length})
           </h3>
           <div className="flex flex-wrap gap-2">
-            {currentSearchResult.brands.slice(0, 6).map((brand) => (
+            {searchResult.brands.slice(0, 6).map((brand) => (
               <div
                 key={brand.id}
                 onClick={() => onBrandClick(brand.slug, brand.name)}
@@ -202,7 +151,7 @@ const MobileSearchDropdown = ({
               >
                 {brand.logoUrl ? (
                   <img
-                    src={`https://kozmetik-001-site1.qtempurl.com/${brand.logoUrl}`}
+                    src={`${API_BASE_URL}/${brand.logoUrl}`}
                     alt={brand.name}
                     className="w-4 h-4 rounded-full object-cover"
                     onError={(e) => { e.target.style.display = 'none'; }}
@@ -221,10 +170,10 @@ const MobileSearchDropdown = ({
       {hasProducts && (
         <div>
           <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Package className="w-3 h-3" /> PRODUCTS ({currentSearchResult.products.length})
+            <Package className="w-3 h-3" /> MƏHSULLAR ({searchResult.products.length})
           </h3>
           <div className="grid grid-cols-2 gap-3">
-            {currentSearchResult.products.slice(0, 6).map((product) => (
+            {searchResult.products.slice(0, 6).map((product) => (
               <div
                 key={product.id}
                 onClick={(e) => onProductClick(e, product.id)}
@@ -232,7 +181,7 @@ const MobileSearchDropdown = ({
               >
                 <div className="relative w-full aspect-square bg-[#f9f9f9] rounded-lg mb-2 flex items-center justify-center p-2">
                   <img
-                    src={`https://kozmetik-001-site1.qtempurl.com/${product.primaryImageUrl}`}
+                    src={`${API_BASE_URL}/${product.primaryImageUrl}`}
                     alt={product.name}
                     className="w-full h-full object-contain mix-blend-multiply"
                     onError={(e) => {
@@ -276,7 +225,7 @@ const MobileSearchDropdown = ({
               onClick={onViewAllProducts}
               className="w-full mt-4 py-3 bg-[#4A041D] text-white rounded-xl text-sm font-medium hover:bg-[#3A0318] active:bg-black transition-colors shadow-lg shadow-pink-900/20"
             >
-              View all {searchResult.products.length} results
+              Bütün {searchResult.products.length} nəticəyə bax
             </button>
           )}
         </div>

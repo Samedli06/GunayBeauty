@@ -14,16 +14,16 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       await forgotPassword({ email }).unwrap();
-      toast.success('Password reset email sent! Please check your inbox.');
+      toast.success('Şifrəni sıfırlama e-poçtu göndərildi! Zəhmət olmasa gələnlər qutusunu yoxlayın.');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (error) {
       console.error("Forgot password failed:", error);
       if (error?.status === 404) {
-        toast.error("Email not found. Please check your email address.");
+        toast.error("E-poçt ünvanı tapılmadı. Zəhmət olmasa e-poçt ünvanını yoxlayın.");
       } else {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
       }
     }
   };
@@ -43,16 +43,16 @@ const ForgotPassword = () => {
         </div>
 
         <div className="relative z-10 max-w-lg text-white/90 animate-fade-in-up delay-100">
-          <h2 className="text-5xl !text-[#FFFF98] font-light mb-6 leading-tight">Password<br /><span className="font-bold text-[#C5A059]">Recovery.</span></h2>
+          <h2 className="text-5xl !text-[#FFFF98] font-light mb-6 leading-tight">Şifrənin<br /><span className="font-bold text-[#C5A059]">bərpası.</span></h2>
           <p className="text-lg opacity-80 leading-relaxed font-light">
-            Don't worry, we'll help you get back to your account in no time.
+            Narahat olmayın, sizə dərhal hesabınıza qayıtmağa kömək edəcəyik.
           </p>
         </div>
 
         <div className="relative z-10 text-white/50 text-sm font-light flex items-center gap-4 animate-fade-in-up delay-200">
           <span>© {new Date().getFullYear()} Gunay Beauty Store</span>
           <div className="h-px w-8 bg-white/20"></div>
-          <span>Support</span>
+          <span>Dəstək</span>
         </div>
       </div>
 
@@ -60,7 +60,7 @@ const ForgotPassword = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 px-15 lg:p-16 relative bg-white">
         <Link to="/login" className="absolute top-6 left-6 p-2 text-gray-500 hover:text-[#4A041D] transition-colors flex items-center gap-2 group">
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm font-medium">Back to Login</span>
+          <span className="text-sm font-medium">Girişə qayıt</span>
         </Link>
 
         <div className="w-full max-w-[420px] space-y-8 animate-fade-in">
@@ -72,13 +72,13 @@ const ForgotPassword = () => {
           </div>
 
           <div className="text-center lg:text-left space-y-2">
-            <h2 className="text-3xl font-bold text-[#4A041D]">Forgot Password?</h2>
-            <p className="text-gray-500">Enter your email and we'll send you instructions</p>
+            <h2 className="text-3xl font-bold text-[#4A041D]">Şifrəni unutmusunuz?</h2>
+            <p className="text-gray-500">E-poçtunuzu daxil edin və biz sizə təlimatları göndərəcəyik</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="group">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">Email Address</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">E-poçt ünvanı</label>
               <div className="relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl">
                 <input
                   type="email"
@@ -99,16 +99,16 @@ const ForgotPassword = () => {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="animate-spin" size={20} />
-                  <span>Sending code...</span>
+                  <span>Kod göndərilir...</span>
                 </div>
-              ) : 'Send Reset Code'}
+              ) : 'Sıfırlama kodunu göndər'}
             </button>
           </form>
 
           <div className="pt-2 text-center text-sm text-gray-500">
-            Remember your password?{' '}
+            Şifrəniz yadınızdadır?{' '}
             <Link to="/login" className="font-bold text-[#4A041D] hover:text-[#C5A059] transition-colors">
-              Log In
+              Daxil Ol
             </Link>
           </div>
         </div>

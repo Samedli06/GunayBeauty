@@ -23,7 +23,6 @@ import { toast } from 'react-toastify';
 import { useParams, useSearchParams, useLocation } from 'react-router';
 import UnauthorizedModal from '../../components/UI/UnauthorizedModal';
 import SEO from '../../components/SEO/SEO';
-import { useTranslation } from 'react-i18next';
 import ProductBanner from '../../components/UI/ProductBanner';
 
 const ProductCardSkeleton = React.memo(() => (
@@ -42,7 +41,6 @@ function Products() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const locationPath = location.pathname;
-  const { t } = useTranslation();
 
   // Get parent category info from navigation state
   const parentCategoryInfo = location.state || null;
@@ -72,13 +70,13 @@ function Products() {
   }, [locationPath, slug, searchQuery, categoryParam, brandParam]);
 
   const categoryName = useMemo(() => {
-    if (isHotDeals) return t('productsPage.hotDeals');
-    if (isRecommended) return t('productsPage.recommended');
+    if (isHotDeals) return "Qaynar təkliflər";
+    if (isRecommended) return "Tövsiyə olunanlar";
     if (isBrand) return brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1);
-    if (isSearch) return t('productsPage.searchResultsFor', { query: searchQuery });
+    if (isSearch) return `"${searchQuery}" üçün axtarış nəticələri`;
     if (isCategoryParam) return categoryParam.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    return slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || t('allProducts');
-  }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug, t]);
+    return slug?.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "Bütün məhsullar";
+  }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -298,9 +296,9 @@ function Products() {
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
-        toast.error(t('pleaseLoginFirst'));
+        toast.error("Xahiş edirik əvvəlcə daxil olun");
       } else {
-        toast.error(t('failedAddToCart'));
+        toast.error("Məhsulu səbətə əlavə etmək mümkün olmadı");
       }
     } finally {
       setAddingIds(prev => {
@@ -319,11 +317,11 @@ function Products() {
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction(t('productsPage.addToCartAction'));
+        setUnauthorizedAction('məhsullarla əməliyyat etmək');
         setShowUnauthorizedModal(true);
         setIsAuthenticated(false);
       } else {
-        toast.error(t('failedUpdateFavorites'));
+        toast.error("Favoritləri yeniləmək mümkün olmadı");
       }
     }
   }, [toggleFavorite]);
@@ -366,23 +364,23 @@ function Products() {
 
   // Generate SEO data based on current page type
   const seoTitle = useMemo(() => {
-    if (isHotDeals) return 'Hot Deals - Smart Team Electronics';
-    if (isRecommended) return 'Recommended Products - Smart Team Electronics';
-    if (isBrand) return `${brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1)} Products - Smart Team Electronics`;
-    if (isSearch) return `Search Results for "${searchQuery}" - Smart Team Electronics`;
-    if (isCategoryParam) return `${categoryParam.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} - Smart Team Electronics`;
-    if (slug) return `${slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} - Smart Team Electronics`;
-    return 'All Products - Smart Team Electronics';
+    if (isHotDeals) return 'Qaynar təkliflər - Gunay Beauty';
+    if (isRecommended) return 'Tövsiyə olunanlar - Gunay Beauty';
+    if (isBrand) return `${brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1)} - Gunay Beauty`;
+    if (isSearch) return `"${searchQuery}" üçün axtarış nəticələri - Gunay Beauty`;
+    if (isCategoryParam) return `${categoryParam.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} - Gunay Beauty`;
+    if (slug) return `${slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} - Gunay Beauty`;
+    return 'Bütün məhsullar - Gunay Beauty';
   }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug]);
 
   const seoDescription = useMemo(() => {
-    if (isHotDeals) return 'Discover amazing hot deals on electronics at Smart Team Electronics. Limited time offers on computers, laptops, printers, and more.';
-    if (isRecommended) return 'Browse our recommended products - carefully selected electronics for the best quality and value at Smart Team Electronics.';
-    if (isBrand) return `Shop ${brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1)} products at Smart Team Electronics. Best prices and authentic products.`;
-    if (isSearch) return `Search results for "${searchQuery}" at Smart Team Electronics. Find the best electronics products.`;
-    if (isCategoryParam) return `Browse ${categoryParam.replace(/-/g, ' ')} products at Smart Team Electronics. Quality electronics with best prices.`;
-    if (slug) return `Shop ${slug.replace(/-/g, ' ')} products at Smart Team Electronics. Best selection and prices.`;
-    return 'Browse all electronics products at Smart Team Electronics. Computers, laptops, printers, surveillance systems, and more.';
+    if (isHotDeals) return 'Gunay Beauty-də möhtəşəm qaynar təkliflər. Məhdud vaxt ərzində xüsusi endirimlər.';
+    if (isRecommended) return 'Seçilmiş məhsullarımızla tanış olun - Gunay Beauty-dən ən yaxşı keyfiyyət və qiymət.';
+    if (isBrand) return `Gunay Beauty-də ${brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1)} məhsullarını əldə edin. Ən yaxşı qiymətlər.`;
+    if (isSearch) return `"${searchQuery}" üçün axtarış nəticələri. Gunay Beauty-də ən yaxşı gözəllik məhsullarını tapın.`;
+    if (isCategoryParam) return `${categoryParam.replace(/-/g, ' ')} məhsulları Gunay Beauty-də. Keyfiyyətli məhsullar ən yaxşı qiymətə.`;
+    if (slug) return `${slug.replace(/-/g, ' ')} məhsulları Gunay Beauty-də. Ən geniş seçim və münasib qiymətlər.`;
+    return 'Gunay Beauty-də bütün gözəllik məhsullarına baxın. Peşəkar gözəllik vasitələri və aksesuarları.';
   }, [isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, brandSlug, searchQuery, categoryParam, slug]);
 
   return (
@@ -390,7 +388,7 @@ function Products() {
       <SEO
         title={seoTitle}
         description={seoDescription}
-        keywords={`${categoryName}, electronics, smart team, Azerbaijan, ${isBrand ? brandSlug : ''}, ${isSearch ? searchQuery : ''}`}
+        keywords={`${categoryName}, gözəllik, gunay beauty, Azerbaijan, ${isBrand ? brandSlug : ''}, ${isSearch ? searchQuery : ''}`}
         image="/Icons/logo.png"
         type="website"
       />
@@ -491,9 +489,9 @@ function Products() {
                 })
               ) : (
                 <div className="col-span-full text-center py-12">
-                  <p className="text-gray-500 text-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('productsPage.noProductsFound')}</p>
+                  <p className="text-gray-500 text-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>Məhsul tapılmadı</p>
                   <p className="text-gray-400 text-sm mt-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                    {isSearch ? t('productsPage.tryDifferentKeywords') : t('productsPage.tryAdjustingFilters')}
+                    {isSearch ? "Fərqli açar sözləri yoxlayın" : "Filtrləri dəyişməyə çalışın"}
                   </p>
                 </div>
               )}

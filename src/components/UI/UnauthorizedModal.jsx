@@ -1,11 +1,9 @@
 import { LogIn, UserPlus } from 'lucide-react';
 import React from 'react'
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 const UnauthorizedModal = ({ isOpen, onClose, action }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation()
 
   if (!isOpen) return null;
 
@@ -26,10 +24,10 @@ const UnauthorizedModal = ({ isOpen, onClose, action }) => {
             <LogIn className="h-8 w-8 text-[#4A041D]" />
           </div>
           <h3 className="text-xl font-bold text-[#4A041D] mb-3">
-            {t('signInRequired')}
+            Daxil olmaq tələb olunur
           </h3>
           <p className="text-sm whitespace-normal text-gray-600 mb-8 leading-relaxed">
-            {t('signInRequiredMessage', { action })}
+            Zəhmət olmasa {action} üçün daxil olun və ya qeydiyyatdan keçin.
           </p>
           <div className="flex gap-4">
             <button
@@ -37,21 +35,21 @@ const UnauthorizedModal = ({ isOpen, onClose, action }) => {
               className="flex-1 bg-[#4A041D] hover:bg-[#6D082D] text-white py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
               <LogIn className="w-5 h-5" />
-              {t('signIn')}
+              Daxil Ol
             </button>
             <button
               onClick={() => navigate('/register')}
               className="flex-1 bg-white border border-[#4A041D]/20 hover:border-[#4A041D] text-[#4A041D] py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all hover:bg-[#4A041D]/5"
             >
               <UserPlus className="w-5 h-5" />
-              {t('signUp')}
+              Qeydiyyat
             </button>
           </div>
           <button
             onClick={onClose}
             className="mt-6 text-sm text-gray-400 hover:text-[#C5A059] transition-colors font-medium"
           >
-            {t('continueBrowsing')}
+            Baxmağa davam et
           </button>
         </div>
       </div>

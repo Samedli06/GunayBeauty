@@ -1,10 +1,8 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router';
 import { XCircle, RefreshCw, ArrowLeft, AlertCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 const PaymentError = () => {
-    const { t } = useTranslation();
     const location = useLocation();
 
     // Filter params
@@ -30,13 +28,13 @@ const PaymentError = () => {
                         </div>
 
                         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                            {t('payment.failed') || 'Payment Failed'}
+                            Ödəniş Uğursuz Oldu
                         </h1>
 
                         <div className="flex items-center gap-2 bg-red-50 p-4 rounded-xl border border-red-100 mb-8 max-w-md w-full">
                             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                             <p className="text-red-700 text-sm font-medium text-left">
-                                {message || t('payment.errorMessage') || 'There was an issue processing your payment. Please try again or contact support.'}
+                                {message || 'Ödəniş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin və ya dəstək xidməti ilə əlaqə saxlayın.'}
                             </p>
                         </div>
 
@@ -44,7 +42,7 @@ const PaymentError = () => {
                         {orderId && (
                             <div className="mb-8 p-3 px-6 bg-gray-50 rounded-full border border-gray-100">
                                 <p className="text-sm font-medium text-gray-600">
-                                    {t('payment.orderId') || 'Order ID'}: <span className="text-gray-900 font-bold">#{orderId}</span>
+                                    Sifariş ID: <span className="text-gray-900 font-bold">#{orderId}</span>
                                 </p>
                             </div>
                         )}
@@ -56,19 +54,19 @@ const PaymentError = () => {
                                 className="flex-1 bg-[#4A041D] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#2D0212] transition-colors shadow-lg shadow-[#4a041d33]"
                             >
                                 <RefreshCw className="w-5 h-5" />
-                                {t('payment.tryAgain') || 'Try Again'}
+                                Yenidən Cəhd Edin
                             </Link>
                             <Link
                                 to="/"
                                 className="flex-1 bg-white border-2 border-[#4A041D] text-[#4A041D] py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#4A041D05] transition-colors"
                             >
                                 <ArrowLeft className="w-5 h-5" />
-                                {t('payment.backToHome') || 'Back to Home'}
+                                Ana Səhifəyə Qayıt
                             </Link>
                         </div>
 
                         <p className="mt-10 text-sm text-gray-400">
-                            {t('supportContact') || 'If the problem persists, please contact our support team.'}
+                            Problem davam edərsə, xahiş edirik dəstək komandamızla əlaqə saxlayın.
                         </p>
                     </div>
                 </div>

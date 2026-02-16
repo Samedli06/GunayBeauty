@@ -47,9 +47,9 @@ const Login = () => {
     } catch (error) {
       console.error("Login failed:", error);
       if (error?.status === 401) {
-        toast.error("Invalid email or password");
+        toast.error("E-poçt və ya şifrə yanlışdır");
       } else {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
       }
     }
   };
@@ -75,16 +75,16 @@ const Login = () => {
         </div>
 
         <div className="relative z-10 max-w-lg text-white/90 animate-fade-in-up delay-100">
-          <h2 className="text-5xl font-light mb-6 leading-tight">Welcome Back,<br /><span className="font-bold text-[#C5A059]">Darling.</span></h2>
+          <h2 className="text-5xl font-light mb-6 leading-tight">Yenidən xoş gəldiniz,<br /><span className="font-bold text-[#C5A059]">Hörmətli müştəri.</span></h2>
           <p className="text-lg opacity-80 leading-relaxed font-light">
-            Sign in to access your personalized beauty profile, track orders, and discover exclusive offers tailored just for you.
+            Fərdi gözəllik profilinizə daxil olmaq, sifarişlərinizi izləmək və sizə özəl təklifləri kəşf etmək üçün daxil olun.
           </p>
         </div>
 
         <div className="relative z-10 text-white/50 text-sm font-light flex items-center gap-4 animate-fade-in-up delay-200">
-          <span>© {new Date().getFullYear()} Gunay Beauty Store</span>
+          <span>© {new Date().getFullYear()} Gunay Beauty</span>
           <div className="h-px w-8 bg-white/20"></div>
-          <span>Privacy Policy</span>
+          <span>Məxfilik Siyasəti</span>
         </div>
       </div>
 
@@ -103,14 +103,14 @@ const Login = () => {
           </div>
 
           <div className="text-center lg:text-left space-y-2">
-            <h2 className="text-3xl font-bold text-[#4A041D]">Log In</h2>
-            <p className="text-gray-500">Please enter your details to continue</p>
+            <h2 className="text-3xl font-bold text-[#4A041D]">Daxil Ol</h2>
+            <p className="text-gray-500">Davam etmək üçün məlumatlarınızı daxil edin</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-5">
               <div className="group">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">E-poçt ünvanı</label>
                 <div className="relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl">
                   <input
                     type="email"
@@ -125,9 +125,9 @@ const Login = () => {
 
               <div className="group">
                 <div className="flex justify-between items-center mb-1.5 ml-1">
-                  <label className="text-sm font-medium text-gray-700">Password</label>
+                  <label className="text-sm font-medium text-gray-700">Şifrə</label>
                   <Link to="/forgot-password" className="text-xs font-semibold text-[#4A041D] hover:text-[#C5A059] transition-colors">
-                    Forgot Password?
+                    Şifrəni unutmusunuz?
                   </Link>
                 </div>
                 <div className="relative transition-all duration-300 focus-within:ring-1 focus-within:ring-[#C5A059] focus-within:border-[#C5A059] rounded-xl">
@@ -138,7 +138,7 @@ const Login = () => {
                     name='password'
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none transition-all placeholder:text-gray-400 text-gray-900 pr-12 group-hover:bg-white group-hover:border-gray-300"
-                    placeholder="Enter your password"
+                    placeholder="Şifrənizi daxil edin"
                   />
                   <button
                     type="button"
@@ -159,22 +159,22 @@ const Login = () => {
               {isLoginLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="animate-spin" size={20} />
-                  <span>Signing in...</span>
+                  <span>Daxil olunur...</span>
                 </div>
-              ) : 'Sign In'}
+              ) : 'Daxil Ol'}
             </button>
           </form>
 
           <div className="pt-2 text-center text-sm text-gray-500">
-            Don't have an account?{' '}
+            Hesabınız yoxdur?{' '}
             <Link to="/register" className="font-bold text-[#4A041D] hover:text-[#C5A059] transition-colors">
-              Create an account
+              Hesab yaradın
             </Link>
           </div>
 
           <div className="text-center">
             <Link to="/" className="text-xs font-medium text-gray-400 hover:text-[#4A041D] transition-colors decoration-slice">
-              Continue as Guest
+              Qonaq olaraq davam et
             </Link>
           </div>
         </div>

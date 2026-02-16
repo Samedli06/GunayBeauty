@@ -3,8 +3,6 @@ import { useGetCategoryQuery, useGetRecommendedPageQuery, useGetRecommendedQuery
 import { Link, useLocation, useParams } from 'react-router';
 import { Breadcrumb } from '../../products/Breadcrumb';
 import SimilarProducts from '../../components/UI/SimilarRecommendedProducts';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 
 // Skeleton Components
 const SkeletonCategoryCard = () => (
@@ -64,7 +62,7 @@ const CategoryCard = ({ title, imageSrc = null, slug, parentCategory }) => (
       <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-50 transition-colors">
         {imageSrc ? (
           <img
-            src={`https://kozmetik-001-site1.qtempurl.com${imageSrc}`}
+            src={`${API_BASE_URL}${imageSrc}`}
             alt={title}
             className="w-full h-full object-contain rounded-lg"
           />
@@ -92,42 +90,9 @@ const SubCategories = () => {
   console.log(similar)
   const location = useLocation();
   const { name } = location.state || {};
-  const { i18n } = useTranslation();
-  const [translatedSubs, setTranslatedSubs] = useState(null);
 
-  useEffect(() => {
-    async function translateCategoryData() {
-      if (!subs) return;
-      const targetLang = i18n.language;
 
-      // If language is English, translate dynamically
-      if (targetLang === 'en') {
-        const translated = { ...subs };
-
-        if (subs.name) {
-          translated.name = await translateDynamicField(subs.name, targetLang);
-        }
-
-        if (Array.isArray(subs.subCategories)) {
-          translated.subCategories = await Promise.all(
-            subs.subCategories.map(async (sub) => ({
-              ...sub,
-              name: await translateDynamicField(sub.name, targetLang),
-            }))
-          );
-        }
-
-        setTranslatedSubs(translated);
-      } else {
-        // Use original data for non-English languages
-        setTranslatedSubs(subs);
-      }
-    }
-
-    translateCategoryData();
-  }, [i18n.language, subs]);
-
-  if (isLoading || !translatedSubs) {
+  if (isLoading || !subs) {
     return <SubCategoriesSkeleton />;
   }
 
@@ -142,19 +107,19 @@ const SubCategories = () => {
         {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-            {translatedSubs.name || name}
+            {subs.name || name}
           </h1>
         </div>
 
         {/* Categories Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {translatedSubs?.subCategories?.map((category, index) => (
+          {subs?.subCategories?.map((category, index) => (
             <CategoryCard
               key={index}
               title={category.name}
               imageSrc={category.imageUrl}
               slug={category.slug}
-              parentCategory={translatedSubs}
+              parentCategory={subs}
             />
           ))}
         </div>

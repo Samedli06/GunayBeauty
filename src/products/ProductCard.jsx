@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Check, ShoppingBag, Loader2 } from 'lucide-react';
 import { Link } from 'react-router';
 import { useGetFavoriteStatusQuery, API_BASE_URL } from '../store/API';
-import { translateDynamicField } from '../i18n';
-import { useTranslation } from 'react-i18next';
 
 export function ProductCard({
   col,
@@ -32,25 +30,11 @@ export function ProductCard({
   const [localFavorite, setLocalFavorite] = useState(isFavorite);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
-  const [name, setName] = useState(originalName);
-  const [description, setDescription] = useState(originalDescription);
+  const name = originalName;
+  const description = originalDescription;
   const { data: favoriteStatus } = useGetFavoriteStatusQuery({ productId: id });
-  const { i18n, t } = useTranslation();
 
-  // Translate dynamic fields on language change
-  useEffect(() => {
-    async function translateFields() {
-      const targetLang = i18n.language;
-      if (targetLang === "en") {
-        setName(await translateDynamicField(originalName, targetLang));
-        setDescription(await translateDynamicField(originalDescription, targetLang));
-      } else {
-        setName(originalName);
-        setDescription(originalDescription);
-      }
-    }
-    translateFields();
-  }, [i18n.language, originalName, originalDescription]);
+
 
   useEffect(() => {
     if (justAdded) {
@@ -96,12 +80,12 @@ export function ProductCard({
         </div>
         {hasDiscount && !isRow && (
           <p className={`${isCompact ? '!text-[10px] lg:!text-sm' : 'text-xs'} text-green-600 font-medium mt-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {t('productCard.save')} {(originalPrice - displayPrice).toFixed(2)} ₼
+            Qənaət edin {(originalPrice - displayPrice).toFixed(2)} ₼
           </p>
         )}
         {hasDiscount && isRow && (
           <span className="text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
-            {t('productCard.save')} {(originalPrice - displayPrice).toFixed(2)} ₼
+            Qənaət edin {(originalPrice - displayPrice).toFixed(2)} ₼
           </span>
         )}
       </div>
@@ -114,14 +98,14 @@ export function ProductCard({
         <Link to={`/details/${id}`} className="block">
           <div className={`aspect-square relative bg-transparent flex items-center justify-center ${compact ? 'p-2 lg:p-4' : 'p-2 lg:p-4'}`}>
             <img
-              src={`https://kozmetik-001-site1.qtempurl.com${url}`}
+              src={`${API_BASE_URL}${url}`}
               alt={name || 'Product'}
-              className="w-full h-full object-contain !w-[70px] md:!w-full lg:!w-full "
+              className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
               onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
             />
             {isHotDeal && (
               <div className={`absolute top-2 right-2 bg-[#E60C03] text-white rounded font-semibold ${compact ? 'text-[10px] lg:text-xs px-1.5 py-0.5 lg:px-2 lg:py-1' : 'text-[10px] lg:text-xs px-1.5 py-0.5 lg:px-2 lg:py-1'}`}>
-                {t('productCard.hotDeal')}
+                Sərfəli Təklif
               </div>
             )}
             {hasDiscount && discountPercentage > 0 && (
@@ -174,12 +158,12 @@ export function ProductCard({
               ) : justAdded ? (
                 <>
                   <Check className="w-4 h-4" />
-                  {t('productCard.addedToCart')}
+                  Səbətə əlavə olundu
                 </>
               ) : (
                 <>
                   <ShoppingBag size={14} />
-                  {t('productCard.addToCart')}
+                  Səbətə əlavə et
                 </>
               )}
             </button>
@@ -192,7 +176,7 @@ export function ProductCard({
       <div className="p-4 bg-white shadow-md rounded-md border border-gray-200 flex items-center gap-6 relative group transition-all duration-300 hover:shadow-lg">
         <Link to={`/details/${id}`} className="flex-shrink-0 h-full w-full max-w-[150px] relative bg-transparent overflow-hidden flex items-center justify-center">
           <img
-            src={`https://kozmetik-001-site1.qtempurl.com${url}`}
+            src={`${API_BASE_URL}${url}`}
             alt={name || 'Product'}
             className="max-w-[150px] object-contain aspect-square w-full h-full rounded-lg"
             onError={(e) => {
@@ -207,7 +191,7 @@ export function ProductCard({
           )}
           {isHotDeal && (
             <div className="absolute top-2 right-2 bg-[#E60C03] text-white text-xs px-2 py-1 rounded font-semibold">
-              {t('productCard.hotDeal')}
+              Sərfəli Təklif
             </div>
           )}
         </Link>
@@ -246,12 +230,12 @@ export function ProductCard({
                 ) : justAdded ? (
                   <>
                     <Check className="w-4 h-4" />
-                    {t('productCard.addedToCart')}
+                    Səbətə əlavə olundu
                   </>
                 ) : (
                   <>
                     <ShoppingBag size={18} />
-                    {t('productCard.addToCart')}
+                    Səbətə əlavə et
                   </>
                 )}
               </button>

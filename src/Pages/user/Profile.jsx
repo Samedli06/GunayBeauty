@@ -5,14 +5,13 @@ import { useChangePasswordMutation, useGetMeQuery, useLogoutMutation, useGetMyOr
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { CloudCog, LogIn, History, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import { Gift, Package, Clock, CheckCircle, ChevronRight, CreditCard, Award, User as UserIcon } from 'lucide-react';
 import OrderDetailsModal from '../../components/UI/OrderDetailsModal';
 
 const Profile = () => {
-  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const { data: me, isLoading: isUserLoading, error: userError } = useGetMeQuery();
   const [changePass, { isLoading: isPasswordLoading, error: passwordError }] = useChangePasswordMutation();
@@ -48,25 +47,25 @@ const Profile = () => {
   }, []);
 
   const roleNames = {
-    0: 'Admin Role',
-    1: t('profile.normalUser'),
-    2: t('profile.retail'),
-    3: t('profile.wholesale'),
-    4: t('profile.vip')
+    0: 'Admin',
+    1: 'İstifadəçi',
+    2: 'Pərakəndə',
+    3: 'Topdan',
+    4: 'VIP'
   };
 
   const getRoleName = (roleId) => {
-    return roleNames[roleId] || t('profile.unknownRole');
+    return roleNames[roleId] || "Naməlum rol";
   };
 
   const toggleCurrentPasswordVisibility = () => setShowCurrentPassword(!showCurrentPassword);
   const toggleNewPasswordVisibility = () => setShowNewPassword(!showNewPassword);
 
   const getApiErrorMessage = (error) => {
-    if (error?.status === 401) return t('profile.unauthorizedMessage');
+    if (error?.status === 401) return "Yetkiniz yoxdur";
     if (error?.data?.message) return error.data.message;
     if (error?.message) return error.message;
-    return t('profile.errorOccurred');
+    return "Xəta baş verdi";
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -85,7 +84,7 @@ const Profile = () => {
       await changePass(passwordData).unwrap();
       setCurrentPassword('');
       setNewPass('');
-      setSuccessMessage(t('profile.passwordChangedSuccess'));
+      setSuccessMessage("Şifrə uğurla dəyişdirildi!");
       setShowCurrentPassword(false);
       setShowNewPassword(false);
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -98,11 +97,11 @@ const Profile = () => {
     try {
       await logout().unwrap();
       document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      toast.success(t('profile.loggedOutSuccess'));
+      toast.success("Hesabdan çıxdınız");
       navigate('/login');
     } catch (error) {
       console.error('Failed to logout:', error);
-      toast.error(t('profile.logoutFailed'));
+      toast.error("Hesabdan çıxmaq mümkün olmadı");
     }
   };
 
@@ -176,14 +175,14 @@ const Profile = () => {
               <div className="w-16 h-16 bg-[#4A041D]/5 rounded-full flex items-center justify-center mb-4">
                 <LogIn className="w-8 h-8 text-[#4A041D] ml-1" />
               </div>
-              <h3 className="text-xl font-bold text-[#4A041D] mb-2 font-sans">{t('profile.confirmLogout')}</h3>
-              <p className="text-gray-500 mb-6 text-sm font-sans">{t('profile.logoutMessage')}</p>
+              <h3 className="text-xl font-bold text-[#4A041D] mb-2 font-sans">Çıxışı təsdiqləyin</h3>
+              <p className="text-gray-500 mb-6 text-sm font-sans">Hesabınızdan çıxmaq istədiyinizə əminsiniz?</p>
               <div className="flex gap-3 w-full">
                 <button onClick={() => setShowLogoutModal(false)} className="flex-1 py-3 border border-gray-200 rounded-xl text-gray-600 font-sans font-medium hover:bg-gray-50 transition-colors">
-                  {t('profile.cancel')}
+                  Ləğv et
                 </button>
                 <button onClick={handleLogout} className="flex-1 py-3 bg-[#4A041D] text-white rounded-xl font-sans font-medium hover:bg-[#7d1733] transition-colors shadow-lg shadow-[#4A041D]/20">
-                  {isLogoutLoading ? t('profile.loggingOut') : t('profile.logout')}
+                  {isLogoutLoading ? "Çıxış edilir..." : "Çıxış"}
                 </button>
               </div>
             </div>
@@ -198,10 +197,10 @@ const Profile = () => {
           <div>
             <Breadcrumb />
             <h1 className="text-3xl lg:text-4xl font-sans font-bold text-[#4A041D] mt-4 mb-2">
-              {t('Hello')}, {me?.firstName}!
+              Salam, {me?.firstName}!
             </h1>
             <p className="text-[#9E2A2B] font-sans text-sm tracking-wide">
-              {t('profile.welcomeBack')} | <span className="font-semibold">{getRoleName(me?.role)}</span>
+              Yenidən xoş gəldiniz | <span className="font-semibold">{getRoleName(me?.role)}</span>
             </p>
           </div>
           <button
@@ -209,7 +208,7 @@ const Profile = () => {
             className="flex items-center gap-2 px-6 py-2.5 border border-[#4A041D] text-[#4A041D] rounded-full hover:bg-[#4A041D] hover:text-white transition-all duration-300 font-sans font-medium text-sm button-hover shadow-sm"
           >
             <LogIn className="w-4 h-4" />
-            {t('profile.logout')}
+            Çıxış
           </button>
         </div>
 
@@ -226,8 +225,8 @@ const Profile = () => {
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h3 className="text-lg font-sans font-medium opacity-90 !text-white">{t('Brand Loyalty')}</h3>
-                    <div className="text-3xl font-sans font-bold mt-1 tracking-tight">{loyaltyPoints} <span className="text-sm font-normal opacity-70">pts</span></div>
+                    <h3 className="text-lg font-sans font-medium opacity-90 !text-white">Brend Loyallığı</h3>
+                    <div className="text-3xl font-sans font-bold mt-1 tracking-tight">{loyaltyPoints} <span className="text-sm font-normal opacity-70">xal</span></div>
                   </div>
                   <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
                     <Award className="w-6 h-6 text-[#C5A059]" />
@@ -238,7 +237,7 @@ const Profile = () => {
 
                 <button className="w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl font-sans text-sm font-medium transition-colors border border-white/10 flex items-center justify-center gap-2 backdrop-blur-md">
                   <Gift className="w-4 h-4" />
-                  {t('Redeem Rewards')}
+                  Mükafatları əldə et
                 </button>
               </div>
             </div>
@@ -247,7 +246,7 @@ const Profile = () => {
             <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 shadow-sm">
               <h3 className="text-[#4A041D] font-sans font-bold mb-4 flex items-center gap-2">
                 <UserIcon className="w-5 h-5 text-[#C5A059]" />
-                {t('Account Overview')}
+                Hesaba baxış
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
@@ -255,7 +254,7 @@ const Profile = () => {
                     <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
                       <Package className="w-4 h-4" />
                     </div>
-                    <span className="text-sm text-gray-600 font-sans">{t('Total Orders')}</span>
+                    <span className="text-sm text-gray-600 font-sans">Ümumi sifarişlər</span>
                   </div>
                   <span className="font-bold text-[#4A041D]">{orders.length}</span>
                 </div>
@@ -264,7 +263,7 @@ const Profile = () => {
                     <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
                       <CreditCard className="w-4 h-4" />
                     </div>
-                    <span className="text-sm text-gray-600 font-sans">{t('Credits')}</span>
+                    <span className="text-sm text-gray-600 font-sans">Kreditlər</span>
                   </div>
                   <span className="font-bold text-[#4A041D]">₼ 0.00</span>
                 </div>
@@ -273,7 +272,7 @@ const Profile = () => {
 
             {/* Update Password */}
             <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 shadow-sm">
-              <h3 className="text-[#4A041D] font-sans font-bold mb-4">{t('Security')}</h3>
+              <h3 className="text-[#4A041D] font-sans font-bold mb-4">Təhlükəsizlik</h3>
               {successMessage && (
                 <div className="mb-4 p-3 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200 font-sans flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
@@ -284,7 +283,7 @@ const Profile = () => {
                 <div>
                   <input
                     type={showCurrentPassword ? "text" : "password"}
-                    placeholder={t('Current Password')}
+                    placeholder="Cari şifrə"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     className="w-full px-4 py-2.5 bg-[#F9F9F9] border border-[#DEE2E6] rounded-xl text-sm focus:outline-none focus:border-[#4A041D]/50 focus:ring-1 focus:ring-[#4A041D]/20 transition-all font-sans"
@@ -293,7 +292,7 @@ const Profile = () => {
                 <div>
                   <input
                     type={showNewPassword ? "text" : "password"}
-                    placeholder={t('New Password')}
+                    placeholder="Yeni şifrə"
                     value={newPass}
                     onChange={(e) => setNewPass(e.target.value)}
                     className="w-full px-4 py-2.5 bg-[#F9F9F9] border border-[#DEE2E6] rounded-xl text-sm focus:outline-none focus:border-[#4A041D]/50 focus:ring-1 focus:ring-[#4A041D]/20 transition-all font-sans"
@@ -304,7 +303,7 @@ const Profile = () => {
                   disabled={isPasswordLoading || !currentPassword || !newPass}
                   className="w-full py-2.5 bg-[#4A041D] text-white rounded-xl font-sans font-medium text-sm hover:bg-[#7d1733] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#4A041D]/20"
                 >
-                  {isPasswordLoading ? t('Updating...') : t('Update Password')}
+                  {isPasswordLoading ? "Yenilənir..." : "Şifrəni yenilə"}
                 </button>
               </form>
             </div>
@@ -314,9 +313,9 @@ const Profile = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl border border-[#F3E7E1] p-6 lg:p-8 shadow-sm h-full">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-sans font-bold text-[#4A041D]">{t('Order History')}</h2>
+                <h2 className="text-xl font-sans font-bold text-[#4A041D]">Sifariş tarixçəsi</h2>
                 <button className="text-[#C5A059] text-sm font-sans font-medium hover:text-[#9E2A2B] transition-colors">
-                  {t('View All Orders')}
+                  Bütün sifarişlərə bax
                 </button>
               </div>
 
@@ -340,7 +339,7 @@ const Profile = () => {
                                 <Clock className="w-3 h-3" /> {new Date(order.createdAt).toLocaleDateString()}
                               </span>
                               <span>•</span>
-                              <span>{order.items?.length || 0} {t('Items')}</span>
+                              <span>{order.items?.length || 0} məhsul</span>
                             </div>
                           </div>
                         </div>
@@ -350,7 +349,20 @@ const Profile = () => {
                             <div className="font-sans font-bold text-[#4A041D]">₼ {order.totalAmount?.toFixed(2)}</div>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-xs font-sans font-medium border ${getStatusColor(order.status)}`}>
-                            {order.status}
+                            {(() => {
+                              const statusTranslations = {
+                                'Pending': 'Gözləmədə',
+                                'PaymentInitiated': 'Ödəniş başladıldı',
+                                'Paid': 'Ödənilib',
+                                'Processing': 'Hazırlanır',
+                                'Shipped': 'Göndərilib',
+                                'Delivered': 'Çatdırılıb',
+                                'Cancelled': 'Ləğv edilib',
+                                'Refunded': 'Geri qaytarılıb',
+                                'Failed': 'Uğursuz',
+                              };
+                              return statusTranslations[order.status] || order.status;
+                            })()}
                           </span>
                           <button className="p-2 text-gray-400 hover:text-[#4A041D] hover:bg-[#4A041D]/5 rounded-lg transition-all hidden sm:block">
                             <ChevronRight className="w-5 h-5" />
@@ -359,7 +371,7 @@ const Profile = () => {
                       </div>
                       <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end md:hidden">
                         <button className="text-xs font-sans font-bold text-[#C5A059] uppercase tracking-wider">
-                          {t('View Details')}
+                          Ətraflı bax
                         </button>
                       </div>
                     </div>
@@ -369,10 +381,10 @@ const Profile = () => {
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Package className="w-8 h-8 text-gray-300" />
                     </div>
-                    <h3 className="text-gray-900 font-medium font-sans mb-1">{t('No orders yet')}</h3>
-                    <p className="text-gray-500 text-sm font-sans">{t('Start shopping to earn loyalty points!')}</p>
+                    <h3 className="text-gray-900 font-medium font-sans mb-1">Hələ sifariş yoxdur</h3>
+                    <p className="text-gray-500 text-sm font-sans">Loyallıq xalları qazanmaq üçün alış-verişə başlayın!</p>
                     <button onClick={() => navigate('/products')} className="mt-4 px-6 py-2 bg-[#4A041D] text-white rounded-lg text-sm font-sans hover:bg-[#7d1733] transition-colors">
-                      {t('Browse Products')}
+                      Məhsullara bax
                     </button>
                   </div>
                 )}

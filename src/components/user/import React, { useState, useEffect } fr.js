@@ -79,10 +79,10 @@ const BannerSlider = () => {
               <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full   relative">
                 <img
                   className="w-full object-cover md:rounded-lg lg:h-full  h-[26vh] md:h-[40vh] lg:p-2"
-                  src={`https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
+                  src={`${API_BASE_URL}/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
-                    e.target.src = '/Icons/logo.svg';
+                    e.target.src = '/Icons/logo.jpeg';
                     e.target.className = 'w-[70%] h-[70%] mx-auto object-contain  md:rounded-lg h-[26vh] md:h-[40vh] lg:p-2'
                   }}
                 />

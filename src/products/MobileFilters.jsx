@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { SlidersHorizontal, Filter, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { useFilterProductsMutation, useGetCategoriesQuery, useGetCategoryFiltersQuery, useGetFiltersQuery, useGetParentCategoriesQuery } from '../store/API';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../i18n';
 
 // Move these components outside to prevent recreation on each render
 const FilterSection = ({ title, isExpanded, onToggle, children }) => (
@@ -46,7 +44,6 @@ const CheckboxItem = ({ label, checked, onChange }) => (
 );
 
 export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentSort, onSortChange, currentPage, pageSize }) {
-  const { t, i18n } = useTranslation();
   const [isSort, setIsSort] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -55,8 +52,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState({});
 
-  // Dynamic translation states
-  const [translatedParentCat, setTranslatedParentCat] = useState([]);
+
 
   const { data: categories, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: ParentCat, isLoading: isParentCatLoading } = useGetParentCategoriesQuery();
@@ -80,26 +76,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
     priceRange: true
   });
 
-  // Dynamic translation effect for parent categories
-  useEffect(() => {
-    async function translateParentCat() {
-      if (!ParentCat || ParentCat.length === 0) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          ParentCat.map(async (category) => ({
-            ...category,
-            name: await translateDynamicField(category.name, targetLang)
-          }))
-        );
-        setTranslatedParentCat(translated);
-      } else {
-        setTranslatedParentCat(ParentCat);
-      }
-    }
-    translateParentCat();
-  }, [i18n.language, ParentCat]);
 
   useEffect(() => {
     if (isFilter) {
@@ -258,10 +235,10 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
 
     if (minPrice || maxPrice) {
       const priceLabel = minPrice && maxPrice
-        ? `Price: $${minPrice} - $${maxPrice}`
+        ? `Qiymət: ₼${minPrice} - ₼${maxPrice}`
         : minPrice
-          ? `Price: $${minPrice}+`
-          : `Price: up to $${maxPrice}`;
+          ? `Qiymət: ₼${minPrice}+`
+          : `Qiymət: ₼${maxPrice}-a qədər`;
 
       activeFilters.push({
         id: 'price-range',
@@ -374,7 +351,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
       {/* Mobile Filter Modal */}
       <div className={`fixed inset-0 bg-white z-5000 flex flex-col ${isFilter ? 'block' : 'hidden'}`}>
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
-          <h1 className="text-xl font-medium text-gray-900">{t('filters.filters')}</h1>
+          <h1 className="text-xl font-medium text-gray-900">Filtrlər</h1>
           <button onClick={() => setIsFilter(false)} className="p-1">
             <X size={24} className="text-gray-600" />
           </button>
@@ -383,12 +360,12 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
         <div className="flex-1 overflow-y-auto">
           {/* Category Filter */}
           <FilterSection
-            title={t('filters.category')}
+            title="Kateqoriya"
             isExpanded={expandedSections.category}
             onToggle={() => toggleSection('category')}
           >
             <div className="space-y-1">
-              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.slice(0, showAllCategories ? (translatedParentCat.length > 0 ? translatedParentCat : ParentCat).length : 5).map(item => (
+              {ParentCat?.slice(0, showAllCategories ? ParentCat.length : 5).map(item => (
                 <CheckboxItem
                   key={item.id}
                   label={item.name}
@@ -396,12 +373,12 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
                   onChange={() => handleCategoryChange(item.id)}
                 />
               ))}
-              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.length > 5 && (
+              {ParentCat?.length > 5 && (
                 <button
                   onClick={() => setShowAllCategories(!showAllCategories)}
                   className="text-sm text-red-500 hover:text-red-600 font-medium mt-2"
                 >
-                  {showAllCategories ? t('filters.seeLess') : t('filters.seeAll')}
+                  {showAllCategories ? "Daha az gör" : "Hamısını gör"}
                 </button>
               )}
             </div>
@@ -442,14 +419,14 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
 
           {/* Price Range */}
           <FilterSection
-            title={t('filters.priceRange')}
+            title="Qiymət aralığı"
             isExpanded={expandedSections.priceRange}
             onToggle={() => toggleSection('priceRange')}
           >
             <div className="flex items-center space-x-2" onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()}>
               <input
                 type="number"
-                placeholder={t('productsPage.min')}
+                placeholder="Min."
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 onFocus={(e) => e.stopPropagation()}
@@ -459,7 +436,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
               <span className="text-gray-500">-</span>
               <input
                 type="number"
-                placeholder={t('productsPage.max')}
+                placeholder="Maks."
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 onFocus={(e) => e.stopPropagation()}
@@ -475,14 +452,14 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
             onClick={handleClearFilters}
             className="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium"
           >
-            {t('productsPage.clear')}
+            Təmizlə
           </button>
           <button
             onClick={handleShowResults}
             className="flex-1 py-3 px-4 bg-red-500 text-white rounded-lg font-medium"
             disabled={isFiltering}
           >
-            {isFiltering ? t('productsPage.loading') : t('productsPage.show')}
+            {isFiltering ? "Yüklənir..." : "Nəticələri göstər"}
           </button>
         </div>
       </div>
@@ -496,18 +473,18 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
               className={`${isSort && 'rounded-b-none border-b-0'} flex items-center  justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-all duration-500 w-full`}
             >
               <SlidersHorizontal className="w-4 h-4 flex-shrink-0" />
-              <span className='whitespace-nowrap text-sm  '>{t('productsPage.sorting')}</span>
+              <span className='whitespace-nowrap text-sm  '>Sıralama</span>
             </button>
 
             <div className={`overflow-hidden transition-all duration-500 rounded-b-lg ${isSort ? "max-h-80 opacity-100" : "max-h-0 opacity-0"}`}>
               <div className="border border-gray-300 border-t-0 rounded-b-lg bg-white shadow-lg">
                 <div className="py-2 rounded-b-lg">
                   {[
-                    { value: null, label: t('sortBy') },
-                    { value: 'price_asc', label: t('priceLowToHigh') },
-                    { value: 'price_desc', label: t('priceHighToLow') },
-                    { value: 'name_asc', label: t('nameAToZ') },
-                    { value: 'name_desc', label: t('nameZToA') }
+                    { value: null, label: "Sıralama" },
+                    { value: 'price_asc', label: "Ucuzdan Bahaya" },
+                    { value: 'price_desc', label: "Bahadan Ucuza" },
+                    { value: 'name_asc', label: "A-dan Z-yə" },
+                    { value: 'name_desc', label: "Z-dən A-ya" }
                   ].map((option) => (
                     <button
                       key={option.value}
@@ -533,7 +510,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
           >
             <Filter className={`w-4 h-4 flex-shrink-0 transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`} />
             <span className={`whitespace-nowrap text-sm transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`}>
-              {t('productsPage.filteringBtn')}
+              Filtrlə
             </span>
           </button>
         </div>

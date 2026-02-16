@@ -1,13 +1,11 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useGetCartCountQuery, useGetFavoritesCountQuery, useGetMeQuery, useSearchProductsQuery, useGetParentCategoriesQuery } from "../../store/API";
-import { translateDynamicField } from '../../i18n';
 import { Search, X } from 'lucide-react';
 import { SearchContext } from '../../router/Context';
 import { FaRegFile, FaRegUser, FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import { PiCarProfile } from 'react-icons/pi';
-import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
+
 import SearchDropdown from '../UI/SearchDropdown';
 import MobileSearchDropdown from '../UI/MobileSearchDropdown';
 import UnauthorizedModal from '../UI/UnauthorizedModal';
@@ -28,13 +26,9 @@ const Header = () => {
   const [mobileSearchActive, setMobileSearchActive] = useState(false);
   const [animateCart, setAnimateCart] = useState(false);
 
-  // Initialize language from cookie or default to 'en'
-  const [selected, setSelected] = useState(() => {
-    const savedLang = getCookie('language');
-    return savedLang || i18next.language || 'en';
-  });
 
-  const { t } = useTranslation();
+
+
   const { searchOpen, setSearchOpen } = useContext(SearchContext);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef(null);
@@ -51,7 +45,20 @@ const Header = () => {
     skip: !hasToken,
   });
 
-  const { data: parentCategories } = useGetParentCategoriesQuery();
+  const { data: parentCategoriesData } = useGetParentCategoriesQuery();
+
+  const parentCategories = React.useMemo(() => {
+    if (!parentCategoriesData) return [];
+    return [...parentCategoriesData]
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      .map(cat => ({
+        ...cat,
+        subCategories: cat.subCategories
+          ? [...cat.subCategories].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+          : []
+      }));
+  }, [parentCategoriesData]);
+
   const [navCategories, setNavCategories] = useState([]);
 
   const [cartCount, setCartCount] = useState(() => {
@@ -144,32 +151,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  const dropdownRefLang = useRef(null);
 
-  const languages = [
-    {
-      name: "English",
-      value: "en"
-    },
-    {
-      name: "Azerbaijani",
-      value: "az"
-    }
-  ];
-
-  const langName = {
-    en: "English",
-    az: "Azerbaijani"
-  };
-
-  // Initialize language on mount
-  useEffect(() => {
-    const savedLang = getCookie('language');
-    if (savedLang && savedLang !== i18next.language) {
-      i18next.changeLanguage(savedLang);
-      setSelected(savedLang);
-    }
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -188,17 +170,7 @@ const Header = () => {
     };
   }, [open]);
 
-  // Handle language change
-  useEffect(() => {
-    i18next.changeLanguage(selected);
-    // Store in cookie for persistence (1 year)
-    document.cookie = `language=${selected}; path=/; max-age=31536000`;
-  }, [selected]);
 
-  const handleSelect = (language) => {
-    setSelected(language);
-    setOpen(false);
-  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -218,34 +190,11 @@ const Header = () => {
     };
   }, [open, searchOpen, setSearchOpen]);
 
-  // Handle Navbar Categories Translation
   useEffect(() => {
-    async function prepareNavCategories() {
-      if (!parentCategories) return;
-
-      const limited = parentCategories.slice(0, 6);
-      const targetLang = i18next.language;
-
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          limited.map(async (cat) => ({
-            ...cat,
-            name: await translateDynamicField(cat.name, 'en'),
-            subCategories: cat.subCategories ? await Promise.all(
-              cat.subCategories.map(async (sub) => ({
-                ...sub,
-                name: await translateDynamicField(sub.name, 'en')
-              }))
-            ) : []
-          }))
-        );
-        setNavCategories(translated);
-      } else {
-        setNavCategories(limited);
-      }
+    if (parentCategories) {
+      setNavCategories(parentCategories.slice(0, 6));
     }
-    prepareNavCategories();
-  }, [parentCategories, i18next.language]);
+  }, [parentCategories]);
 
   const { data: searchResult, isLoading: isSearching } = useSearchProductsQuery({ q: searchQuery }, {
     skip: !searchQuery || searchQuery.length < 2
@@ -261,7 +210,7 @@ const Header = () => {
     if (hasToken && meError?.status !== 401) {
       navigate('/favorites');
     } else {
-      setUnauthorizedAction(t('unauthorized.favorites'));
+      setUnauthorizedAction("Məhsulları sevimlilərə əlavə etmək");
       setShowUnauthorizedModal(true);
     }
   };
@@ -270,7 +219,7 @@ const Header = () => {
     if (hasToken && meError?.status !== 401) {
       navigate('/profile');
     } else {
-      setUnauthorizedAction(t('unauthorized.account'));
+      setUnauthorizedAction("Hesabınıza daxil olmaq");
       setShowUnauthorizedModal(true);
     }
   };
@@ -367,7 +316,7 @@ const Header = () => {
                 <Search className='text-white w-4 h-4 mb-2' />
                 <input
                   type="text"
-                  placeholder={t("search")}
+                  placeholder="Axtar..."
                   value={searchQuery}
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
@@ -395,7 +344,6 @@ const Header = () => {
                     onCategoryClick={handleCategoryClick}
                     onBrandClick={handleBrandClick}
                     onViewAllProducts={handleViewAllClick}
-                    t={t}
                     width={searchWidth}
                   />
                 </div>
@@ -406,7 +354,7 @@ const Header = () => {
           {/* Center: Logo */}
           <div className='flex-1 flex justify-center items-center z-10 min-w-max'>
             <Link to='/' className='block no-underline'>
-              <span className="font-gateway text-xl lg:text-4xl text-white whitespace-nowrap hover:text-white transition-colors duration-300">
+              <span className="font-logo text-xl lg:text-4xl text-white whitespace-nowrap hover:text-white transition-colors duration-300">
                 Gunay Beauty Store
               </span>
             </Link>
@@ -414,21 +362,7 @@ const Header = () => {
 
           {/* Right: Icons */}
           <div className='flex-1 flex justify-end items-center gap-5 lg:gap-8'>
-            {/* Language Switcher */}
-            <div className="relative hidden lg:block text-white font-sans cursor-pointer" ref={dropdownRef}>
-              <div onClick={() => setOpen(!open)} className="flex items-center gap-1 hover:text-white transition-colors">
-                <span className="text-xs uppercase tracking-[0.15em]">{selected}</span>
-              </div>
-              {open && (
-                <div className="absolute top-full right-0 mt-3 bg-[#4A041D] border border-white py-1 min-w-[100px] z-50">
-                  {languages.map((lang) => (
-                    <div key={lang.value} onClick={() => handleSelect(lang.value)} className="px-4 py-2 hover:bg-white hover:text-[#4A041D] text-white text-xs cursor-pointer font-sans uppercase tracking-wider transition-colors">
-                      {lang.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+
 
             <div
               onClick={handleFavoriteClick}
@@ -457,10 +391,10 @@ const Header = () => {
             <div onClick={handleAccountClick} className="cursor-pointer hidden lg:block group">
               {hasToken && meError?.status !== 401 ? (
                 <div className="flex items-center gap-2">
-                  <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Account</span>
+                  <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Hesab</span>
                 </div>
               ) : (
-                <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Log In</span>
+                <span className="font-sans text-white text-xs uppercase tracking-wider group-hover:text-white transition-colors">Daxil ol</span>
               )}
             </div>
           </div>
@@ -505,7 +439,7 @@ const Header = () => {
 
             {/* 3. Darling Favorites */}
             <Link to='/products?isHotDeal=true' className="text-white hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-bold transition-colors shadow-glow whitespace-nowrap border border-white/20 px-3 py-1 rounded-sm">
-              {t('Darlings Favourites')}
+              Hamının sevimlisi
             </Link>
 
             {/* 4. Last 3 Parent Categories */}
@@ -556,7 +490,7 @@ const Header = () => {
             <input
               autoFocus={mobileSearchActive}
               type="text"
-              placeholder={t("search")}
+              placeholder="Axtar..."
               value={searchQuery}
               onChange={handleSearchChange}
               onKeyDown={handleKeyDown}
@@ -574,7 +508,7 @@ const Header = () => {
               }}
               className="text-[#4A041D] text-sm font-medium uppercase tracking-wider ml-2"
             >
-              Cancel
+              Ləğv et
             </button>
           </div>
 

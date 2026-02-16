@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useEditBrandWithImageMutation } from "../../../store/API";
+import { useEditBrandWithImageMutation, API_BASE_URL } from "../../../store/API";
 import { Loader2, Upload, X } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -25,7 +25,7 @@ const EditBrandUI = ({ item, setOpen }) => {
 
       // Set existing image preview
       if (item.logoUrl) {
-        setImagePreview(`https://kozmetik-001-site1.qtempurl.com/${item.logoUrl}`);
+        setImagePreview(`${API_BASE_URL}/${item.logoUrl}`);
       }
     }
   }, [item]);
@@ -78,7 +78,7 @@ const EditBrandUI = ({ item, setOpen }) => {
 
   const removeImage = () => {
     setImageFile(null);
-    setImagePreview(item?.logoUrl ? `https://kozmetik-001-site1.qtempurl.com/${item.logoUrl}` : null);
+    setImagePreview(item?.logoUrl ? `${API_BASE_URL}/${item.logoUrl}` : null);
   };
 
   return (

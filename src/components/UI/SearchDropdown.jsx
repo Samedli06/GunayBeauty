@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Package, Tag, Grid, ChevronRight } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 
 // Skeleton Components
 const CategorySkeleton = () => (
@@ -41,52 +39,6 @@ const SearchDropdown = ({
   onViewAllProducts,
   t
 }) => {
-  const { i18n } = useTranslation();
-  const [translatedSearchResult, setTranslatedSearchResult] = useState(null);
-
-  useEffect(() => {
-    async function translateSearchResult() {
-      if (!searchResult) return;
-
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...searchResult };
-
-        if (searchResult.categories) {
-          translated.categories = await Promise.all(
-            searchResult.categories.map(async (category) => ({
-              ...category,
-              name: await translateDynamicField(category.name, targetLang)
-            }))
-          );
-        }
-
-        if (searchResult.brands) {
-          translated.brands = await Promise.all(
-            searchResult.brands.map(async (brand) => ({
-              ...brand,
-              name: await translateDynamicField(brand.name, targetLang)
-            }))
-          );
-        }
-
-        if (searchResult.products) {
-          translated.products = await Promise.all(
-            searchResult.products.map(async (product) => ({
-              ...product,
-              name: await translateDynamicField(product.name, targetLang),
-              categoryName: product.categoryName ? await translateDynamicField(product.categoryName, targetLang) : product.categoryName
-            }))
-          );
-        }
-
-        setTranslatedSearchResult(translated);
-      } else {
-        setTranslatedSearchResult(searchResult);
-      }
-    }
-    translateSearchResult();
-  }, [i18n.language, searchResult]);
 
   const containerStyle = { fontFamily: 'Montserrat, sans-serif' };
 
@@ -96,8 +48,8 @@ const SearchDropdown = ({
         <div className="w-16 h-16 bg-[#4A041D]/5 rounded-full flex items-center justify-center mx-auto mb-4">
           <Search className="w-8 h-8 text-[#4A041D]/40" />
         </div>
-        <p className="text-[#4A041D] font-medium text-lg mb-1">{t('search')}</p>
-        <p className="text-gray-400 text-sm">Start typing to see results...</p>
+        <p className="text-[#4A041D] font-medium text-lg mb-1">Axtar</p>
+        <p className="text-gray-400 text-sm">Nəticələri görmək üçün yazmağa başlayın...</p>
       </div>
     );
   }
@@ -121,23 +73,21 @@ const SearchDropdown = ({
     );
   }
 
-  const currentSearchResult = translatedSearchResult || searchResult;
-
-  if (!currentSearchResult || (!currentSearchResult.categories?.length && !currentSearchResult.brands?.length && !currentSearchResult.products?.length)) {
+  if (!searchResult || (!searchResult.categories?.length && !searchResult.brands?.length && !searchResult.products?.length)) {
     return (
       <div className="p-12 text-center" style={containerStyle}>
         <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
           <Search className="w-8 h-8 text-gray-300" />
         </div>
-        <p className="text-gray-900 font-medium text-lg mb-1">No results found</p>
-        <p className="text-gray-500 text-sm">We couldn't find matches for "{searchQuery}"</p>
+        <p className="text-gray-900 font-medium text-lg mb-1">Heç bir məhsul tapılmadı</p>
+        <p className="text-gray-500 text-sm">"{searchQuery}" üçün nəticə tapılmadı</p>
       </div>
     );
   }
 
-  const hasCategories = currentSearchResult.categories?.length > 0;
-  const hasBrands = currentSearchResult.brands?.length > 0;
-  const hasProducts = currentSearchResult.products?.length > 0;
+  const hasCategories = searchResult.categories?.length > 0;
+  const hasBrands = searchResult.brands?.length > 0;
+  const hasProducts = searchResult.products?.length > 0;
 
   return (
     <div className="max-h-[75vh] overflow-y-auto bg-white" style={containerStyle}>
@@ -148,10 +98,10 @@ const SearchDropdown = ({
             {hasCategories && (
               <div className="mb-8">
                 <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Grid className="w-3 h-3" /> Categories
+                  <Grid className="w-3 h-3" /> Kateqoriyalar
                 </h3>
                 <div className="space-y-1">
-                  {currentSearchResult.categories.slice(0, 5).map((category) => (
+                  {searchResult.categories.slice(0, 5).map((category) => (
                     <div
                       key={category.id}
                       onClick={() => onCategoryClick(category.slug, category.name)}
@@ -168,10 +118,10 @@ const SearchDropdown = ({
             {hasBrands && (
               <div>
                 <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Tag className="w-3 h-3" /> Brands
+                  <Tag className="w-3 h-3" /> Brendlər
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {currentSearchResult.brands.slice(0, 8).map((brand) => (
+                  {searchResult.brands.slice(0, 8).map((brand) => (
                     <div
                       key={brand.id}
                       onClick={() => onBrandClick(brand.slug, brand.name)}
@@ -192,17 +142,17 @@ const SearchDropdown = ({
             <>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xs font-bold text-[#4A041D] uppercase tracking-wider flex items-center gap-2">
-                  <Package className="w-3 h-3" /> Products
+                  <Package className="w-3 h-3" /> Məhsullar
                 </h3>
-                {currentSearchResult.products.length > 4 && (
+                {searchResult.products.length > 4 && (
                   <button onClick={onViewAllProducts} className="text-xs font-semibold text-[#C5A059] hover:text-[#b08d4b] transition-colors">
-                    View All Results &rarr;
+                    Bütün nəticələrə bax &rarr;
                   </button>
                 )}
               </div>
 
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {currentSearchResult.products.slice(0, 4).map((product) => (
+                {searchResult.products.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
                     onClick={(e) => onProductClick(e, product.id)}
@@ -210,7 +160,7 @@ const SearchDropdown = ({
                   >
                     <div className="relative aspect-square bg-gray-50/30 p-4 flex items-center justify-center overflow-hidden">
                       <img
-                        src={`https://kozmetik-001-site1.qtempurl.com/${product.primaryImageUrl}`}
+                        src={`${API_BASE_URL}/${product.primaryImageUrl}`}
                         alt={product.name}
                         className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}

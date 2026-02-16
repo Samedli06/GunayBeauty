@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useTranslation } from 'react-i18next';
 import { useGetParentCategoriesQuery, API_BASE_URL } from '../../store/API';
-import { translateDynamicField } from '../../i18n';
 import SEO from '../../components/SEO/SEO';
 import { ChevronRight, Loader2 } from 'lucide-react';
 
 const Categories = () => {
-    const { t, i18n } = useTranslation();
     const { data: parentCategories, isLoading } = useGetParentCategoriesQuery();
-    const [translatedCategories, setTranslatedCategories] = useState([]);
 
     // Category icon mapping (reused from Home.jsx or similar)
     const getCategoryIcon = (slug) => {
@@ -25,34 +21,7 @@ const Categories = () => {
         return iconMap[slug] || '/Icons/banner-commercial.svg';
     };
 
-    // Translation effect
-    useEffect(() => {
-        async function translateCategories() {
-            if (!parentCategories || parentCategories.length === 0) return;
-
-            const targetLang = i18n.language;
-            if (targetLang === 'en') {
-                const translated = await Promise.all(
-                    parentCategories.map(async (category) => ({
-                        ...category,
-                        name: await translateDynamicField(category.name, targetLang),
-                        subCategories: category.subCategories ? await Promise.all(
-                            category.subCategories.map(async (subCategory) => ({
-                                ...subCategory,
-                                name: await translateDynamicField(subCategory.name, targetLang)
-                            }))
-                        ) : category.subCategories
-                    }))
-                );
-                setTranslatedCategories(translated);
-            } else {
-                setTranslatedCategories(parentCategories);
-            }
-        }
-        translateCategories();
-    }, [i18n.language, parentCategories]);
-
-    const categoriesToDisplay = translatedCategories.length > 0 ? translatedCategories : parentCategories;
+    const categoriesToDisplay = parentCategories;
 
     if (isLoading) {
         return (
@@ -65,8 +34,8 @@ const Categories = () => {
     return (
         <>
             <SEO
-                title={`${t('Categories')} - GunayBeauty`}
-                description="Browse all our beauty and electronic categories."
+                title="Kateqoriyalar - Gunay Beauty"
+                description="Bütün gözəllik və elektronika kateqoriyalarımıza baxın."
             />
 
             <main className="min-h-screen bg-[#FDFBF8] pt-[80px] lg:pt-[120px] pb-20 px-4 lg:px-12">
@@ -74,11 +43,11 @@ const Categories = () => {
 
                     <div className="text-center mb-12 lg:mb-20">
                         <h1 className="text-3xl lg:text-5xl font-sans text-[#4A041D] mb-4">
-                            {t('Our Collections')}
+                            Bizim Kolleksiyalarımız
                         </h1>
                         <div className="h-[2px] w-24 bg-[#C5A059] mx-auto mb-4"></div>
                         <p className="text-[#9E2A2B] font-sans italic text-lg lg:text-xl">
-                            {t('Explore our carefully curated categories')}
+                            Bizim diqqətlə seçilmiş kateqoriyalarımızı kəşf edin
                         </p>
                     </div>
 
@@ -94,7 +63,7 @@ const Categories = () => {
                                     <div className="absolute inset-0 bg-gradient-to-tr from-[#4A041D]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                                     <img
-                                        src={category.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${category.imageUrl}` : getCategoryIcon(category.slug)}
+                                        src={category.imageUrl ? `${API_BASE_URL}${category.imageUrl}` : getCategoryIcon(category.slug)}
                                         alt={category.name}
                                         className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-in-out drop-shadow-sm"
                                         onError={(e) => {
@@ -124,9 +93,9 @@ const Categories = () => {
                                                             to={`/products/${sub.slug || ''}`}
                                                             className="group/sub flex flex-col items-center gap-3 p-1 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
                                                         >
-                                                            <div className="w-20 h-20 lg:w-12 lg:h-12 bg-white rounded-full border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm group-hover/sub:border-[#C5A059] transition-all">
+                                                            <div className="w-16 h-16 lg:w-12 lg:h-12 bg-white rounded-full border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm group-hover/sub:border-[#C5A059] transition-all">
                                                                 <img
-                                                                    src={sub.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${sub.imageUrl}` : getCategoryIcon(sub.slug)}
+                                                                    src={sub.imageUrl ? `${API_BASE_URL}${sub.imageUrl}` : getCategoryIcon(sub.slug)}
                                                                     alt={sub.name}
                                                                     className="w-full h-full object-cover p-1"
                                                                     onError={(e) => {
@@ -148,13 +117,13 @@ const Categories = () => {
                                                             to={`/categories/${category.slug}`}
                                                             className="text-[#C5A059] font-sans font-semibold text-[10px] uppercase tracking-widest hover:text-[#9E2A2B] transition-colors inline-flex items-center gap-1"
                                                         >
-                                                            {t('View All')} ({category.subCategories.length}) <ChevronRight className="w-3 h-3" />
+                                                            Hamısına bax ({category.subCategories.length}) <ChevronRight className="w-3 h-3" />
                                                         </Link>
                                                     </div>
                                                 )}
                                             </>
                                         ) : (
-                                            <p className="text-gray-400 font-sans text-xs italic p-4 text-center border border-dashed border-gray-200 rounded-lg bg-gray-50/50">{t('No subcategories')}</p>
+                                            <p className="text-gray-400 font-sans text-xs italic p-4 text-center border border-dashed border-gray-200 rounded-lg bg-gray-50/50">Alt kateqoriya yoxdur</p>
                                         )}
                                     </div>
                                 </div>
@@ -165,7 +134,7 @@ const Categories = () => {
                                         to={`/categories/${category.slug}`}
                                         className="w-full block text-center py-3 border border-[#4A041D]/10 rounded-full text-[#4A041D] font-medium text-sm hover:bg-[#4A041D] hover:text-white transition-all duration-300"
                                     >
-                                        {t('View Collection')}
+                                        Kolleksiyaya bax
                                     </Link>
                                 </div>
 

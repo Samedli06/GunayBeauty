@@ -13,6 +13,8 @@ import {
   API_BASE_URL
 } from '../../../store/API';
 
+console.log(API_BASE_URL);
+
 const BannersUI = () => {
   const { data: categories, isCatsLoading } = useGetParentCategoriesQuery();
   const { data: bannersD, isBannersLoading, error, refetch } = useGetBannersQuery();
@@ -33,14 +35,17 @@ const BannersUI = () => {
     const [uploadMobileImage] = useUploadMobileImageMutation();
     const [formData, setFormData] = useState({
       title: "",
+      titleVisible: true,
       description: "",
+      descriptionVisible: true,
       linkUrl: "",
       buttonText: "",
+      buttonVisible: true,
       type: 0,
       isActive: true,
       sortOrder: 0,
-      startDate: "2025-09-21T13:38:28.551Z",
-      endDate: "2025-09-21T13:38:28.551Z"
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
     });
 
     const getCategoryOptions = () => {
@@ -116,7 +121,10 @@ const BannersUI = () => {
         ...formData,
         type: Number(formData.type),
         sortOrder: Number(formData.sortOrder),
-        isActive: Boolean(formData.isActive)
+        isActive: Boolean(formData.isActive),
+        titleVisible: Boolean(formData.titleVisible),
+        descriptionVisible: Boolean(formData.descriptionVisible),
+        buttonVisible: Boolean(formData.buttonVisible)
       };
 
       const formDataToSend = new FormData();
@@ -147,14 +155,17 @@ const BannersUI = () => {
 
         setFormData({
           title: "",
+          titleVisible: true,
           description: "",
+          descriptionVisible: true,
           linkUrl: "",
           buttonText: "",
+          buttonVisible: true,
           type: 0,
           isActive: true,
           sortOrder: 0,
-          startDate: "2025-09-21T13:38:28.551Z",
-          endDate: "2025-09-21T13:38:28.551Z"
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
         });
         setFile(null);
         setImagePreview(null);
@@ -260,6 +271,22 @@ const BannersUI = () => {
               className="w-full px-4 py-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="məs: İndi alış veriş et, Ətraflı öyrən"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Banner Növü *
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData(prev => ({ ...prev, type: Number(e.target.value), sortOrder: Number(e.target.value) }))}
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg text-white bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value={0}>Hero</option>
+              <option value={1}>Top</option>
+              <option value={2}>Middle</option>
+              <option value={3}>Bottom</option>
+            </select>
           </div>
 
           <div>
@@ -509,17 +536,55 @@ const BannersUI = () => {
             )}
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="isActive"
-              checked={formData.isActive}
-              onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-            />
-            <label htmlFor="isActive" className="ml-2 block text-sm text-gray-300">
-              Aktiv (vebsaytda görünür)
-            </label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={formData.isActive}
+                onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="isActive" className="ml-2 block text-sm text-gray-300">
+                Aktiv
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="titleVisible"
+                checked={formData.titleVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, titleVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="titleVisible" className="ml-2 block text-sm text-gray-300">
+                Başlıq Görünür
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="descriptionVisible"
+                checked={formData.descriptionVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, descriptionVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="descriptionVisible" className="ml-2 block text-sm text-gray-300">
+                Açıqlama Görünür
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="buttonVisible"
+                checked={formData.buttonVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, buttonVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="buttonVisible" className="ml-2 block text-sm text-gray-300">
+                Düymə Görünür
+              </label>
+            </div>
           </div>
 
           <div className="flex gap-4 pt-4">
@@ -562,26 +627,26 @@ const BannersUI = () => {
     useEffect(() => {
       if (banner) {
         if (banner.imageUrl && !file) {
-          setImagePreview(`https://kozmetik-001-site1.qtempurl.com${banner.imageUrl}`);
+          setImagePreview(`${API_BASE_URL}/${banner.imageUrl} `);
         }
         if (banner.mobileImageUrl && !mobileFile) {
-          setMobileImagePreview(`https://kozmetik-001-site1.qtempurl.com${banner.mobileImageUrl}`);
+          setMobileImagePreview(`${API_BASE_URL}/${banner.mobileImageUrl} `);
         }
       }
     }, [banner, file, mobileFile]);
     const [formData, setFormData] = useState({
       title: banner?.title || '',
-      titleVisible: banner?.titleVisible,
+      titleVisible: banner?.titleVisible ?? true,
       description: banner?.description || '',
-      descriptionVisible: banner?.descriptionVisible,
+      descriptionVisible: banner?.descriptionVisible ?? true,
       linkUrl: banner?.linkUrl || '',
       buttonText: banner?.buttonText || '',
-      buttonVisible: banner?.buttonVisible,
+      buttonVisible: banner?.buttonVisible ?? true,
       type: banner?.type || 0,
       isActive: banner?.isActive ?? true,
       sortOrder: banner?.sortOrder || 0,
-      startDate: banner?.startDate || "2025-09-21T13:38:28.551Z",
-      endDate: banner?.endDate || "2025-09-21T13:38:28.551Z"
+      startDate: banner?.startDate || new Date().toISOString(),
+      endDate: banner?.endDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
     });
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -756,6 +821,22 @@ const BannersUI = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
+              Banner Növü *
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData(prev => ({ ...prev, type: Number(e.target.value), sortOrder: Number(e.target.value) }))}
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg text-white bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value={0}>Hero</option>
+              <option value={1}>Top</option>
+              <option value={2}>Middle</option>
+              <option value={3}>Bottom</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Açıqlama
             </label>
             <textarea
@@ -777,46 +858,45 @@ const BannersUI = () => {
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
               />
               <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-                Banner görünürlüyü
+                Aktiv
               </label>
             </div>
             <div className="flex items-center">
               <input
                 type="checkbox"
-                id="editIsActive"
-                checked={formData.buttonVisible}
-                onChange={(e) => setFormData(prev => ({ ...prev, buttonVisible: e.target.checked }))}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
-              />
-              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-                Düymə görünürlüyü
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="editIsActive"
+                id="editTitleVisible"
                 checked={formData.titleVisible}
                 onChange={(e) => setFormData(prev => ({ ...prev, titleVisible: e.target.checked }))}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
               />
-              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-                Başlıq görünürlüyü
+              <label htmlFor="editTitleVisible" className="ml-2 block text-sm text-gray-300">
+                Başlıq Görünür
               </label>
             </div>
             <div className="flex items-center">
               <input
                 type="checkbox"
-                id="editIsActive"
+                id="editDescriptionVisible"
                 checked={formData.descriptionVisible}
                 onChange={(e) => setFormData(prev => ({ ...prev, descriptionVisible: e.target.checked }))}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
               />
-              <label htmlFor="editIsActive" className="ml-2 block text-sm text-gray-300">
-                Açıqlama görünürlüyü
+              <label htmlFor="editDescriptionVisible" className="ml-2 block text-sm text-gray-300">
+                Açıqlama Görünür
               </label>
             </div>
-
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="editButtonVisible"
+                checked={formData.buttonVisible}
+                onChange={(e) => setFormData(prev => ({ ...prev, buttonVisible: e.target.checked }))}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+              />
+              <label htmlFor="editButtonVisible" className="ml-2 block text-sm text-gray-300">
+                Düymə Görünür
+              </label>
+            </div>
           </div>
 
           <div>
@@ -848,7 +928,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={imagePreview || `https://kozmetik-001-site1.qtempurl.com${banner?.imageUrl}`}
+                    src={imagePreview || `${API_BASE_URL} ${banner?.imageUrl} `}
                     alt="Desktop Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -926,7 +1006,7 @@ const BannersUI = () => {
               <div className="relative">
                 <div className="relative rounded-lg overflow-hidden border-2 border-gray-600">
                   <img
-                    src={mobileImagePreview || `https://kozmetik-001-site1.qtempurl.com${banner?.mobileImageUrl}`}
+                    src={mobileImagePreview || `${API_BASE_URL} ${banner?.mobileImageUrl} `}
                     alt="Mobile Preview"
                     className="w-full h-48 object-cover"
                   />
@@ -1063,6 +1143,7 @@ const BannersUI = () => {
           <>
             <div className="space-y-6">
               {bannersD?.map((banner) => {
+                console.log(`${API_BASE_URL}${banner.imageUrl}`);
                 return (
                   <div
                     key={banner.id}
@@ -1072,16 +1153,20 @@ const BannersUI = () => {
                       <div className="md:w-1/3 relative min-h-[180px] h-64 md:h-auto bg-gray-700">
                         <img
                           className="w-full h-full object-cover"
-                          src={`https://kozmetik-001-site1.qtempurl.com${banner.imageUrl}`}
+
+                          src={`${API_BASE_URL}${banner.imageUrl} `}
                           alt={banner.title}
                           onError={(e) => {
                             e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239CA3AF' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E";
                           }}
                         />
 
-                        <div className="absolute top-3 left-3">
-                          <span className={`${banner.isActive ? 'bg-green-600' : 'bg-red-600'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
+                        <div className="absolute top-3 left-3 flex flex-col gap-2">
+                          <span className={`${banner.isActive ? 'bg-green-600' : 'bg-red-600'} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md`}>
                             {banner.isActive ? 'Aktiv' : 'Deaktiv'}
+                          </span>
+                          <span className={`${banner.type === 0 ? 'bg-purple-600' : banner.type === 1 ? 'bg-blue-600' : banner.type === 2 ? 'bg-orange-600' : 'bg-gray-600'} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md`}>
+                            {banner.type === 0 ? 'Hero' : banner.type === 1 ? 'Top' : banner.type === 2 ? 'Middle' : 'Bottom'}
                           </span>
                         </div>
                       </div>

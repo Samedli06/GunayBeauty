@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useFilterProductsMutation, useGetCategoriesQuery, useGetCategoryFiltersQuery, useGetFiltersQuery, useGetParentCategoriesQuery } from '../store/API';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../i18n';
 
 
 const SortDropdown = ({ currentSort, onSortChange, t }) => {
@@ -10,11 +8,11 @@ const SortDropdown = ({ currentSort, onSortChange, t }) => {
   const dropdownRef = useRef(null);
 
   const options = [
-    { value: "", label: t('sortBy') },
-    { value: "price_asc", label: t('priceLowToHigh') },
-    { value: "price_desc", label: t('priceHighToLow') },
-    { value: "name_asc", label: t('nameAToZ') },
-    { value: "name_desc", label: t('nameZToA') }
+    { value: "", label: "Sırala" },
+    { value: "price_asc", label: "Ucuzdan Bahaya" },
+    { value: "price_desc", label: "Bahadan Ucuza" },
+    { value: "name_asc", label: "A-dan Z-yə" },
+    { value: "name_desc", label: "Z-dən A-ya" }
   ];
 
   const selectedOption = options.find(opt => opt.value === (currentSort || "")) || options[0];
@@ -115,18 +113,13 @@ export const FilterSidebar = React.memo(({
   showCategory = false,
   onSortChange
 }) => {
-  const { t, i18n } = useTranslation();
+
 
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedFilters, setSelectedFilters] = useState({});
-
-  // Dynamic translation states
-  const [translatedCategories, setTranslatedCategories] = useState([]);
-  const [translatedParentCat, setTranslatedParentCat] = useState([]);
-  const [translatedCustomFilters, setTranslatedCustomFilters] = useState([]);
 
   const { data: categories, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: ParentCat, isLoading: isParentCatLoading } = useGetParentCategoriesQuery();
@@ -145,61 +138,8 @@ export const FilterSidebar = React.memo(({
     { skip: !activeCategoryId }
   );
 
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateData() {
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        // Translate categories
-        if (categories) {
-          const translated = await Promise.all(
-            categories.map(async (category) => ({
-              ...category,
-              name: await translateDynamicField(category.name, targetLang)
-            }))
-          );
-          setTranslatedCategories(translated);
-        }
-
-        // Translate parent categories
-        if (ParentCat) {
-          const translated = await Promise.all(
-            ParentCat.map(async (category) => ({
-              ...category,
-              name: await translateDynamicField(category.name, targetLang)
-            }))
-          );
-          setTranslatedParentCat(translated);
-        }
-
-        // Translate custom filters
-        if (customFilters) {
-          const translated = await Promise.all(
-            customFilters.map(async (filter) => ({
-              ...filter,
-              name: await translateDynamicField(filter.name, targetLang),
-              options: filter.options ? await Promise.all(
-                filter.options.map(async (option) => ({
-                  ...option,
-                  displayName: option.displayName ? await translateDynamicField(option.displayName, targetLang) : option.displayName,
-                  label: option.label ? await translateDynamicField(option.label, targetLang) : option.label
-                }))
-              ) : filter.options
-            }))
-          );
-          setTranslatedCustomFilters(translated);
-        }
-      } else {
-        setTranslatedCategories(categories || []);
-        setTranslatedParentCat(ParentCat || []);
-        setTranslatedCustomFilters(customFilters || []);
-      }
-    }
-    translateData();
-  }, [i18n.language, categories, ParentCat, customFilters]);
-
   // Determine which filters to show - category-specific or general
-  const filtersToShow = activeCategoryId && categoryFilters ? categoryFilters : (translatedCustomFilters.length > 0 ? translatedCustomFilters : customFilters);
+  const filtersToShow = activeCategoryId && categoryFilters ? categoryFilters : (customFilters || []);
   const isFiltersLoading = activeCategoryId ? isCategoryFiltersLoading : isCustomLoading;
 
   // Memoize buildActiveFilters function - don't include it in dependencies
@@ -207,10 +147,9 @@ export const FilterSidebar = React.memo(({
     const activeFilters = [];
 
     // Add category filters only if shown
-    if (showCategory && selectedCategories.length > 0 && (translatedCategories.length > 0 ? translatedCategories : categories)) {
-      const categoriesToUse = translatedCategories.length > 0 ? translatedCategories : categories;
+    if (showCategory && selectedCategories.length > 0 && categories) {
       selectedCategories.forEach(categoryId => {
-        const category = categoriesToUse.find(cat => cat.id === categoryId);
+        const category = categories.find(cat => cat.id === categoryId);
         if (category) {
           activeFilters.push({
             id: `category-${categoryId}`,
@@ -224,11 +163,10 @@ export const FilterSidebar = React.memo(({
     }
 
     // Add custom filter selections
-    const filtersToUse = translatedCustomFilters.length > 0 ? translatedCustomFilters : customFilters;
-    if (filtersToUse) {
+    if (customFilters) {
       Object.values(selectedFilters).forEach(filter => {
         if (filter.filterOptionIds && filter.filterOptionIds.length > 0) {
-          const customFilter = filtersToUse.find(cf => cf.id === filter.filterId);
+          const customFilter = customFilters.find(cf => cf.id === filter.filterId);
           if (customFilter) {
             filter.filterOptionIds.forEach(optionId => {
               const option = customFilter.options?.find(opt => opt.id === optionId);
@@ -251,10 +189,10 @@ export const FilterSidebar = React.memo(({
     // Add price range filter
     if (minPrice || maxPrice) {
       const priceLabel = minPrice && maxPrice
-        ? `Price: $${minPrice} - $${maxPrice}`
+        ? `Qiymət: ₼${minPrice} - ₼${maxPrice}`
         : minPrice
-          ? `Price: $${minPrice}+`
-          : `Price: up to $${maxPrice}`;
+          ? `Qiymət: ₼${minPrice}+`
+          : `Qiymət: ₼${maxPrice}-a qədər`;
 
       activeFilters.push({
         id: 'price-range',
@@ -519,11 +457,11 @@ export const FilterSidebar = React.memo(({
         {/* Categories Dropdown */}
         {showCategory && (
           <FilterDropdown
-            label={t('filters.category')}
+            label="Kateqoriya"
             isActive={selectedCategories.length > 0}
           >
             <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-              {(translatedParentCat.length > 0 ? translatedParentCat : ParentCat)?.map(item => (
+              {(ParentCat)?.map(item => (
                 <label key={item.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors group">
                   <div className="relative flex items-center">
                     <input
@@ -580,12 +518,12 @@ export const FilterSidebar = React.memo(({
 
         {/* Price Dropdown */}
         <FilterDropdown
-          label={t('priceRange')}
+          label="Qiymət aralığı"
           isActive={minPrice || maxPrice}
         >
           <div className="space-y-4 p-1">
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">{t('productsPage.min')}</label>
+              <label className="text-xs text-gray-500 mb-1 block">Min.</label>
               <div className="relative">
                 <span className="absolute left-3 top-2.5 text-gray-400 text-sm">₼</span>
                 <input
@@ -599,7 +537,7 @@ export const FilterSidebar = React.memo(({
               </div>
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">{t('productsPage.max')}</label>
+              <label className="text-xs text-gray-500 mb-1 block">Maks.</label>
               <div className="relative">
                 <span className="absolute left-3 top-2.5 text-gray-400 text-sm">₼</span>
                 <input
@@ -627,7 +565,6 @@ export const FilterSidebar = React.memo(({
         <SortDropdown
           currentSort={currentSort}
           onSortChange={onSortChange}
-          t={t}
         />
       </div>
     </div>

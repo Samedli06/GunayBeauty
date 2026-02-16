@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Users, CreditCard, Sparkles, Star, Heart, Gift, Crown, Diamond, Gem } from 'lucide-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -7,7 +6,6 @@ import SEO from '../../components/SEO/SEO';
 import { useGetLoyaltySettingsQuery } from '../../store/API';
 
 const About = () => {
-  const { t } = useTranslation();
   const { data: loyaltySettings } = useGetLoyaltySettingsQuery();
 
   useEffect(() => {
@@ -24,7 +22,7 @@ const About = () => {
         title="Haqqımızda - Günay Beauty Store"
         description="Günay Beauty Store - Lüks və orijinal gözəllik məhsullarının ünvanı."
         keywords="about gunay beauty, cosmetics baku, luxury beauty store, original makeup"
-        image="/Icons/logo.svg"
+        image="/Icons/logo.jpeg"
         type="website"
       />
 
@@ -143,9 +141,9 @@ const About = () => {
 
             <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 group">
               <Gift className="w-10 h-10 text-[#C5A059] mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-lg font-bold text-[#4A041D] mb-3">{t('Earn Rewards')}</h3>
+              <h3 className="text-lg font-bold text-[#4A041D] mb-3">Bonus Qazanın</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                {t('Join our loyalty program and earn')} <span className="font-bold text-[#4A041D]">{loyaltySettings?.bonusPercentage}%</span> {t('bonus on every purchase.')}
+                Loyallıq proqramımıza qoşulun və hər alış-verişdə <span className="font-bold text-[#4A041D]">{loyaltySettings?.bonusPercentage}%</span> bonus qazanın.
               </p>
             </div>
 

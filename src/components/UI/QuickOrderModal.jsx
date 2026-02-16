@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { X, ShoppingBag, Loader2, Check } from 'lucide-react';
 import { useGetMeQuery, useQuickOrderMutation } from '../../store/API';
-import { useTranslation } from 'react-i18next';
 
 const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     customerName: '',
     phoneNumber: '0703569121',
@@ -30,11 +28,11 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
   const validateForm = () => {
     if (!formData.customerName.trim()) {
-      setError(t('quickOrder.pleaseEnterName'));
+      setError("Zəhmət olmasa tam adınızı daxil edin");
       return false;
     }
     if (!formData.customerPhone.trim()) {
-      setError(t('quickOrder.pleaseEnterPhone'));
+      setError("Zəhmət olmasa telefon nömrənizi daxil edin");
       return false;
     }
     return true;
@@ -77,7 +75,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
     } catch (err) {
       console.error('Quick order error:', err);
-      setError(t('quickOrder.orderFailed'));
+      setError("Sifariş zamanı xəta baş verdi");
     } finally {
       setIsSubmitting(false);
     }
@@ -112,7 +110,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               <div className="p-2 bg-red-100 rounded-lg">
                 <ShoppingBag className="w-5 h-5 text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">{t('quickOrder.title')}</h3>
+              <h3 className="text-xl font-semibold text-gray-900">Sürətli Sifariş</h3>
             </div>
             <button
               onClick={handleClose}
@@ -127,7 +125,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center gap-4">
               <img
-                src={`https://kozmetik-001-site1.qtempurl.com/${product?.imageUrl}`}
+                src={`${API_BASE_URL}/${product?.imageUrl}`}
                 alt={product?.name}
                 className="w-16 h-16 object-contain rounded-lg bg-white p-2"
                 onError={(e) => {
@@ -151,7 +149,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
             <div className="space-y-4">
               <div>
                 <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('quickOrder.fullName')} <span className="text-red-500">*</span>
+                  Tam Adınız <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -160,7 +158,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
                   value={formData.customerName}
                   onChange={handleInputChange}
                   disabled={isSubmitting || isSuccess}
-                  placeholder={t('quickOrder.fullNamePlaceholder')}
+                  placeholder="Məsələn: Əli Məmmədov"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
@@ -169,7 +167,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
 
               <div>
                 <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('quickOrder.phoneNumber')} <span className="text-red-500">*</span>
+                  Telefon Nömrəsi <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -178,7 +176,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
                   value={formData.customerPhone}
                   onChange={handleInputChange}
                   disabled={isSubmitting || isSuccess}
-                  placeholder={t('quickOrder.phoneNumberPlaceholder')}
+                  placeholder="050 000 00 00"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
@@ -193,7 +191,7 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
             {/* Total */}
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 font-medium">{t('quickOrder.totalAmount')}</span>
+                <span className="text-gray-600 font-medium">Ümumi Məbləğ</span>
                 <span className="text-2xl font-bold text-gray-900">
                   {((product.discountedPrice > 0 ? product.discountedPrice : product.price) * quantity).toFixed(2)} AZN
                 </span>
@@ -214,17 +212,17 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  {t('quickOrder.processing')}
+                  Emal olunur...
                 </>
               ) : isSuccess ? (
                 <>
                   <Check className="w-5 h-5" />
-                  {t('quickOrder.orderPlacedSuccess')}
+                  Sifarişiniz qəbul edildi!
                 </>
               ) : (
                 <>
                   <ShoppingBag className="w-5 h-5" />
-                  {t('quickOrder.placeOrder')}
+                  Sifarişi Tamamla
                 </>
               )}
             </button>

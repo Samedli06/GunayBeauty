@@ -5,10 +5,7 @@ import AddBrandUI from '../../components/admin/Brands/AddBrand';
 import { Loader2 } from 'lucide-react';
 import { useDeleteBrandMutation, useGetBrandsAdminQuery, API_BASE_URL } from '../../store/API';
 import EditBrandUI from '../../components/admin/Brands/EditBrand';
-import { useTranslation } from 'react-i18next';
-
 const Brand = () => {
-  const { t } = useTranslation();
   const [modalType, setModalType] = useState(null);
   const [edit, setEdit] = useState(null);
   const { data: brands, isLoading, error, refetch } = useGetBrandsAdminQuery();
@@ -18,10 +15,10 @@ const Brand = () => {
   const handleDeleteBrand = async (id) => {
     try {
       await deleteBrand({ id }).unwrap();
-      toast.success(t('admin.brandDeletedSuccess'));
+      toast.success("Brend uğurla silindi");
       handleCloseModal();
     } catch (error) {
-      toast.error(error?.data || t('admin.deletingBrandFailed'));
+      toast.error(error?.data || "Brend Silinmədi");
     }
   };
 
@@ -35,12 +32,12 @@ const Brand = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold !text-white">{t('admin.brands')}</h1>
+        <h1 className="text-2xl font-bold !text-white">Brendlər</h1>
         <button
           onClick={() => setModalType("add")}
           className="px-6 py-3 font-semibold rounded-lg bg-white text-black hover:bg-gray-200 transition-all"
         >
-          {t('admin.addNewBrand')}
+          Yeni Brend Əlavə Et
         </button>
       </div>
 
@@ -70,7 +67,7 @@ const Brand = () => {
                   <img
                     className="w-10 h-10 rounded-full"
                     src={
-                      `https://kozmetik-001-site1.qtempurl.com${brand.logoUrl}` ||
+                      `${API_BASE_URL}${brand.logoUrl}` ||
                       "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/85d1d12f-b0a5-49c0-bc81-6238cfc5d9ac/JORDAN+1+RETRO+HIGH+OG+%28PS%29.png"
                     }
                     alt=""

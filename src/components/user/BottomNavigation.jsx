@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
 import { Home, Store, User, Percent, Grid, Tag } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import AuthUtils from '../UI/AuthUtils';
 
 const BottomNavigation = () => {
     const location = useLocation();
-    const { t } = useTranslation();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -15,35 +14,35 @@ const BottomNavigation = () => {
 
     const navItems = [
         {
-            label: t('Home') || 'Home',
+            label: 'Ana Səhifə',
             icon: Home,
             path: '/',
         },
         {
-            label: t('Shop') || 'Shop',
+            label: 'Məhsullar',
             icon: Store,
             path: '/products',
         },
         {
-            label: t('Categories') || 'Categories',
+            label: 'Kateqoriyalar',
             icon: Grid,
             path: '/categories',
         },
         {
-            label: t('Brands') || 'Brands',
+            label: 'Brendlər',
             icon: Tag,
             path: '/brands',
         },
         {
-            label: t('Profile') || 'Profile',
+            label: 'Profil',
             icon: User,
             path: isAuthenticated ? '/profile' : '/login',
         },
     ];
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4A041D]/10 px-6 py-2 z-50 lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-            <div className="flex justify-between items-center max-w-md mx-auto">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4A041D]/10 px-4 py-3 z-50 lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+            <div className="flex justify-around items-center max-w-md mx-auto gap-2">
                 {navItems.map((item) => {
                     let isActive = false;
 
@@ -61,19 +60,31 @@ const BottomNavigation = () => {
                         <Link
                             key={item.path}
                             to={item.path}
-                            className="flex flex-col items-center gap-1 min-w-[3.5rem]"
+                            className={`
+                                flex items-center gap-2 
+                                transition-all duration-300 ease-in-out
+                                ${isActive
+                                    ? 'bg-[#2D1B2E] text-white px-4 py-2.5 rounded-full shadow-lg'
+                                    : 'p-2.5 text-gray-400 hover:text-[#4A041D]'
+                                }
+                            `}
                         >
-                            <div
-                                className={`p-1.5 rounded-full transition-all duration-300 ${isActive
-                                    ? 'text-[#4A041D] bg-[#4A041D]/10 translate-y-[-2px]'
-                                    : 'text-gray-400 hover:text-[#4A041D]'
-                                    }`}
-                            >
-                                <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-                            </div>
+                            <item.icon
+                                size={15}
+                                strokeWidth={isActive ? 2.5 : 2}
+                                className="flex-shrink-0"
+                            />
+
+                            {/* Label - only visible when active */}
                             <span
-                                className={`text-[10px] font-sans uppercase tracking-wider transition-colors duration-300 ${isActive ? 'text-[#4A041D] font-bold' : 'text-gray-400'
-                                    }`}
+                                className={`
+                                    font-sans font-semibold text-[8px] capitalize
+                                    transition-all duration-300 ease-in-out
+                                    ${isActive
+                                        ? 'max-w-[100px] opacity-100'
+                                        : 'max-w-0 opacity-0 overflow-hidden'
+                                    }
+                                `}
                             >
                                 {item.label}
                             </span>

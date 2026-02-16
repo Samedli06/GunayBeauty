@@ -1,10 +1,9 @@
 import { Heart, Loader2, Check, LogIn, UserPlus } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router'
-import { useToggleFavoriteMutation, useGetFavoriteStatusQuery } from '../../store/API';
+import { useToggleFavoriteMutation, useGetFavoriteStatusQuery, API_BASE_URL } from '../../store/API';
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
+
 import CartUtils from './CartUtils';
 import AuthUtils from './AuthUtils';
 import UnauthorizedModal from './UnauthorizedModal';
@@ -22,13 +21,10 @@ const HomePageUI = ({
   setUnauthorizedAction,
 }) => {
 
-  const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Dynamic translation states
-  const [translatedProductName, setTranslatedProductName] = useState(product?.name || '');
-  const [translatedProductDescription, setTranslatedProductDescription] = useState(product?.shortDescription || '');
+
 
 
   // Get favorite status for this product
@@ -42,24 +38,7 @@ const HomePageUI = ({
     setIsAuthenticated(AuthUtils.isAuthenticated());
   }, []);
 
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateFields() {
-      const targetLang = i18n.language;
-      if (targetLang === 'en' && product?.name) {
-        setTranslatedProductName(await translateDynamicField(product.name, targetLang));
-      } else {
-        setTranslatedProductName(product?.name || '');
-      }
 
-      if (targetLang === 'en' && product?.shortDescription) {
-        setTranslatedProductDescription(await translateDynamicField(product.shortDescription, targetLang));
-      } else {
-        setTranslatedProductDescription(product?.shortDescription || '');
-      }
-    }
-    translateFields();
-  }, [i18n.language, product?.name, product?.shortDescription]);
 
   // Update local favorite state when API data arrives
   useEffect(() => {
@@ -98,11 +77,11 @@ const HomePageUI = ({
 
       // Check for 401 unauthorized error (in case token expired)
       if (error?.status === 401 || error?.data?.status === 401) {
-        setUnauthorizedAction('add items to cart');
+        setUnauthorizedAction('məhsulları səbətə əlavə etmək');
         setShowUnauthorizedModal(true);
         setIsAuthenticated(false);
       } else {
-        toast.error(t('oCart') || 'Error adding to cart');
+        toast.error('Səbətə əlavə edilə bilmədi');
         console.error('Add to cart error:', error);
       }
     }
@@ -124,10 +103,10 @@ const HomePageUI = ({
 
       // Check for 401 unauthorized error
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction('add items to favorites');
+        setUnauthorizedAction('məhsulları sevimlilərə əlavə etmək');
         setShowUnauthorizedModal(true);
       } else {
-        toast.error('Failed to update favorites');
+        toast.error('Favoritləri yeniləmək mümkün olmadı');
         console.error('Toggle favorite error:', err);
       }
     }
@@ -138,7 +117,7 @@ const HomePageUI = ({
       return (
         <button disabled className="w-full cursor-not-allowed flex justify-center items-center !text-[10px] lg:text-xs bg-[#9E2A2B] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          {t('adding')}
+          Əlavə edilir...
         </button>
       );
     }
@@ -147,7 +126,7 @@ const HomePageUI = ({
       return (
         <button disabled className="w-full cursor-default flex justify-center items-center !text-[10px] lg:text-xs bg-[#4A041D] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-200">
           <Check className="w-4 h-4 mr-2" />
-          {t('addedToCart')}
+          Səbətə əlavə edildi
         </button>
       );
     }
@@ -157,7 +136,7 @@ const HomePageUI = ({
         onClick={(e) => onAddToCart(e, product)}
         className="w-full cursor-pointer flex justify-center items-center !text-[10px] lg:text-xs bg-[#4A041D] hover:bg-[#9E2A2B] text-white py-2 rounded-none font-medium uppercase tracking-widest transition-colors duration-300"
       >
-        {t('addToCart')}
+        Səbətə əlavə et
       </button>
     );
   };
@@ -187,8 +166,8 @@ const HomePageUI = ({
 
 
           <img
-            className="w-full aspect-square   h-[150px] mb-10 object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
-            src={`https://kozmetik-001-site1.qtempurl.com/${url}`}
+            className="w-full aspect-square object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
+            src={`${API_BASE_URL}${url}`}
             alt={product.name}
             onError={(e) => { e.target.src = '/Icons/logo.jpeg'; }}
           />
@@ -201,7 +180,7 @@ const HomePageUI = ({
           <p className="text-[#9E2A2B] !text-[12px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
 
           <h3 className="font-sans text-[#4A041D] !text-sm leading-tight line-clamp-2 h-[3rem] w-full flex items-center justify-center">
-            {translatedProductName}
+            {product?.name}
           </h3>
 
           {/* Price - Pushed to bottom */}

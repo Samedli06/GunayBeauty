@@ -12,21 +12,17 @@ import {
 import { toast } from 'react-toastify';
 import { Link } from 'react-router';
 import SimilarProducts from '../../components/UI/SimilarRecommendedProducts';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 import { ProductCard } from '../../products/ProductCard';
 
 const WishList = () => {
-  const { t, i18n } = useTranslation();
+
 
   const [page, setPage] = useState(1);
   const pageSize = 20;
   const [loadingProductId, setLoadingProductId] = useState(null);
   const [showSuccess, setShowSuccess] = useState(null);
 
-  // Dynamic translation states
-  const [translatedFavorites, setTranslatedFavorites] = useState([]);
-
+  // Products data
   const { data: recommendation, isRecLoading } = useGetRecommendedQuery({ limit: 6 });
   const { data: favoritesData, isLoading, error } = useGetFavoritesQuery({ page, pageSize });
   const [removeFavorite, { isLoading: isRemovingFavorite }] = useRemoveFavoriteMutation();
@@ -36,32 +32,7 @@ const WishList = () => {
   const favorites = favoritesData?.favorites || [];
   const totalCount = favoritesData?.totalCount || 0;
 
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateFavorites() {
-      if (!favorites || favorites.length === 0) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          favorites.map(async (favorite) => ({
-            ...favorite,
-            product: {
-              ...favorite.product,
-              name: await translateDynamicField(favorite.product.name, targetLang),
-              shortDescription: favorite.product.shortDescription ?
-                await translateDynamicField(favorite.product.shortDescription, targetLang) :
-                favorite.product.shortDescription
-            }
-          }))
-        );
-        setTranslatedFavorites(translated);
-      } else {
-        setTranslatedFavorites(favorites);
-      }
-    }
-    translateFavorites();
-  }, [i18n.language, favorites]);
 
   const handleRemoveFavorite = async (e, productId) => {
     e.preventDefault();
@@ -69,7 +40,7 @@ const WishList = () => {
     try {
       await removeFavorite({ productId }).unwrap();
     } catch (err) {
-      toast.error(t('failedToRemoveFavorite'));
+      toast.error("Məhsulu sevimlilərdən silmək mümkün olmadı");
       console.error('Remove favorite error:', err);
     }
   };
@@ -88,9 +59,9 @@ const WishList = () => {
     } catch (err) {
       setLoadingProductId(null);
       if (err?.status === 401 || err?.data?.status === 401) {
-        toast.error(t('pleaseLoginFirst'));
+        toast.error("Xahiş edirik əvvəlcə daxil olun");
       } else {
-        toast.error(t('failedToAddToCart'));
+        toast.error("Məhsulu səbətə əlavə etmək mümkün olmadı");
       }
       console.error('Add to cart error:', err);
     }
@@ -100,7 +71,7 @@ const WishList = () => {
     try {
       await clearFavorites().unwrap();
     } catch (err) {
-      toast.error(t('failedToClearFavorites'));
+      toast.error("Sevimliləri təmizləmək mümkün olmadı");
       console.error('Clear favorites error:', err);
     }
   };
@@ -109,7 +80,7 @@ const WishList = () => {
   if (isLoading) {
     return (
       <section className="inter bg-[#f7fafc] min-h-screen flex items-center justify-center">
-        <div className="text-xl">{t('loadingFavorites')}</div>
+        <div className="text-xl">Sevimlilər yüklənir...</div>
       </section>
     );
   }
@@ -117,7 +88,7 @@ const WishList = () => {
   if (error) {
     return (
       <section className="inter bg-[#f7fafc] min-h-screen flex items-center justify-center">
-        <div className="text-xl text-red-600">{t('errorLoadingFavorites')}</div>
+        <div className="text-xl text-red-600">Sevimliləri yükləyərkən xəta baş verdi</div>
       </section>
     );
   }
@@ -136,7 +107,7 @@ const WishList = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-[#4A041D]">
-            {t('favorites')} ({totalCount})
+            Sevimlilər ({totalCount})
           </h1>
           {favorites?.length > 0 && (
             <button
@@ -144,7 +115,7 @@ const WishList = () => {
               className="mt-4 md:mt-0 px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-300 flex items-center gap-2 shadow-sm"
             >
               <Trash2 className="w-4 h-4" />
-              {t('clearAll')}
+              Hamısını sil
             </button>
           )}
         </div>
@@ -154,15 +125,15 @@ const WishList = () => {
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <Heart className="w-10 h-10 text-gray-300 fill-gray-100" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('favoritesEmpty')}</h2>
-            <p className="text-gray-500 max-w-md mx-auto">{t('favoritesEmptyHint')}</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Sevimlilər siyahınız boşdur</h2>
+            <p className="text-gray-500 max-w-md mx-auto">Görünür hələ heç bir məhsulu bəyənməmisiniz.</p>
             <Link to="/products" className="inline-block mt-8 px-8 py-3 bg-[#4A041D] text-white rounded-full font-medium hover:bg-[#3d0318] transition-colors shadow-lg shadow-pink-900/20">
-              {t('startShopping')}
+              Alış-verişə başla
             </Link>
           </div>
         ) : (
           <div className="flex overflow-x-scroll lg:grid lg:grid-cols-4 gap-6 scrollbar-hide items-stretch pb-4">
-            {(translatedFavorites.length > 0 ? translatedFavorites : favorites).map((item) => {
+            {favorites.map((item) => {
               const cardInfo = {
                 url: item.product.primaryImageUrl,
                 name: item.product.name,

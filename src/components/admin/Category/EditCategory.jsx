@@ -12,7 +12,9 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
 
   const [formData, setFormData] = useState({
     name: "",
-    description: ""
+    description: "",
+    sortOrder: 1,
+    isActive: true
   });
 
   useEffect(() => {
@@ -26,7 +28,9 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
     if (item) {
       setFormData({
         name: item.name || "",
-        description: item.description || ""
+        description: item.description || "",
+        sortOrder: item.sortOrder || 1,
+        isActive: item.isActive !== undefined ? item.isActive : true
       });
 
       if (item.imageUrl) {
@@ -87,8 +91,8 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
       const categoryData = {
         name: formData.name,
         description: formData.description || "description",
-        isActive: true,
-        sortOrder: 1,
+        isActive: formData.isActive,
+        sortOrder: Number(formData.sortOrder || 1),
         parentCategoryId: item.parentCategoryId
       };
 
@@ -125,7 +129,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
     }
     // If it's an existing image URL from the server
     else if (imagePreview) {
-      return `https://kozmetik-001-site1.qtempurl.com${imagePreview}`;
+      return `${API_BASE_URL}${imagePreview}`;
     }
 
     return null;
@@ -164,6 +168,35 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400 resize-none"
           placeholder="Kateqoriya açıqlamasını daxil edin"
         />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-white text-sm mb-1" htmlFor="sortOrder">
+          Sıralama (Sort Order)
+        </label>
+        <input
+          id="sortOrder"
+          onChange={handleChange}
+          name="sortOrder"
+          type="number"
+          value={formData.sortOrder}
+          placeholder="Sıralama nömrəsini daxil edin"
+          className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          id="isActive"
+          type="checkbox"
+          name="isActive"
+          checked={formData.isActive}
+          onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+          className="w-5 h-5 rounded border-gray-700 bg-[#2a2a2a] text-blue-500 focus:ring-0"
+        />
+        <label htmlFor="isActive" className="text-white text-sm">
+          Aktivdir
+        </label>
       </div>
 
       <div className="flex flex-col">

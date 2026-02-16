@@ -1,7 +1,7 @@
 # API_BASE_URL Migration Progress
 
 ## Summary
-Replacing all occurrences of `https://kozmetik-001-site1.qtempurl.com` placeholder and fixing extra slashes throughout the codebase.
+Replacing all occurrences of `${API_BASE_URL}` placeholder and fixing extra slashes throughout the codebase.
 
 ## Completed Files ✅
 1. ✅ `src/store/API.js` - Fixed fallback and download URL
@@ -44,5 +44,5 @@ Replacing all occurrences of `https://kozmetik-001-site1.qtempurl.com` placehold
 ## Pattern
 All files need:
 1. Import `API_BASE_URL` from the appropriate path to `../../store/API` or `../../../store/API`
-2. Replace `https://kozmetik-001-site1.qtempurl.com/` with `https://kozmetik-001-site1.qtempurl.com`
-3. Replace `https://kozmetik-001-site1.qtempurl.com//` with `https://kozmetik-001-site1.qtempurl.com`
+2. Replace `${API_BASE_URL}/` with `${API_BASE_URL}`
+3. Replace `${API_BASE_URL}//` with `${API_BASE_URL}`

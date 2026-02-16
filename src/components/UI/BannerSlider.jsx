@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { useGetBannersQuery, useGetCategoriesQuery, useGetParentCategoriesQuery } from '../../store/API';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
+import { useGetBannersQuery, useGetCategoriesQuery, useGetParentCategoriesQuery, API_BASE_URL } from '../../store/API';
 
-const BannerSlider = () => {
-  const { i18n } = useTranslation();
-  const { data: bannersD, isBannersLoading, } = useGetBannersQuery();
+const BannerSlider = ({ banners, isLoading, disableAnimation = false }) => {
+  const { data: apiBanners, isLoading: apiLoading } = useGetBannersQuery(undefined, { skip: !!banners });
+
+  const bannersD = banners || apiBanners;
+  const isBannersLoading = isLoading !== undefined ? isLoading : apiLoading;
   console.log(bannersD);
   const navigate = useNavigate();
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  // Dynamic translation states
-  const [translatedBanners, setTranslatedBanners] = useState([]);
   useEffect(() => {
     if (!isAutoPlaying) return;
 
@@ -40,28 +37,7 @@ const BannerSlider = () => {
   const handleMouseEnter = () => setIsAutoPlaying(false);
   const handleMouseLeave = () => setIsAutoPlaying(false);
 
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateBanners() {
-      if (!bannersD || bannersD.length === 0) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = await Promise.all(
-          bannersD.map(async (banner) => ({
-            ...banner,
-            title: await translateDynamicField(banner.title, targetLang),
-            description: await translateDynamicField(banner.description, targetLang),
-            buttonText: await translateDynamicField(banner.buttonText, targetLang)
-          }))
-        );
-        setTranslatedBanners(translated);
-      } else {
-        setTranslatedBanners(bannersD);
-      }
-    }
-    translateBanners();
-  }, [i18n.language, bannersD]);
 
   return (
     <div className='w-full h-full '>
@@ -75,30 +51,30 @@ const BannerSlider = () => {
           className="flex transition-transform duration-500 h-full w-full ease-in-out "
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {(translatedBanners.length > 0 ? translatedBanners : bannersD)?.map((banner, index) => {
+          {bannersD?.map((banner, index) => {
             const isActive = index === currentSlide;
             return (
-              <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer flex-shrink-0 h-full relative group">
+              <div onClick={() => navigate(`${banner.linkUrl}`)} key={banner.id} className="w-full cursor-pointer  flex items-center justify-center flex-shrink-0 h-full relative group">
                 {/* Desktop Image */}
                 <img
-                  className={`hidden md:block w-full h-full object-cover md:rounded-lg lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
-                  src={`https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
+                  className={`hidden md:block w-full h-full object-cover md:rounded-lg lg:p-2 ${isActive && !disableAnimation ? 'animate-ken-burns' : ''}`}
+                  src={`${API_BASE_URL}/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
-                    e.target.src = '/Icons/logo.svg';
-                    e.target.className = 'hidden md:block w-[70%] h-[70%] mx-auto  md:rounded-lg md:h-[40vh] lg:p-2'
+                    e.target.src = '/Icons/logo.jpeg';
+                    e.target.className = 'hidden md:block  object-contain bg-[#580000] w-[70%] h-[70%] mx-auto '
                   }}
                 />
 
                 {/* Mobile Image */}
                 <img
-                  className={`block md:hidden w-full md:rounded-lg md:h-[40vh] lg:p-2 ${isActive ? 'animate-ken-burns' : ''}`}
+                  className={`block md:hidden w-full md:rounded-lg md:h-[40vh] lg:p-2 ${isActive && !disableAnimation ? 'animate-ken-burns' : ''}`}
                   src={banner.mobileImageUrl
-                    ? `https://kozmetik-001-site1.qtempurl.com/${banner.mobileImageUrl}`
-                    : `https://kozmetik-001-site1.qtempurl.com/${banner.imageUrl}`}
+                    ? `${API_BASE_URL}/${banner.mobileImageUrl}`
+                    : `${API_BASE_URL}/${banner.imageUrl}`}
                   alt={`Banner ${index + 1}`}
                   onError={(e) => {
-                    e.target.src = '/Icons/logo.svg';
+                    e.target.src = '/Icons/logo.jpeg';
                     e.target.className = 'block md:hidden w-[70%] h-[70%] mx-auto object-contain md:rounded-lg h-[26vh] md:h-[40vh] lg:p-2'
                   }}
                 />

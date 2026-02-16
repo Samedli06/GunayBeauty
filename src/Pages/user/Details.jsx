@@ -16,7 +16,7 @@ import {
   useGetRecommendedQuery,
   useGetMeQuery,
   useGetRecommendedPageQuery,
-  API_BASE_URL,
+  API_BASE_URL
 } from '../../store/API';
 import { toast } from 'react-toastify';
 import SimilarProducts from '../../components/UI/SimilarRecommendedProducts';
@@ -24,8 +24,6 @@ import QuickOrderModal from '../../components/UI/QuickOrderModal';
 import CartUtils from '../../components/UI/CartUtils';
 import AuthUtils from '../../components/UI/AuthUtils';
 import UnauthorizedModal from '../../components/UI/UnauthorizedModal';
-import { useTranslation } from 'react-i18next';
-import { translateDynamicField } from '../../i18n';
 import SEO from '../../components/SEO/SEO';
 
 // Skeleton Components
@@ -66,7 +64,6 @@ const DesktopDetailsSkeleton = () => (
 );
 
 function Details() {
-  const { t, i18n } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
@@ -83,9 +80,7 @@ function Details() {
   const { data: me, isLoading: isMeLoading } = useGetMeQuery();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Dynamic translation states
-  const [translatedProduct, setTranslatedProduct] = useState(null);
-  const [translatedProductSpec, setTranslatedProductSpec] = useState(null);
+
 
   useEffect(() => {
     setIsAuthenticated(AuthUtils.isAuthenticated());
@@ -122,55 +117,9 @@ function Details() {
 
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Dynamic translation effect
-  useEffect(() => {
-    async function translateProductData() {
-      if (!product) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...product };
-        if (product.name) translated.name = await translateDynamicField(product.name, targetLang);
-        if (product.description) translated.description = await translateDynamicField(product.description, targetLang);
-        if (product.shortDescription) translated.shortDescription = await translateDynamicField(product.shortDescription, targetLang);
-        if (product.categoryName) translated.categoryName = await translateDynamicField(product.categoryName, targetLang);
-        setTranslatedProduct(translated);
-      } else {
-        setTranslatedProduct(product);
-      }
-    }
-    translateProductData();
-  }, [i18n.language, product]);
 
-  // Dynamic translation effect for product specifications
-  useEffect(() => {
-    async function translateProductSpec() {
-      if (!productSpec) return;
 
-      const targetLang = i18n.language;
-      if (targetLang === 'en') {
-        const translated = { ...productSpec };
-        if (productSpec.specificationGroups) {
-          translated.specificationGroups = await Promise.all(
-            productSpec.specificationGroups.map(async (group) => ({
-              ...group,
-              items: group.items ? await Promise.all(
-                group.items.map(async (item) => ({
-                  ...item,
-                  name: await translateDynamicField(item.name, targetLang),
-                  value: await translateDynamicField(item.value, targetLang)
-                }))
-              ) : group.items
-            }))
-          );
-        }
-        setTranslatedProductSpec(translated);
-      } else {
-        setTranslatedProductSpec(productSpec);
-      }
-    }
-    translateProductSpec();
-  }, [i18n.language, productSpec]);
 
   const [toggleFavorite] = useToggleFavoriteMutation();
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
@@ -193,30 +142,30 @@ function Details() {
     } catch (err) {
       console.error(err);
       if (err?.status === 401 || err?.data?.status === 401) {
-        setUnauthorizedAction('add items to favorites');
+        setUnauthorizedAction('məhsulları sevimlilərə əlavə etmək');
         setShowUnauthorizedModal(true);
       } else {
-        toast.error("Failed to update favorites");
+        toast.error("Favoritləri yeniləmək mümkün olmadı");
       }
     }
   };
 
   const handleDownloadPdf = async () => {
-    if (!product?.id) { toast.error("Product not loaded"); return; }
+    if (!product?.id) { toast.error("Məhsul yüklənməyib"); return; }
     try {
       const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
       const headers = { 'Accept': '*/*' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(`https://kozmetik-001-site1.qtempurl.comapi/v1/product-pdfs/download/product/${product.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/product-pdfs/download/product/${product.id}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',
       });
 
-      if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
+      if (!response.ok) throw new Error(`PDF yüklənməsi uğursuz oldu: ${response.status} `);
       const blob = await response.blob();
-      if (blob.size === 0) throw new Error('Downloaded file is empty');
+      if (blob.size === 0) throw new Error('Yüklənmiş fayl boşdur');
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -228,13 +177,13 @@ function Details() {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download error:', error);
-      toast.error("No file exists for this product.");
+      toast.error("Bu məhsul üçün fayl yoxdur.");
     }
   };
 
   useEffect(() => {
     if (error?.status === 401 || error?.data?.status === 401) {
-      setUnauthorizedAction('view this product');
+      setUnauthorizedAction('məhsula baxmaq');
       setShowUnauthorizedModal(true);
     }
   }, [error]);
@@ -253,28 +202,28 @@ function Details() {
       window.dispatchEvent(new Event('cartAnimation'));
     } catch (err) {
       console.error('Failed to add product to cart:', err);
-      toast.error("Failed to add product to cart");
+      toast.error("Məhsulu səbətə əlavə etmək mümkün olmadı");
     }
   };
 
   const handleShare = async (platform) => {
     const productUrl = window.location.href;
     const productTitle = product.name;
-    const productDescription = product.shortDescription || `Check out ${product.name}`;
+    const productDescription = product.shortDescription || `${product.name} məhsuluna baxın`;
 
     if (platform === 'native') {
       if (navigator.share) {
         try {
           await navigator.share({ title: productTitle, text: productDescription, url: productUrl });
           setShowShareMenu(false);
-        } catch (error) { if (error.name !== 'AbortError') toast.error('Failed to share'); }
-      } else { toast.info('Share API not supported on this browser'); }
+        } catch (error) { if (error.name !== 'AbortError') toast.error('Paylaşmaq mümkün olmadı'); }
+      } else { toast.info('Paylaşma API bu brauzer tərəfindən dəstəklənmir'); }
     } else if (platform === 'copy') {
       try {
         await navigator.clipboard.writeText(productUrl);
         setShowShareMenu(false);
-        toast.success("Link copied!");
-      } catch (error) { toast.error('Failed to copy link'); }
+        toast.success("Link kopyalandı!");
+      } catch (error) { toast.error('Linki kopyalamaq mümkün olmadı'); }
     } else if (platform === 'whatsapp') {
       window.open(`https://wa.me/?text=${encodeURIComponent(productTitle + ' - ' + productUrl)}`, '_blank');
       setShowShareMenu(false);
@@ -291,7 +240,7 @@ function Details() {
   const getSpecifications = (product, productSpec) => {
     if (!product) return [];
     const specs = [];
-    const currentProductSpec = translatedProductSpec || productSpec;
+    const currentProductSpec = productSpec;
     if (currentProductSpec && currentProductSpec.specificationGroups) {
       currentProductSpec.specificationGroups.forEach(group => {
         if (group.items && Array.isArray(group.items)) {
@@ -311,7 +260,7 @@ function Details() {
   const getFeatures = (product, productSpec) => {
     if (!product) return [];
     const features = [];
-    const currentProductSpec = translatedProductSpec || productSpec;
+    const currentProductSpec = productSpec;
     if (currentProductSpec && currentProductSpec.specificationGroups) {
       currentProductSpec.specificationGroups.forEach(group => {
         if (group.items && Array.isArray(group.items)) {
@@ -338,17 +287,17 @@ function Details() {
       <div className="min-h-[70vh] bg-[#FCFCFC] flex items-center justify-center font-sans">
         <div className="text-center">
           <X className="w-16 h-16 text-[#4A041D] mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600">The product you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Məhsul tapılmadı</h2>
+          <p className="text-gray-600">Axtardığınız məhsul mövcud deyil.</p>
         </div>
       </div>
     );
   }
 
-  const currentProduct = translatedProduct || product;
+  const currentProduct = product;
   const features = getFeatures(currentProduct, productSpec);
-  const productImageUrl = product?.imageUrl ? `https://kozmetik-001-site1.qtempurl.com${product.imageUrl}` : '/Icons/logo.jpeg';
-  const productImages = product?.images ? product.images.map(img => `https://kozmetik-001-site1.qtempurl.com${img.imageUrl}`) : [];
+  const productImageUrl = product?.imageUrl ? `${API_BASE_URL}${product.imageUrl}` : '/Icons/logo.jpeg';
+  const productImages = product?.images ? product.images.map(img => `${API_BASE_URL}${img.imageUrl}`) : [];
 
   const productForSEO = product ? {
     ...product,
@@ -365,8 +314,8 @@ function Details() {
   return (
     <section className="bg-[#FCFCFC] min-h-screen font-sans" style={{ fontFamily: 'Montserrat, sans-serif' }}>
       <SEO
-        title={`${currentProduct?.name || 'Product'} - GunayBeauty`}
-        description={currentProduct?.description || currentProduct?.shortDescription || `Buy ${currentProduct?.name} at GunayBeauty.`}
+        title={`${currentProduct?.name || 'Məhsul'} - Gunay Beauty`}
+        description={currentProduct?.description || currentProduct?.shortDescription || `Gunay Beauty - də ${currentProduct?.name} alın.`}
         image={productImageUrl}
         url={typeof window !== 'undefined' ? window.location.href : ''}
         type="product"
@@ -399,7 +348,7 @@ function Details() {
 
           <div className="w-full h-full flex items-center justify-center p-8">
             <img
-              src={`https://kozmetik-001-site1.qtempurl.com${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
+              src={`${API_BASE_URL}${modalSlideIndex === 0 ? product?.imageUrl : product?.images?.[modalSlideIndex - 1]?.imageUrl}`}
               alt={product?.name}
               className="max-w-[90vw] max-h-[85vh] object-contain drop-shadow-2xl"
               onError={(e) => { e.target.src = '/Icons/logo.jpeg' }}
@@ -419,17 +368,17 @@ function Details() {
 
           {/* Left Column: Sticky Images */}
           {/* Left Column: Sticky Images (Desktop Only) */}
-          <div className="lg:col-span-7 relative lg:sticky lg:top-24 z-10">
-            <div className='flex flex-col-reverse lg:flex-row gap-6'>
-              {/* Thumbnails (Vertical on Desktop, Horizontal on Mobile) */}
-              <div className="flex lg:flex-col gap-4 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px] hide-scrollbar py-2 lg:py-4 px-1 min-w-[80px] lg:min-w-[120px]">
+          <div className="lg:col-span-7 relative lg:sticky lg:top-24">
+            <div className="flex flex-row gap-4 lg:gap-6 h-[400px] md:h-[500px] lg:h-[600px]">
+              {/* Thumbnails - Always on the side (Left) */}
+              <div className="flex flex-col gap-3 lg:gap-4 lg:px-1 overflow-y-auto overflow-x-hidden hide-scrollbar w-16 md:w-20 lg:w-28 flex-shrink-0 h-full">
                 {/* Main thumb */}
                 <div
                   onClick={() => { setHovered(null); openDetail(0); }}
                   onMouseEnter={() => setHovered(null)}
-                  className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${!hovered ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
+                  className={`aspect-square rounded-xl bg-white p-1.5 lg:p-2 lg:m-1 cursor-pointer border-2 transition-all duration-300 ${!hovered ? 'border-[#4A041D] shadow-md scale-[1.02]' : 'border-gray-100 hover:border-gray-300'}`}
                 >
-                  <img src={productImageUrl} alt="Main" className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
+                  <img src={productImageUrl} alt="Əsas" className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
                 </div>
 
                 {/* Additional thumbs */}
@@ -438,32 +387,41 @@ function Details() {
                     key={idx}
                     onClick={() => { setHovered(img.imageUrl); openDetail(idx + 1); }}
                     onMouseEnter={() => setHovered(img.imageUrl)}
-                    className={`flex-shrink-0 w-20 h-20 lg:w-28 lg:h-28 rounded-2xl bg-white p-2 cursor-pointer border-2 transition-all duration-300 ${hovered === img.imageUrl ? 'border-[#4A041D] shadow-lg scale-105' : 'border-transparent shadow-sm hover:border-gray-200'}`}
+                    className={`aspect-square rounded-xl bg-white p-1.5 lg:p-2 cursor-pointer border-2 transition-all duration-300 ${hovered === img.imageUrl ? 'border-[#4A041D] shadow-md scale-[1.02]' : 'border-gray-100 hover:border-gray-300'}`}
                   >
-                    <img src={`https://kozmetik-001-site1.qtempurl.com${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
+                    <img src={`${API_BASE_URL}${img.imageUrl}`} alt={`Thumb ${idx}`} className="w-full h-full object-contain" onError={(e) => { e.target.src = '/Icons/logo.jpeg' }} />
                   </div>
                 ))}
               </div>
 
               {/* Main Image Display */}
-              <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] min-h-[300px] lg:min-h-[500px]  lg:max-h-[700px] flex items-center justify-center relative group">
+              <div className="flex-1 bg-white rounded-3xl p-4 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-50 flex items-center justify-center relative group overflow-hidden h-full">
                 <img
-                  src={hovered ? `https://kozmetik-001-site1.qtempurl.com${hovered}` : productImageUrl}
+                  src={hovered ? `${API_BASE_URL}${hovered}` : productImageUrl}
                   alt={product.name}
-                  className="w h-full !max-h-[470px] object-contain transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
+                  className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
                   onClick={() => {
                     const idx = hovered ? product?.images?.findIndex(i => i.imageUrl === hovered) : -1;
                     openDetail(idx !== -1 ? idx + 1 : 0);
                   }}
                   onError={(e) => { e.target.src = '/Icons/logo.jpeg' }}
                 />
+
                 {/* Floating Action Buttons */}
-                <div className="absolute top-4 right-4 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button onClick={() => handleToggleFavorite(id)} className="p-3 bg-white shadow-md rounded-full hover:bg-[#4A041D] hover:text-white transition-colors group/btn">
-                    <Heart className={`w-5 h-5 text-gray-400 group-hover/btn:text-white ${favoriteStatus?.isFavorite ? 'fill-[#4A041D] text-[#4A041D]' : ''}`} />
+                <div className="absolute top-6 right-6 flex flex-col gap-3 lg:translate-x-12 lg:opacity-0 lg:group-hover:opacity-100 lg:group-hover:translate-x-0 transition-all duration-500">
+                  <button
+                    onClick={() => handleToggleFavorite(id)}
+                    className="p-3 bg-white/90 backdrop-blur shadow-lg rounded-full hover:bg-[#4A041D] hover:text-white transition-all transform hover:scale-110 group/btn"
+                    title="Seçilmişlərə əlavə et"
+                  >
+                    <Heart className={`w-5 h-5 ${favoriteStatus?.isFavorite ? 'fill-[#4A041D] text-[#4A041D] group-hover/btn:fill-white group-hover/btn:text-white' : 'text-gray-600 group-hover/btn:text-white'}`} />
                   </button>
-                  <button onClick={() => setShowShareMenu(true)} className="p-3 bg-white shadow-md rounded-full hover:bg-[#4A041D] hover:text-white transition-colors">
-                    <Share2 className="w-5 h-5 text-gray-400 hover:text-white" />
+                  <button
+                    onClick={() => setShowShareMenu(true)}
+                    className="p-3 bg-white/90 backdrop-blur shadow-lg rounded-full hover:bg-[#4A041D] hover:text-white transition-all transform hover:scale-110"
+                    title="Paylaş"
+                  >
+                    <Share2 className="w-5 h-5 text-gray-600 hover:text-white" />
                   </button>
                 </div>
               </div>
@@ -478,11 +436,11 @@ function Details() {
               <div className="flex items-center gap-3 mb-4">
                 {isInStock ? (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#FDFBF8] text-[#4A041D] border border-[#4A041D]/20">
-                    <Check size={12} className="mr-1" /> {t("features.inStock")}
+                    <Check size={12} className="mr-1" /> Stokda var
                   </span>
                 ) : (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
-                    <X size={12} className="mr-1" /> {t("features.outOfStock")}
+                    <X size={12} className="mr-1" /> Stokda yoxdur
                   </span>
                 )}
                 {product.brandName && (
@@ -524,14 +482,14 @@ function Details() {
                     className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-xs shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={21} />}
-                    {t('addToCart')}
+                    Səbətə əlavə et
                   </button>
                   <button
                     onClick={() => setShowQuickOrderModal(true)}
                     disabled={!isInStock}
                     className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-xs transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    {t('buyNow')}
+                    İndi al
                   </button>
                 </div>
               </div>
@@ -539,7 +497,7 @@ function Details() {
 
             {/* Description & Features (Moved to Right Column) */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-50">
-              <h3 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-6 border-b border-gray-100 pb-2">{t('features.title')}</h3>
+              <h3 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-6 border-b border-gray-100 pb-2">Xüsusiyyətlər</h3>
 
               {features.length > 0 ? (
                 <div className="flex flex-col gap-4">
@@ -551,12 +509,12 @@ function Details() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-400 italic">No additional features available.</p>
+                <p className="text-gray-400 italic">Əlavə xüsusiyyət yoxdur.</p>
               )}
 
               {currentProduct.description && (
                 <div className="mt-8 pt-6 border-t border-gray-100">
-                  <h4 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-3">Product Description</h4>
+                  <h4 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-3">Məhsulun təsviri</h4>
                   <div className="!text-sm md:!text-base lg:!text-lg prose prose-stone text-gray-600 leading-relaxed">
                     {currentProduct.description}
                   </div>
@@ -578,13 +536,13 @@ function Details() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm" onClick={() => setShowShareMenu(false)}>
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm transform scale-100 transition-all" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-[#4A041D]">Share Product</h3>
+              <h3 className="text-lg font-bold text-[#4A041D]">Məhsulu paylaş</h3>
               <button onClick={() => setShowShareMenu(false)} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <button onClick={() => handleShare('copy')} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
                 <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><Copy size={24} /></div>
-                <span className="font-medium text-sm">Copy Link</span>
+                <span className="font-medium text-sm">Linki kopyala</span>
               </button>
               <button onClick={() => handleShare('whatsapp')} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
                 <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600"><MessageCircle size={24} /></div>

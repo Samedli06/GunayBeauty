@@ -46,8 +46,8 @@ const ProductFormUI = ({ setOpen }) => {
     stockQuantity: 0,
     categoryId: "",
     brandId: "",
-    price: 0,
-    discountedPrice: 0,
+    price: "",
+    discountedPrice: "",
     detailImageUrls: [],
   });
 
@@ -241,7 +241,7 @@ const ProductFormUI = ({ setOpen }) => {
 
     setFormData(prev => ({
       ...prev,
-      [name]: value === "" ? 0 : Number(value)
+      [name]: value
     }));
   };
 
@@ -399,7 +399,7 @@ const ProductFormUI = ({ setOpen }) => {
             <input
               type="number"
               name="price"
-              value={formData.price}
+              value={formData.price === 0 ? "" : formData.price}
               onChange={handlePriceChange}
               min="0"
               step="0.01"
@@ -413,7 +413,7 @@ const ProductFormUI = ({ setOpen }) => {
             <input
               type="number"
               name="discountedPrice"
-              value={formData.discountedPrice}
+              value={formData.discountedPrice === 0 ? "" : formData.discountedPrice}
               onChange={handlePriceChange}
               min="0"
               step="0.01"
