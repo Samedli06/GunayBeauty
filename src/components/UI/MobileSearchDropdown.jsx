@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Package, Tag, Grid, ChevronRight } from 'lucide-react';
-
+import { API_BASE_URL } from '../../store/API';
 // Skeleton Components
 const CategorySkeletonMobile = () => (
   <div className="flex items-center gap-3 p-3 animate-pulse border-b border-gray-50 last:border-0">

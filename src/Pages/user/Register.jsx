@@ -41,11 +41,11 @@ const Register = () => {
     } catch (error) {
       console.error("Signup failed:", error);
 
-      if (error?.status === 400) {
-        toast.error(error?.data || "E-poçt və ya telefon artıq mövcuddur");
-      } else {
-        toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
-      }
+      const errorMessage = error?.data?.message ||
+        (typeof error?.data === 'string' ? error.data : null) ||
+        "Qeydiyyat zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.";
+
+      toast.error(errorMessage);
     }
   };
 

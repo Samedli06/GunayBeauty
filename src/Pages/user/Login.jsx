@@ -1,6 +1,6 @@
 // Login.jsx
 import React, { useState, useEffect } from 'react';
-import { useLoginMutation } from '../../store/API';
+import { useLoginMutation, useAddCartItemMutation } from '../../store/API';
 import { jwtDecode } from "jwt-decode";
 import { Loader2, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router';
@@ -16,6 +16,34 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || '/';
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [addCartItem] = useAddCartItemMutation();
+
+  const syncCart = async () => {
+    try {
+      const localCart = JSON.parse(localStorage.getItem('ecommerce_cart')) || { items: [] };
+      if (localCart.items && localCart.items.length > 0) {
+        console.log("🔄 Syncing local cart to server...", localCart.items);
+
+        // Sync each item to the server
+        const syncPromises = localCart.items.map(item =>
+          addCartItem({
+            productId: item.productId,
+            quantity: item.quantity
+          }).unwrap()
+        );
+
+        await Promise.all(syncPromises);
+        console.log("✅ Cart synced successfully");
+
+        // Clear local cart after successful sync
+        localStorage.removeItem('ecommerce_cart');
+        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { items: [], totalAmount: 0 } }));
+      }
+    } catch (error) {
+      console.error("❌ Cart sync failed:", error);
+      // We don't block the login process if sync fails, but we log it
+    }
+  };
 
   const togglePassword = () => setShowPassword(prev => !prev);
 
@@ -36,6 +64,9 @@ const Login = () => {
       const token = jwtDecode(result.token);
 
       if (token.role != "Admin") {
+        // Sync cart before redirecting
+        await syncCart();
+
         if (from && from !== '/') {
           navigate(from, { replace: true });
         } else {

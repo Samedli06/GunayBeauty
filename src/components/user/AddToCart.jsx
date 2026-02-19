@@ -109,23 +109,37 @@ export const CartUtils = {
 };
 
 // AddToCart Component
+import { useAddCartItemMutation } from '../../store/API';
+import { toast } from 'react-toastify';
+
 const AddToCart = ({ product, quantity = 1, onSuccess, children, className }) => {
   const [isAdding, setIsAdding] = React.useState(false);
+  const [addCartItem] = useAddCartItemMutation();
 
-  const handleAddToCart = () => {
+  const hasToken = document.cookie.split('; ').some(row => row.startsWith('token='));
+
+  const handleAddToCart = async () => {
     setIsAdding(true);
 
     try {
-      const updatedCart = CartUtils.addItem(product, quantity);
-
-      // Call success callback if provided
-      if (onSuccess) {
-        onSuccess(updatedCart);
+      if (hasToken) {
+        // Authenticated user: add to server cart
+        await addCartItem({
+          productId: product.id,
+          quantity: quantity
+        }).unwrap();
+        toast.success("Məhsul səbətə əlavə edildi!");
+        if (onSuccess) onSuccess();
+      } else {
+        // Guest user: add to localStorage
+        const updatedCart = CartUtils.addItem(product, quantity);
+        window.dispatchEvent(new CustomEvent("cartUpdated", { detail: updatedCart }));
+        toast.success("Məhsul səbətə əlavə edildi!");
+        if (onSuccess) onSuccess(updatedCart);
       }
-
-
     } catch (error) {
       console.error('Error adding to cart:', error);
+      toast.error(error?.data?.message || "Xəta baş verdi");
     } finally {
       setIsAdding(false);
     }
@@ -133,11 +147,15 @@ const AddToCart = ({ product, quantity = 1, onSuccess, children, className }) =>
 
   return (
     <button
-      onClick={handleAddToCart}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleAddToCart();
+      }}
       disabled={isAdding}
       className={className}
     >
-      {children || (isAdding ? 'Adding...' : 'Add to Cart')}
+      {children || (isAdding ? 'Əlavə edilir...' : 'Səbətə at')}
     </button>
   );
 };

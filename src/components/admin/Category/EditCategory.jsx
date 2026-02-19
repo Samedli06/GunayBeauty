@@ -12,6 +12,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
 
   const [formData, setFormData] = useState({
     name: "",
+    slug: "",
     description: "",
     sortOrder: 1,
     isActive: true
@@ -28,6 +29,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
     if (item) {
       setFormData({
         name: item.name || "",
+        slug: item.slug || "",
         description: item.description || "",
         sortOrder: item.sortOrder || 1,
         isActive: item.isActive !== undefined ? item.isActive : true
@@ -90,6 +92,7 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
 
       const categoryData = {
         name: formData.name,
+        slug: formData.slug,
         description: formData.description || "description",
         isActive: formData.isActive,
         sortOrder: Number(formData.sortOrder || 1),
@@ -151,6 +154,22 @@ const EditCategoryUI = ({ item, setOpen, categories }) => {
           type="text"
           required
           value={formData.name}
+          className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-white text-sm mb-1" htmlFor="slug">
+          Slug <span className="text-red-500">*</span>
+        </label>
+        <input
+          id="slug"
+          onChange={handleChange}
+          name="slug"
+          type="text"
+          required
+          value={formData.slug}
+          placeholder="meselən: qadin-parfumu"
           className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400"
         />
       </div>

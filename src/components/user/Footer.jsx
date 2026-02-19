@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router';
-import icons from '../../../public/Icons/icons.jpg';
 
 import { FaInstagram, FaTiktok } from 'react-icons/fa';
 

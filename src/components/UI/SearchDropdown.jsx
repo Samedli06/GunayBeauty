@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Package, Tag, Grid, ChevronRight } from 'lucide-react';
+import { API_BASE_URL } from '../../store/API';
 
 // Skeleton Components
 const CategorySkeleton = () => (

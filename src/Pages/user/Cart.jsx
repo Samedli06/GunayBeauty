@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2, X, Loader2, Check, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2, X, Loader2, Check, ShoppingBag, Wallet } from 'lucide-react';
 import { Link } from 'react-router';
 import {
   useGetCartItemsQuery,
@@ -14,11 +14,13 @@ import {
   useInitiatePaymentMutation,
   useGetInstallmentConfigurationQuery,
   useGetInstallmentOptionsQuery,
-  useCalculateInstallmentQuery
+  useCalculateInstallmentQuery,
+  useGetWalletBalanceQuery
 } from '../../store/API';
 import { Ticket, Tag, CreditCard, ChevronRight, Calculator } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Breadcrumb } from '../../products/Breadcrumb'
+import UnauthorizedModal from '../../components/UI/UnauthorizedModal';
 
 const AuthUtils = {
   isAuthenticated() {
@@ -225,6 +227,82 @@ const EmptyCartSkeleton = () => (
   </div>
 );
 
+// Loyalty Wallet Section Component
+const LoyaltyWalletSection = ({ walletBalance, walletAmountToUse, onWalletAmountChange, totalAmount, disabled }) => {
+  const balance = walletBalance?.balance ?? 0;
+  const maxUsable = Math.min(balance, totalAmount);
+
+  const handleChange = (e) => {
+    const val = parseFloat(e.target.value) || 0;
+    const clamped = Math.max(0, Math.min(val, maxUsable));
+    onWalletAmountChange(clamped);
+  };
+
+  const handleUseAll = () => {
+    onWalletAmountChange(maxUsable);
+  };
+
+  const handleClear = () => {
+    onWalletAmountChange(0);
+  };
+
+  if (balance <= 0) return null;
+
+  return (
+    <div className="rounded-xl border-2 border-[#C5A059]/30 bg-gradient-to-r from-[#FDF2F5] to-[#FFFBF2] overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 bg-[#C5A059]/10 border-b border-[#C5A059]/20">
+        <Wallet className="w-4 h-4 text-[#C5A059]" />
+        <span className="text-sm font-bold text-[#4A041D]">Loyalty Cüzdanı</span>
+        <span className="ml-auto text-sm font-semibold text-[#C5A059]">Balans: {balance.toFixed(2)} AZN</span>
+      </div>
+      <div className="p-4 space-y-3">
+        <p className="text-xs text-gray-500">Sifarişdən çıxılacaq məbləği daxil edin (maks: {maxUsable.toFixed(2)} AZN)</p>
+        <div className="flex flex-col md:flex-row gap-2 md:items-center items-start">
+          <div className="relative flex-1">
+            <input
+              type="number"
+              min="0"
+              max={maxUsable}
+              step="0.01"
+              value={walletAmountToUse === 0 ? '' : walletAmountToUse}
+              onChange={handleChange}
+              disabled={disabled}
+              placeholder="0.00"
+              className="w-full px-4 py-2.5 mb-3 min-w-[150px] md:mb-0 border-2 border-[#C5A059]/30 rounded-lg focus:ring-2 focus:ring-[#C5A059] focus:border-[#C5A059] transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">AZN</span>
+          </div>
+          {walletAmountToUse > 0 ? (
+            <button
+              type="button"
+              onClick={handleClear}
+              disabled={disabled}
+              className="px-3 py-2.5 text-xs font-semibold text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+            >
+              Sıfırla
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleUseAll}
+              disabled={disabled}
+              className="px-3 py-2.5 text-xs font-semibold text-[#C5A059] border border-[#C5A059]/40 rounded-lg hover:bg-[#C5A059]/10 transition-colors disabled:opacity-50 whitespace-nowrap"
+            >
+              Hamısını istifadə et
+            </button>
+          )}
+        </div>
+        {walletAmountToUse > 0 && (
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-gray-500">Cüzdandan çıxılacaq:</span>
+            <span className="font-bold text-[#C5A059]">- {walletAmountToUse.toFixed(2)} AZN</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Checkout Modal Component
 const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isSuccess }) => {
   const [formData, setFormData] = useState({
@@ -234,9 +312,15 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
     shippingAddress: '',
     notes: ''
   });
+  const [walletAmountToUse, setWalletAmountToUse] = useState(0);
   const [error, setError] = useState('');
 
+  const { data: walletBalance } = useGetWalletBalanceQuery(undefined, { skip: !isOpen });
+
   if (!isOpen) return null;
+
+  const cartTotal = cartItems?.finalAmount || cartItems?.totalAmount || 0;
+  const finalPayable = Math.max(0, cartTotal - walletAmountToUse);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -269,10 +353,8 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
-    onSubmit(formData);
+    onSubmit({ ...formData, walletAmountToUse });
   };
 
   const handleClose = () => {
@@ -284,6 +366,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
         shippingAddress: '',
         notes: ''
       });
+      setWalletAmountToUse(0);
       setError('');
       onClose();
     }
@@ -295,152 +378,178 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
       onClick={handleClose}
     >
       <div
-        className="bg-white rounded-lg max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl max-w-4xl w-full shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10 rounded-t-2xl">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-50 rounded-lg">
+            <div className="p-2 bg-[#FDF2F5] rounded-xl">
               <ShoppingBag className="w-5 h-5 text-[#4A041D]" />
             </div>
-            <h3 className="text-xl font-semibold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>Sifarişi rəsmiləşdir</h3>
+            <div>
+              <h3 className="text-xl font-bold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>Sifarişi rəsmiləşdir</h3>
+              <p className="text-xs text-gray-500">Çatdırılma məlumatlarınızı daxil edin</p>
+            </div>
           </div>
           <button
             onClick={handleClose}
             disabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Cart Items Preview */}
-        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 max-h-60 overflow-y-auto">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
-            Sifariş xülasəsi ({cartItems?.items?.length || 0} məhsul)
-          </h4>
-          <div className="space-y-2">
-            {cartItems?.items?.slice(0, 3).map((item) => (
-              <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
-                <img
-                  src={`${API_BASE_URL}${item?.productImageUrl}`}
-                  alt={item?.productName}
-                  className="w-12 h-12 object-contain rounded bg-gray-50 p-1"
-                  onError={(e) => {
-                    e.target.src = "/Icons/logo.jpeg"
-                  }}
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{item.productName}</p>
-                  <p className="text-xs text-gray-500">Sayı: {item.quantity}</p>
+        <div className="p-6">
+          {/* Cart Items Preview */}
+          <div className="mb-6 bg-gray-50 rounded-xl p-4 max-h-44 overflow-y-auto">
+            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Sifariş xülasəsi ({cartItems?.items?.length || 0} məhsul)
+            </h4>
+            <div className="space-y-2">
+              {cartItems?.items?.slice(0, 3).map((item) => (
+                <div key={item.id} className="flex items-center gap-3 bg-white p-2 rounded-lg">
+                  <img
+                    src={`${API_BASE_URL}${item?.productImageUrl}`}
+                    alt={item?.productName}
+                    className="w-10 h-10 object-contain rounded bg-gray-50 p-1"
+                    onError={(e) => { e.target.src = "/Icons/logo.jpeg" }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{item.productName}</p>
+                    <p className="text-xs text-gray-500">Sayı: {item.quantity}</p>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    {(item.unitPrice * item.quantity).toFixed(2)} AZN
+                  </span>
                 </div>
-                <span className="text-sm font-semibold text-gray-900">
-                  {(item.unitPrice * item.quantity).toFixed(2)} AZN
-                </span>
-              </div>
-            ))}
-            {cartItems?.items?.length > 3 && (
-              <p className="text-sm text-gray-500 text-center py-1">
-                +{cartItems.items.length - 3} daha çox məhsul
-              </p>
-            )}
+              ))}
+              {cartItems?.items?.length > 3 && (
+                <p className="text-sm text-gray-500 text-center py-1">
+                  +{cartItems.items.length - 3} daha çox məhsul
+                </p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 mb-1">
-                Ad və Soyad <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="customerName"
-                name="customerName"
-                value={formData.customerName}
-                onChange={handleInputChange}
-                disabled={isSubmitting || isSuccess}
-                placeholder="Ad və soyadınızı daxil edin"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
+          {/* Form - Two column on desktop */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left Column - Personal Info */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-[#4A041D] text-sm border-b border-gray-100 pb-2 uppercase tracking-wide">
+                  Şəxsi Məlumatlar
+                </h4>
+
+                <div className="space-y-1">
+                  <label htmlFor="customerName" className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    Ad və Soyad <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="customerName"
+                    name="customerName"
+                    value={formData.customerName}
+                    onChange={handleInputChange}
+                    disabled={isSubmitting || isSuccess}
+                    placeholder="Ad və soyadınızı daxil edin"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all disabled:cursor-not-allowed text-sm"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="customerPhone" className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    Telefon nömrəsi <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    id="customerPhone"
+                    name="customerPhone"
+                    value={formData.customerPhone}
+                    onChange={handleInputChange}
+                    disabled={isSubmitting || isSuccess}
+                    placeholder="+994 XX XXX XX XX"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all disabled:cursor-not-allowed text-sm"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="customerEmail" className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    E-poçt ünvanı <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="customerEmail"
+                    name="customerEmail"
+                    value={formData.customerEmail}
+                    onChange={handleInputChange}
+                    disabled={isSubmitting || isSuccess}
+                    placeholder="example@mail.com"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all disabled:cursor-not-allowed text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column - Shipping Info */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-[#4A041D] text-sm border-b border-gray-100 pb-2 uppercase tracking-wide">
+                  Çatdırılma Məlumatları
+                </h4>
+
+                <div className="space-y-1">
+                  <label htmlFor="shippingAddress" className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    Çatdırılma ünvanı <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="shippingAddress"
+                    name="shippingAddress"
+                    value={formData.shippingAddress}
+                    onChange={handleInputChange}
+                    disabled={isSubmitting || isSuccess}
+                    placeholder="Çatdırılma ünvanınızı daxil edin"
+                    rows="3"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all disabled:cursor-not-allowed resize-none text-sm"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="notes" className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    Sifariş qeydləri
+                  </label>
+                  <textarea
+                    id="notes"
+                    name="notes"
+                    value={formData.notes}
+                    onChange={handleInputChange}
+                    disabled={isSubmitting || isSuccess}
+                    placeholder="Çatdırılma üçün hər hansı xüsusi qeydiniz?"
+                    rows="3"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all disabled:cursor-not-allowed resize-none text-sm"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-1">
-                Telefon nömrəsi <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                id="customerPhone"
-                name="customerPhone"
-                value={formData.customerPhone}
-                onChange={handleInputChange}
+            {/* Loyalty Wallet */}
+            <div className="pt-2">
+              <LoyaltyWalletSection
+                walletBalance={walletBalance}
+                walletAmountToUse={walletAmountToUse}
+                onWalletAmountChange={setWalletAmountToUse}
+                totalAmount={cartTotal}
                 disabled={isSubmitting || isSuccess}
-                placeholder="+994 XX XXX XX XX"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="customerEmail" className="block text-sm font-medium text-gray-700 mb-1">
-                E-poçt ünvanı <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                id="customerEmail"
-                name="customerEmail"
-                value={formData.customerEmail}
-                onChange={handleInputChange}
-                disabled={isSubmitting || isSuccess}
-                placeholder="example@mail.com"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="shippingAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                Çatdırılma ünvanı <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                id="shippingAddress"
-                name="shippingAddress"
-                value={formData.shippingAddress}
-                onChange={handleInputChange}
-                disabled={isSubmitting || isSuccess}
-                placeholder="Çatdırılma ünvanınızı daxil edin"
-                rows="2"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                Sifariş qeydləri
-              </label>
-              <textarea
-                id="notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleInputChange}
-                disabled={isSubmitting || isSuccess}
-                placeholder="Çatdırılma üçün hər hansı xüsusi qeydiniz?"
-                rows="2"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A041D] focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
               />
             </div>
 
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
                 <p className="text-sm text-red-600">{error}</p>
               </div>
             )}
-          </div>
 
-          {/* Total */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <div className="space-y-2">
+            {/* Order Summary */}
+            <div className="mt-5 p-4 bg-gray-50 rounded-xl space-y-2">
               <div className="flex items-center justify-between text-sm text-gray-600">
                 <span>Məbləğ:</span>
                 <span>{(cartItems?.totalPriceBeforeDiscount || 0).toFixed(2)} AZN</span>
@@ -457,52 +566,59 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit, isSubmitting, isS
                   <span>- {(cartItems?.promoCodeDiscountAmount || 0).toFixed(2)} AZN</span>
                 </div>
               )}
+              {walletAmountToUse > 0 && (
+                <div className="flex items-center justify-between text-sm text-[#C5A059]">
+                  <span>Loyalty cüzdanı:</span>
+                  <span>- {walletAmountToUse.toFixed(2)} AZN</span>
+                </div>
+              )}
               <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                <span className="font-medium text-gray-900">Yekun məbləğ:</span>
-                <span className="text-2xl font-bold text-gray-900">
-                  {(cartItems?.finalAmount || cartItems?.totalAmount || 0).toFixed(2)} AZN
+                <span className="font-bold text-gray-900">Ödəniləcək məbləğ:</span>
+                <span className="text-2xl font-black text-[#4A041D]">
+                  {finalPayable.toFixed(2)} AZN
                 </span>
               </div>
             </div>
-          </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting || isSuccess}
-            className={`w-full mt-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${isSuccess
-              ? 'bg-green-500 text-white cursor-default'
-              : isSubmitting
-                ? 'bg-[#4A041D] opacity-70 text-white cursor-not-allowed'
-                : 'bg-[#4A041D] hover:bg-[#6D082D] text-white cursor-pointer shadow-md'
-              }`}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Gözləyin...
-              </>
-            ) : isSuccess ? (
-              <>
-                <Check className="w-5 h-5" />
-                Sifariş uğurla yerləşdirildi!
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="w-5 h-5" />
-                Sifarişi tamamla
-              </>
-            )}
-          </button>
-        </form>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting || isSuccess}
+              className={`w-full mt-5 py-4 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-2 ${isSuccess
+                ? 'bg-green-500 text-white cursor-default'
+                : isSubmitting
+                  ? 'bg-[#4A041D] opacity-70 text-white cursor-not-allowed'
+                  : 'bg-[#4A041D] hover:bg-[#6D082D] text-white cursor-pointer shadow-lg transform active:scale-[0.98]'
+                }`}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Gözləyin...
+                </>
+              ) : isSuccess ? (
+                <>
+                  <Check className="w-5 h-5" />
+                  Sifariş uğurla yerləşdirildi!
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-5 h-5" />
+                  Sifarişi tamamla
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
 };
 
-const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubmitting }) => {
+const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubmitting, user }) => {
   const [selectedOptionId, setSelectedOptionId] = useState(null);
   const [step, setStep] = useState(1); // 1: Options, 2: Calculation/Form
+  const [walletAmountToUse, setWalletAmountToUse] = useState(0);
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -511,6 +627,8 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
     notes: ''
   });
 
+  const { data: walletBalance } = useGetWalletBalanceQuery(undefined, { skip: !isOpen });
+
   const { data: options, isLoading: isOptionsLoading } = useGetInstallmentOptionsQuery(amount, { skip: !isOpen });
   const { data: calculation, isLoading: isCalculating } = useCalculateInstallmentQuery(
     { amount, optionId: selectedOptionId },
@@ -518,9 +636,21 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
   );
 
   useEffect(() => {
+    if (isOpen && user) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: user.fullName || '',
+        customerEmail: user.email || '',
+        customerPhone: user.phoneNumber || ''
+      }));
+    }
+  }, [isOpen, user]);
+
+  useEffect(() => {
     if (!isOpen) {
       setStep(1);
       setSelectedOptionId(null);
+      setWalletAmountToUse(0);
     }
   }, [isOpen]);
 
@@ -538,16 +668,16 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.customerName || !formData.customerPhone || !formData.shippingAddress) {
+    if (!formData.customerName || !formData.customerPhone || !formData.shippingAddress || !formData.customerEmail) {
       toast.error('Zəhmət olmasa tələb olunan xanaları doldurun');
       return;
     }
-    onSubmit({ ...formData, installmentOptionId: selectedOptionId });
+    onSubmit({ ...formData, installmentOptionId: selectedOptionId, walletAmountToUse });
   };
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/40 z-[9999] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+      <div className="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
           <div className="flex items-center gap-3">
@@ -573,15 +703,15 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
                   <Loader2 className="w-10 h-10 animate-spin text-[#4A041D]" />
                 </div>
               ) : (
-                <div className="grid gap-4">
+                <div className="grid gap-4 md:grid-cols-2">
                   {options?.map(option => (
                     <button
                       key={option.id}
                       onClick={() => handleOptionSelect(option.id)}
-                      className="group flex items-center justify-between p-5 bg-white border-2 border-gray-100 rounded-2xl hover:border-[#4A041D] transition-all hover:shadow-lg text-left"
+                      className="group flex items-center justify-between p-5 bg-white border-2 border-gray-100 rounded-2xl hover:border-[#4A041D] transition-all hover:shadow-lg text-left h-full"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center font-bold text-[#4A041D] group-hover:bg-[#4A041D] group-hover:text-white transition-colors uppercase">
+                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center font-bold text-[#4A041D] group-hover:bg-[#4A041D] group-hover:text-white transition-colors uppercase flex-shrink-0">
                           {option.bankName.slice(0, 2)}
                         </div>
                         <div>
@@ -589,7 +719,7 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
                           <p className="text-sm text-gray-500">{option.installmentPeriod} ay / {option.interestPercentage}% faiz</p>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#4A041D] transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#4A041D] transition-colors flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -664,19 +794,62 @@ const InstallmentModal = ({ isOpen, onClose, amount, cartItems, onSubmit, isSubm
                           className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all"
                         />
                       </div>
+
+                      <div className="space-y-1 md:col-span-2">
+                        <label className="text-xs font-bold text-gray-500 ml-1">E-POÇT ÜNVANI</label>
+                        <input
+                          required
+                          type="email"
+                          name="customerEmail"
+                          value={formData.customerEmail}
+                          onChange={handleInputChange}
+                          placeholder="example@mail.com"
+                          className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all"
+                        />
+                      </div>
+
+                      <div className="space-y-1 md:col-span-2">
+                        <label className="text-xs font-bold text-gray-500 ml-1">ÇATDIRILMA ÜNVANI</label>
+                        <textarea
+                          required
+                          name="shippingAddress"
+                          value={formData.shippingAddress}
+                          onChange={handleInputChange}
+                          rows="2"
+                          className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all resize-none"
+                        />
+                      </div>
+
+                      <div className="space-y-1 md:col-span-2">
+                        <label className="text-xs font-bold text-gray-500 ml-1">SİFARİŞ QEYDLƏRİ</label>
+                        <textarea
+                          name="notes"
+                          value={formData.notes}
+                          onChange={handleInputChange}
+                          rows="2"
+                          placeholder="Hər hansı əlavə qeydiniz..."
+                          className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all resize-none"
+                        />
+                      </div>
+
+                      {/* Loyalty Wallet */}
+                      <div className="md:col-span-2">
+                        <LoyaltyWalletSection
+                          walletBalance={walletBalance}
+                          walletAmountToUse={walletAmountToUse}
+                          onWalletAmountChange={setWalletAmountToUse}
+                          totalAmount={amount}
+                          disabled={isSubmitting}
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-500 ml-1">ÇATDIRILMA ÜNVANI</label>
-                      <textarea
-                        required
-                        name="shippingAddress"
-                        value={formData.shippingAddress}
-                        onChange={handleInputChange}
-                        rows="2"
-                        className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-[#4A041D] outline-none transition-all resize-none"
-                      />
-                    </div>
+                    {walletAmountToUse > 0 && (
+                      <div className="flex items-center justify-between text-sm text-[#C5A059] px-1">
+                        <span>Loyalty endirimindən sonra:</span>
+                        <span className="font-bold">{Math.max(0, (calculation?.totalAmount || amount) - walletAmountToUse).toFixed(2)} AZN</span>
+                      </div>
+                    )}
 
                     <button
                       type="submit"
@@ -714,6 +887,8 @@ const Cart = () => {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
   const [isOrderSuccess, setIsOrderSuccess] = useState(false);
+  const [showUnauthorizedModal, setShowUnauthorizedModal] = useState(false);
+  const [unauthorizedAction, setUnauthorizedAction] = useState("");
 
   const { data: cartItemsD, isLoading: apiLoading, isError } = useGetCartItemsQuery(undefined, {
     skip: !isAuthenticated
@@ -762,7 +937,6 @@ const Cart = () => {
 
 
   const handleCheckoutSubmit = async (formData) => {
-    console.log("🔥 checkout submit triggered");
     setIsOrderSubmitting(true);
 
     try {
@@ -771,16 +945,14 @@ const Cart = () => {
         customerEmail: formData?.customerEmail || me?.email,
         customerPhone: formData?.customerPhone.replace(/\D/g, '') || me?.phoneNumber,
         shippingAddress: formData?.shippingAddress,
-        notes: formData?.notes
+        notes: formData?.notes || '',
+        installmentOptionId: null,
+        walletAmountToUse: formData?.walletAmountToUse || 0
       };
-      console.log("📦 Payment Payload:", paymentPayload);
       const response = await initiatePayment(paymentPayload).unwrap();
-      console.log("✅ Payment Initiation Success:", response);
 
       if (response.redirect_url) {
         setIsOrderSuccess(true);
-
-        // Brief delay to show success icon before redirect
         setTimeout(() => {
           window.location.href = response.redirect_url;
         }, 1000);
@@ -935,6 +1107,15 @@ const Cart = () => {
       toast.error('Promo kodu silmək mümkün olmadı');
     } finally {
       setIsRemovingPromo(false);
+    }
+  };
+
+  const handleOrderCompletion = () => {
+    if (isAuthenticated) {
+      setIsCheckoutModalOpen(true);
+    } else {
+      setUnauthorizedAction("Sifarişi tamamlamaq");
+      setShowUnauthorizedModal(true);
     }
   };
 
@@ -1211,7 +1392,7 @@ const Cart = () => {
                 </div>
 
                 <button
-                  onClick={() => setIsCheckoutModalOpen(true)}
+                  onClick={handleOrderCompletion}
                   className="w-full mt-6 cursor-pointer bg-[#4A041D] hover:bg-[#6D082D] text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
                   disabled={!cartItems?.items?.length}
                 >
@@ -1221,7 +1402,14 @@ const Cart = () => {
 
                 {installmentConfig?.isEnabled && (cartItems?.finalAmount || cartItems?.totalAmount || 0) >= installmentConfig?.minimumAmount && (
                   <button
-                    onClick={() => setIsInstallmentModalOpen(true)}
+                    onClick={() => {
+                      if (isAuthenticated) {
+                        setIsInstallmentModalOpen(true);
+                      } else {
+                        setUnauthorizedAction("Hissə-hissə ödənişdən istifadə etmək");
+                        setShowUnauthorizedModal(true);
+                      }
+                    }}
                     className="w-full mt-3 cursor-pointer bg-white border-2 border-[#4A041D] text-[#4A041D] hover:bg-[#FDF2F5] font-semibold py-4 px-6 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
                     disabled={!cartItems?.items?.length}
                   >
@@ -1240,16 +1428,18 @@ const Cart = () => {
         onClose={() => setIsInstallmentModalOpen(false)}
         amount={cartItems?.finalAmount || cartItems?.totalAmount || 0}
         cartItems={cartItems}
+        user={me}
         onSubmit={async (formData) => {
           setIsOrderSubmitting(true);
           try {
             const payload = {
               customerName: formData.customerName,
-              customerEmail: formData.customerEmail || me?.email,
+              customerEmail: formData.customerEmail,
               customerPhone: formData.customerPhone.replace(/\D/g, ''),
               shippingAddress: formData.shippingAddress,
-              notes: formData.notes,
-              installmentOptionId: formData.installmentOptionId
+              notes: formData.notes || '',
+              installmentOptionId: formData.installmentOptionId,
+              walletAmountToUse: formData.walletAmountToUse || 0
             };
             const response = await initiatePayment(payload).unwrap();
             if (response.redirect_url) {
@@ -1266,7 +1456,6 @@ const Cart = () => {
         isSubmitting={isOrderSubmitting}
       />
 
-      {/* Checkout Modal */}
       <CheckoutModal
         isOpen={isCheckoutModalOpen}
         onClose={() => {
@@ -1278,6 +1467,12 @@ const Cart = () => {
         onSubmit={handleCheckoutSubmit}
         isSubmitting={isOrderSubmitting}
         isSuccess={isOrderSuccess}
+      />
+
+      <UnauthorizedModal
+        isOpen={showUnauthorizedModal}
+        onClose={() => setShowUnauthorizedModal(false)}
+        action={unauthorizedAction}
       />
     </section>
   );
