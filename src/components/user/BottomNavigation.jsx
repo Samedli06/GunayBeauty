@@ -19,19 +19,14 @@ const BottomNavigation = () => {
             path: '/',
         },
         {
-            label: 'Məhsullar',
-            icon: Store,
-            path: '/products',
+            label: 'Kampaniyalar',
+            icon: Percent,
+            path: '/products/hot-deals',
         },
         {
             label: 'Kateqoriyalar',
             icon: Grid,
             path: '/categories',
-        },
-        {
-            label: 'Brendlər',
-            icon: Tag,
-            path: '/brands',
         },
         {
             label: 'Profil',
@@ -41,53 +36,37 @@ const BottomNavigation = () => {
     ];
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4A041D]/10 px-4 py-3 z-50 lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-            <div className="flex justify-around items-center max-w-md mx-auto gap-2">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 lg:hidden shadow-[0_-8px_20px_rgba(0,0,0,0.05)] px-2 pb-[safe-area-inset-bottom]">
+            <div className="flex justify-around items-center h-[72px]">
                 {navItems.map((item) => {
-                    let isActive = false;
-
-                    if (item.path === '/') {
-                        isActive = location.pathname === '/';
-                    } else if (item.path === '/products') {
-                        // Shop should be active for products but NOT for hot-deals which has its own tab
-                        isActive = location.pathname.startsWith('/products') && !location.pathname.includes('/products/hot-deals');
-                    } else {
-                        // Standard prefix match for others (including hot-deals, profile, brands)
-                        isActive = location.pathname.startsWith(item.path);
-                    }
+                    const isActive = item.path === '/'
+                        ? location.pathname === '/'
+                        : location.pathname.startsWith(item.path);
 
                     return (
                         <Link
                             key={item.path}
                             to={item.path}
-                            className={`
-                                flex items-center gap-2 
-                                transition-all duration-300 ease-in-out
-                                ${isActive
-                                    ? 'bg-[#2D1B2E] text-white px-4 py-2.5 rounded-full shadow-lg'
-                                    : 'p-2.5 text-gray-400 hover:text-[#4A041D]'
-                                }
-                            `}
+                            className="flex flex-col items-center justify-center gap-1 flex-1 relative group"
                         >
-                            <item.icon
-                                size={15}
-                                strokeWidth={isActive ? 2.5 : 2}
-                                className="flex-shrink-0"
-                            />
-
-                            {/* Label - only visible when active */}
-                            <span
-                                className={`
-                                    font-sans font-semibold text-[8px] capitalize
-                                    transition-all duration-300 ease-in-out
-                                    ${isActive
-                                        ? 'max-w-[100px] opacity-100'
-                                        : 'max-w-0 opacity-0 overflow-hidden'
-                                    }
-                                `}
-                            >
+                            <div className={`
+                                p-1.5 rounded-lg transition-all duration-300
+                                ${isActive ? 'text-[#4A041D]' : 'text-gray-400 group-hover:text-[#4A041D]'}
+                            `}>
+                                <item.icon
+                                    size={22}
+                                    strokeWidth={isActive ? 2.5 : 2}
+                                />
+                            </div>
+                            <span className={`
+                                text-[9px] font-custom  font-bold uppercase tracking-wider  transition-colors text-center
+                                ${isActive ? 'text-[#4A041D]' : 'text-gray-400'}
+                            `}>
                                 {item.label}
                             </span>
+                            {isActive && (
+                                <div className="absolute -top-px w-10 h-1 bg-[#4A041D] rounded-b-full shadow-[0_2px_10px_rgba(74,4,29,0.2)]" />
+                            )}
                         </Link>
                     );
                 })}

@@ -195,10 +195,10 @@ const MobileSearchDropdown = ({
                   )}
                 </div>
                 <div className="px-1">
-                  <p className="text-[9px] text-gray-400 uppercase tracking-wide truncate mb-0.5">
+                  <p className="!text-[9px] text-gray-400 uppercase tracking-wide truncate mb-0.5">
                     {product.categoryName}
                   </p>
-                  <h4 className="text-xs font-semibold text-gray-900 mb-1.5 line-clamp-2 min-h-[2.4em] leading-snug">
+                  <h4 className="!text-xs font-semibold text-gray-900 mb-1.5 line-clamp-2 min-h-[2.4em] leading-snug">
                     {product.name}
                   </h4>
                   <div className="flex items-center gap-1.5 flex-wrap">

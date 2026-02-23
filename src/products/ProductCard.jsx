@@ -67,7 +67,7 @@ export function ProductCard({
     if (displayPrice <= 0) return null;
 
     return (
-      <div className={`${isRow ? 'flex items-center gap-3 mt-4 flex-wrap' : 'mt-auto border-t border-gray-100/50 pt-2'}`}>
+      <div className={`${isRow ? 'flex items-center gap-3 mt-4 flex-wrap' : ' border-t border-gray-100/50 pt-2'}`}>
         <div className="flex items-center gap-2 flex-wrap">
           <p className={`${isCompact ? '!text-[13px] lg:!text-lg' : isRow ? 'text-!2xl' : 'text-lg md:!text-xl'} font-bold text-[#C5A059]`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {displayPrice} ₼
@@ -94,7 +94,7 @@ export function ProductCard({
 
   if (col) {
     return (
-      <div className={`bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden relative group transition-all duration-300 h-full flex flex-col min-h-[300px] md:min-h-[450px] items-between hover:shadow-xl transform hover:-translate-y-1 ${compact ? 'min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] lg:min-w-[270px] lg:max-w-[270px]' : 'w-full'}`}>
+      <div className={`bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden relative group transition-all duration-300 h-full flex flex-col min-h-[300px]  items-between hover:shadow-xl transform hover:-translate-y-1 ${compact ? 'min-w-[150px] max-w-[150px] md:min-w-[180px] md:max-w-[180px] lg:min-w-[220px] lg:max-w-[220px] xl:min-w-[270px] xl:max-w-[270px]' : 'w-full'}`}>
         <Link to={`/details/${id}`} className="block">
           <div className={`aspect-square relative bg-transparent flex items-center justify-center ${compact ? 'p-2 lg:p-4' : 'p-2 lg:p-4'}`}>
             <img
@@ -117,18 +117,18 @@ export function ProductCard({
         </Link>
 
         <div className={`${compact ? 'p-2 lg:p-3' : 'p-2 lg:p-4'} pt-2 bg-white flex flex-col flex-1`}>
-          <Link to={`/details/${id}`} className="block flex flex-col flex-1">
+          <Link to={`/details/${id}`} className="block">
             <div className='flex gap-2 items-start justify-between'>
-              <h3 className={`${compact ? 'text-xs md:!text-sm lg:!text-lg h-[2rem] lg:h-[3rem]' : '!text-[9px] lg:!text-lg h-[2rem] lg:h-[3rem]'} font-semibold text-gray-900 mb-1 line-clamp-2 leading-snug flex-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+              <h3 className={`${compact ? '!text-xs md:!text-sm lg:!text-lg' : '!text-[10px] lg:!text-sm'} font-semibold text-gray-900 mb-1 line-clamp-3 leading-snug flex-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                 {name}
               </h3>
               <button
                 onClick={handleFavoriteClick}
                 disabled={isTogglingFavorite}
-                className={`rounded-full hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 shrink-0 ${compact ? 'p-1 lg:p-1.5 -mt-0.5 lg:-mt-1' : 'p-1 -mt-1 h-fit'}`}
+                className={`rounded-full hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed z-10 shrink-0 ${compact ? 'p-1.5 lg:p-2.5 -mt-0.5 lg:-mt-2' : 'p-2 -mt-1 h-fit lg:p-3'}`}
               >
                 <Heart
-                  className={`transition-all duration-300 ${compact ? 'w-4 h-4 lg:w-5 lg:h-5' : 'w-4 h-4'} ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
+                  className={`transition-all duration-300 ${compact ? 'w-4 h-4 lg:w-6 lg:h-6' : 'w-5 h-5 lg:w-6 lg:h-6'} ${favoriteStatus?.isFavorite ? 'fill-[#C5A059] text-[#C5A059]' : 'text-gray-400 hover:text-[#C5A059]'}`}
                 />
               </button>
             </div>
@@ -147,7 +147,7 @@ export function ProductCard({
             <button
               onClick={handleCartClick}
               disabled={isAddingToCart}
-              className={`w-full py-2 px-2 rounded font-semibold text-[8px] md:text-[10px] lg:text-[12px] transition-all duration-300 flex items-center justify-center  gap-1 ${justAdded
+              className={`w-full py-2 px-2 rounded font-semibold text-[10px] md:text-[16px] lg:text-[14px] transition-all duration-300 flex items-center justify-center  gap-1 ${justAdded
                 ? 'bg-[#C5A059] text-white'
                 : 'bg-[#4A041D] hover:bg-[#6D082D] text-white shadow-sm'
                 }`}

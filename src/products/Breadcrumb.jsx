@@ -148,7 +148,7 @@ export function Breadcrumb({ productData = null, categoryData = null }) {
       </Link>
 
       {pathnames.map((value, index) => {
-        if (isId(value) || value == "categories") return null;
+        if (isId(value) || value == "categories" || value == "brand") return null;
 
 
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;

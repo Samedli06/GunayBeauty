@@ -106,13 +106,13 @@ const WishList = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#4A041D]">
+          <h1 className="text-xl md:text-3xl font-bold text-[#4A041D] text-center md:text-left">
             Sevimlilər ({totalCount})
           </h1>
           {favorites?.length > 0 && (
             <button
               onClick={handleClearAll}
-              className="mt-4 md:mt-0 px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-300 flex items-center gap-2 shadow-sm"
+              className="mt-4 md:mt-0 px-3 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-300 flex items-center gap-2 shadow-sm text-sm"
             >
               <Trash2 className="w-4 h-4" />
               Hamısını sil
@@ -132,7 +132,7 @@ const WishList = () => {
             </Link>
           </div>
         ) : (
-          <div className="flex overflow-x-scroll lg:grid lg:grid-cols-4 gap-6 scrollbar-hide items-stretch pb-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 items-stretch pb-4">
             {favorites.map((item) => {
               const cardInfo = {
                 url: item.product.primaryImageUrl,
@@ -171,7 +171,7 @@ const WishList = () => {
             >
               {'<'}
             </button>
-            <span className="px-6 py-2 bg-white border border-gray-200 rounded-full text-gray-700 font-medium shadow-sm">
+            <span className="px-3 py-2 bg-white border border-gray-200 rounded-full text-xs font-medium shadow-sm">
               {page} / {Math.ceil(totalCount / pageSize)}
             </span>
             <button

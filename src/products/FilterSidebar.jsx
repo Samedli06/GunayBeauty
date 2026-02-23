@@ -63,7 +63,7 @@ const SortDropdown = ({ currentSort, onSortChange, t }) => {
   );
 };
 
-const FilterDropdown = ({ label, children, isActive }) => {
+const FilterDropdown = ({ label, children, isActive, widthClass = "min-w-[240px]" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -90,7 +90,7 @@ const FilterDropdown = ({ label, children, isActive }) => {
       </button>
 
       <div
-        className={`absolute z-30 mt-2 min-w-[240px] bg-white border border-gray-100 rounded-xl shadow-xl p-4 transition-all duration-300 origin-top-left ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
+        className={`absolute z-30 mt-2 ${widthClass} bg-white border border-gray-100 rounded-xl shadow-xl p-5 transition-all duration-300 origin-top-left ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
       >
         {children}
       </div>
@@ -459,26 +459,68 @@ export const FilterSidebar = React.memo(({
           <FilterDropdown
             label="Kateqoriya"
             isActive={selectedCategories.length > 0}
+            widthClass="w-[320px] md:w-[600px] lg:w-[800px]"
           >
-            <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-              {(ParentCat)?.map(item => (
-                <label key={item.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors group">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      className="peer appearance-none w-5 h-5 border border-gray-300 rounded checked:bg-[#4A041D] checked:border-[#4A041D] transition-all"
-                      checked={selectedCategories.includes(item.id)}
-                      onChange={() => handleCategoryChange(item.id)}
-                    />
-                    <svg className="absolute w-3 h-3 text-white hidden peer-checked:block pointer-events-none left-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+            <div className="max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                {(ParentCat)?.map(item => (
+                  <div key={item.id} className="flex flex-col bg-gray-50/30 p-3 rounded-xl border border-transparent hover:border-[#F3E7E1] transition-all">
+                    {/* Level 1 Parent */}
+                    <label className="flex items-center gap-3 cursor-pointer pb-2 mb-2 border-b border-[#F3E7E1] transition-colors group">
+                      <div className="relative flex items-center">
+                        <input
+                          type="checkbox"
+                          className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded checked:bg-[#4A041D] checked:border-[#4A041D] transition-all"
+                          checked={selectedCategories.includes(item.id)}
+                          onChange={() => handleCategoryChange(item.id)}
+                        />
+                        <svg className="absolute w-3 h-3 text-white hidden peer-checked:block pointer-events-none left-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <span className={`text-sm tracking-tight transition-colors uppercase font-bold italic ${selectedCategories.includes(item.id) ? 'text-[#4A041D]' : 'text-gray-700 group-hover:text-[#4A041D]'}`}>
+                        {item.name}
+                      </span>
+                    </label>
+
+                    {/* Level 2 Subcategories */}
+                    {item.subCategories && item.subCategories.length > 0 && (
+                      <div className="ml-1 space-y-3">
+                        {item.subCategories.map(sub => (
+                          <div key={sub.id} className="flex flex-col">
+                            <label className="flex items-center gap-2 cursor-pointer group/sub">
+                              <input
+                                type="checkbox"
+                                checked={selectedCategories.includes(sub.id)}
+                                onChange={() => handleCategoryChange(sub.id)}
+                                className="w-4 h-4 accent-[#4A041D] cursor-pointer"
+                              />
+                              <span className={`text-xs font-semibold transition-colors ${selectedCategories.includes(sub.id) ? 'text-[#4A041D]' : 'text-gray-600 group-hover/sub:text-[#4A041D]'}`}>{sub.name}</span>
+                            </label>
+
+                            {/* Level 3 Categories */}
+                            {sub.subCategories && sub.subCategories.length > 0 && (
+                              <div className="ml-6 flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                                {sub.subCategories.map(third => (
+                                  <label key={third.id} className="flex items-center gap-1.5 cursor-pointer group/third">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedCategories.includes(third.id)}
+                                      onChange={() => handleCategoryChange(third.id)}
+                                      className="w-3 h-3 accent-[#C5A059] cursor-pointer"
+                                    />
+                                    <span className={`text-[10px] uppercase tracking-wider transition-colors ${selectedCategories.includes(third.id) ? 'text-[#C5A059] font-bold' : 'text-gray-400 group-hover/third:text-[#4A041D]'}`}>{third.name}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <span className={`text-sm transition-colors ${selectedCategories.includes(item.id) ? 'text-[#4A041D] font-medium' : 'text-gray-600 group-hover:text-[#4A041D]'}`}>
-                    {item.name}
-                  </span>
-                </label>
-              ))}
+                ))}
+              </div>
             </div>
           </FilterDropdown>
         )}

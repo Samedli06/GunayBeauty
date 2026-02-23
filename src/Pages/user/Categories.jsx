@@ -86,30 +86,49 @@ const Categories = () => {
                                     <div className="flex-1 space-y-3">
                                         {category.subCategories && category.subCategories.length > 0 ? (
                                             <>
-                                                <div className="grid grid-cols-4 gap-2">
+                                                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
                                                     {category.subCategories.slice(0, 4).map((sub) => (
-                                                        <Link
-                                                            key={sub.id}
-                                                            to={`/products/${sub.slug || ''}`}
-                                                            className="group/sub flex flex-col items-center gap-3 p-1 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
-                                                        >
-                                                            <div className="w-16 h-16 lg:w-12 lg:h-12 bg-white rounded-full border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm group-hover/sub:border-[#C5A059] transition-all">
-                                                                <img
-                                                                    src={sub.imageUrl ? `${API_BASE_URL}${sub.imageUrl}` : getCategoryIcon(sub.slug)}
-                                                                    alt={sub.name}
-                                                                    className="w-full h-full object-cover p-1"
-                                                                    onError={(e) => {
-                                                                        e.target.src = getCategoryIcon(sub.slug);
-                                                                        e.target.className = "w-6 h-6 object-contain opacity-30 grayscale";
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <span className="!text-xs md:!text-sm lg:!text-base  text-center font-sans font-medium text-[#4A041D] leading-tight line-clamp-2 px-1">
-                                                                {sub.name}
-                                                            </span>
-                                                        </Link>
+                                                        <div key={sub.id} className="flex flex-col gap-2">
+                                                            <Link
+                                                                to={`/products/${sub.slug || ''}`}
+                                                                className="group/sub flex flex-col items-center gap-2 p-2 hover:bg-gray-50 rounded-xl transition-all cursor-pointer border border-transparent hover:border-[#F3E7E1]"
+                                                            >
+                                                                <div className="w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-full border border-gray-100 flex items-center justify-center overflow-hidden shadow-sm group-hover/sub:border-[#C5A059] transition-all">
+                                                                    <img
+                                                                        src={sub.imageUrl ? `${API_BASE_URL}${sub.imageUrl}` : getCategoryIcon(sub.slug)}
+                                                                        alt={sub.name}
+                                                                        className="w-full h-full object-cover p-1"
+                                                                        onError={(e) => {
+                                                                            e.target.src = getCategoryIcon(sub.slug);
+                                                                            e.target.className = "w-6 h-6 object-contain opacity-30 grayscale";
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <span className="text-[10px] lg:text-[11px] text-center font-sans font-bold text-[#4A041D] uppercase tracking-wider leading-tight line-clamp-2 px-1">
+                                                                    {sub.name}
+                                                                </span>
+                                                            </Link>
+                                                            {/* 3rd Level Categories */}
+                                                            {sub.subCategories && sub.subCategories.length > 0 && (
+                                                                <div className="flex flex-col items-center gap-1.5 px-2">
+                                                                    {sub.subCategories.slice(0, 3).map((third) => (
+                                                                        <Link
+                                                                            key={third.id}
+                                                                            to={`/products/${third.slug}`}
+                                                                            className="text-[9px] text-gray-400 hover:text-[#C5A059] text-center transition-colors font-medium border-l border-gray-100 pl-2 ml-1"
+                                                                        >
+                                                                            {third.name}
+                                                                        </Link>
+                                                                    ))}
+                                                                    {sub.subCategories.length > 3 && (
+                                                                        <span className="text-[8px] text-[#C5A059] font-bold opacity-60 italic">
+                                                                            + {sub.subCategories.length - 3} daha...
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     ))}
-
                                                 </div>
                                                 {category.subCategories.length > 4 && (
                                                     <div className="text-center pt-1 border-t border-gray-50">

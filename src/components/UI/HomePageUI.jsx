@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 import CartUtils from './CartUtils';
 import AuthUtils from './AuthUtils';
-import UnauthorizedModal from './UnauthorizedModal';
 
 
 // ============= MAIN COMPONENT =============
@@ -91,6 +90,13 @@ const HomePageUI = ({
     e.preventDefault();
     e.stopPropagation();
 
+    // If not authenticated, show unauthorized modal immediately
+    if (!isAuthenticated) {
+      setUnauthorizedAction('məhsulları sevimlilərə əlavə etmək');
+      setShowUnauthorizedModal(true);
+      return;
+    }
+
     // Optimistic update
     const newFavoriteState = !localFavorite;
     setLocalFavorite(newFavoriteState);
@@ -143,19 +149,13 @@ const HomePageUI = ({
 
   return (
     <>
-      <UnauthorizedModal
-        isOpen={showUnauthorizedModal}
-        onClose={() => setShowUnauthorizedModal(false)}
-        action={unauthorizedAction}
-      />
-
       <Link
         to={`/details/${product.id}`}
         className="group flex flex-col flex-shrink-0 w-[200px] md:w-[240px] lg:w-[260px] h-full max-h-[400px] min-h-[400px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-md overflow-hidden border border-gray-200 relative transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
       >
 
-        {/* Image Container - Added padding to match ProductCard style */}
-        <div className="relative  p-4 overflow-hidden flex items-center justify-center">
+        {/* Image Container */}
+        <div className="relative p-4 overflow-hidden flex items-center justify-center">
           {/* Discount Badge */}
           {product.discountPercentage > 0 && (
             <div className='absolute top-2 left-2 z-10 bg-[#9E2A2B] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full'>
@@ -163,7 +163,20 @@ const HomePageUI = ({
             </div>
           )}
 
-
+          {/* Favorite Button */}
+          <button
+            onClick={handleFavoriteClick}
+            className={`absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${localFavorite
+              ? 'bg-[#9E2A2B] text-white'
+              : 'bg-white/80 text-gray-400 hover:bg-white hover:text-[#9E2A2B]'
+              }`}
+            aria-label={localFavorite ? 'Sevimlilərə əlavə edildi' : 'Sevimlilərə əlavə et'}
+          >
+            <Heart
+              className={`w-4 h-4 transition-all duration-200 ${localFavorite ? 'fill-current' : ''
+                }`}
+            />
+          </button>
 
           <img
             className="w-full aspect-square object-contain group-hover:scale-105 transition-transform duration-700 ease-in-out"
@@ -179,7 +192,7 @@ const HomePageUI = ({
           {/* Brand/Category Placeholder */}
           <p className="text-[#9E2A2B] !text-[12px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
 
-          <h3 className="font-sans text-[#4A041D] !text-sm leading-tight line-clamp-2 h-[3rem] w-full flex items-center justify-center">
+          <h3 className="font-sans text-[#4A041D] !text-[12px] leading-[1.2rem] !line-clamp-2 w-full mb-1 flex items-center justify-center overflow-hidden">
             {product?.name}
           </h3>
 

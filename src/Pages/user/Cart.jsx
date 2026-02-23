@@ -187,7 +187,7 @@ const CartItemSkeletonDesktop = () => (
         <div className="w-10 h-10 bg-gray-300 rounded"></div>
       </div>
     </div>
-  </div>
+  </div >
 );
 
 const CartSummarySkeleton = () => (
@@ -268,7 +268,7 @@ const LoyaltyWalletSection = ({ walletBalance, walletAmountToUse, onWalletAmount
               onChange={handleChange}
               disabled={disabled}
               placeholder="0.00"
-              className="w-full px-4 py-2.5 mb-3 min-w-[150px] md:mb-0 border-2 border-[#C5A059]/30 rounded-lg focus:ring-2 focus:ring-[#C5A059] focus:border-[#C5A059] transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+              className="w-full px-4 py-2.5 mb-3 min-w-[150px]  md:mb-0 border-2 border-[#C5A059]/30 rounded-lg focus:ring-2 focus:ring-[#C5A059] focus:border-[#C5A059] transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">AZN</span>
           </div>
@@ -974,6 +974,7 @@ const Cart = () => {
         await updateCartItemQuantity({ cartItemId, quantity }).unwrap();
       } catch (error) {
         console.error('Failed to update cart item:', error);
+        toast.error(error?.data == 'Insufficient stock. Available: 1' ? 'Stokda kifayət qədər məhsul yoxdur' : 'Səbət yenilənmədi');
         setLocalQuantities(prev => {
           const newState = { ...prev };
           delete newState[cartItemId];
@@ -1079,6 +1080,7 @@ const Cart = () => {
 
     } catch (error) {
       console.error('Failed to remove cart:', error);
+      toast.error(error?.data?.message || 'Səbəti boşaltmaq mümkün olmadı.');
     } finally {
       setIsRemovingCart(false);
     }
@@ -1202,7 +1204,7 @@ const Cart = () => {
                           <div className="flex items-center justify-between pt-2 border-t border-gray-50">
                             <div className="flex items-center bg-gray-50 rounded-lg p-1">
                               <button
-                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors cursor-pointer"
                                 onClick={() => handleDecrement(item)}
                                 disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
                               >
@@ -1212,7 +1214,7 @@ const Cart = () => {
                                 {effectiveQuantity}
                               </span>
                               <button
-                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                                className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors cursor-pointer"
                                 onClick={() => handleIncrement(item)}
                                 disabled={isItemUpdating || isItemRemoving}
                               >
@@ -1256,7 +1258,7 @@ const Cart = () => {
                           {/* Quantity */}
                           <div className="flex items-center bg-gray-50 rounded-lg p-1 mx-8">
                             <button
-                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors cursor-pointer"
                               onClick={() => handleDecrement(item)}
                               disabled={effectiveQuantity <= 1 || isItemUpdating || isItemRemoving}
                             >
@@ -1266,7 +1268,7 @@ const Cart = () => {
                               {effectiveQuantity}
                             </span>
                             <button
-                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors"
+                              className="w-8 h-8 flex items-center justify-center bg-white rounded-md text-gray-600 shadow-sm hover:text-[#4A041D] disabled:opacity-50 transition-colors cursor-pointer"
                               onClick={() => handleIncrement(item)}
                               disabled={isItemUpdating || isItemRemoving}
                             >
@@ -1305,7 +1307,7 @@ const Cart = () => {
                   <>
                     <hr className="mx-2 border-[#dee2e6] hidden lg:block" />
                     <div className='justify-between hidden lg:flex'>
-                      <Link to='/' className='flex items-center gap-2 text-white bg-black inter p-2 rounded-lg'>
+                      <Link to='/' className='flex items-center gap-2 text-white bg-[#4A041D] inter p-2 rounded-lg'>
                         <ArrowLeft size={20} />
                         <p>Mağazaya qayıt</p>
                       </Link>
@@ -1385,7 +1387,7 @@ const Cart = () => {
                     </div>
                   )}
 
-                  <div className="flex justify-between text-lg font-bold text-[#4A041D] pt-4">
+                  <div className="flex justify-between text-lg max-lg:text-base font-bold text-[#4A041D] pt-4">
                     <span>Yekun məbləğ:</span>
                     <span>{(cartItems?.finalAmount || cartItems?.totalAmount || 0).toFixed(2)} AZN</span>
                   </div>
@@ -1474,7 +1476,7 @@ const Cart = () => {
         onClose={() => setShowUnauthorizedModal(false)}
         action={unauthorizedAction}
       />
-    </section>
+    </section >
   );
 };
 

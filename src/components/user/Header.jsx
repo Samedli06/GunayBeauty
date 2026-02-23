@@ -54,7 +54,14 @@ const Header = () => {
       .map(cat => ({
         ...cat,
         subCategories: cat.subCategories
-          ? [...cat.subCategories].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+          ? [...cat.subCategories]
+            .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+            .map(sub => ({
+              ...sub,
+              subCategories: sub.subCategories
+                ? [...sub.subCategories].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+                : []
+            }))
           : []
       }));
   }, [parentCategoriesData]);
@@ -219,8 +226,7 @@ const Header = () => {
     if (hasToken && meError?.status !== 401) {
       navigate('/profile');
     } else {
-      setUnauthorizedAction("Hesabınıza daxil olmaq");
-      setShowUnauthorizedModal(true);
+      navigate('/login');
     }
   };
 
@@ -354,7 +360,7 @@ const Header = () => {
           {/* Center: Logo */}
           <div className='flex-1 flex justify-center items-center z-10 min-w-max'>
             <Link to='/' className='block no-underline'>
-              <span className="font-logo text-xl lg:text-4xl text-white whitespace-nowrap hover:text-white transition-colors duration-300">
+              <span className="font-logo text-sm lg:text-4xl text-white whitespace-nowrap hover:text-white transition-colors duration-300">
                 Gunay Beauty Store
               </span>
             </Link>
@@ -401,8 +407,8 @@ const Header = () => {
         </div>
 
         {/* Desktop Navigation - Slim Secondary Bar */}
-        <div className="hidden lg:flex justify-center bg-[#43041A] py-3 border-t border-white/10">
-          <div className="flex items-center gap-10">
+        <div className="hidden lg:flex justify-center bg-[#43041A] py-3 border-t border-white/10 ">
+          <div className="flex items-center gap-10 max-[1200px]:gap-5">
             {/* 1. Categories */}
             <Link to='/categories' className="whitespace-nowrap text-[12px]">
               <CategoriesDropdown />
@@ -413,23 +419,37 @@ const Header = () => {
               <div key={cat.id} className="relative group/cat">
                 <Link
                   to={`/categories/${cat.slug}`}
-                  className="text-white/90 hover:text-white font-sans text-[12px] tracking-[0.25em] uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap block py-1"
+                  className="text-white/90 hover:text-white font-sans text-[12px] tracking-[0.25em] max-[1200px]:tracking-[0.1em]  uppercase font-medium transition-colors relative after:content-[''] after:block after:w-0 after:h-[1px] after:bg-white after:transition-all after:duration-300 hover:after:w-full whitespace-nowrap block py-1"
                 >
                   {cat.name}
                 </Link>
 
                 {/* Subcategories Dropdown */}
                 {cat.subCategories && cat.subCategories.length > 0 && (
-                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw] h-[20vh] overflow-y-auto z-[60] p-6 custom-scrollbar">
+                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw]  z-[60] p-6 custom-scrollbar">
                     <div className="grid grid-cols-2 gap-x-10 gap-y-1">
                       {cat.subCategories.map(sub => (
-                        <Link
-                          key={sub.id}
-                          to={`/products/${sub.slug}`}
-                          className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
-                        >
-                          {sub.name}
-                        </Link>
+                        <div key={sub.id} className="flex flex-col">
+                          <Link
+                            to={`/products/${sub.slug}`}
+                            className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
+                          >
+                            {sub.name}
+                          </Link>
+                          {sub.subCategories && sub.subCategories.length > 0 && (
+                            <div className="pl-4 pb-2 flex flex-col gap-1.5">
+                              {sub.subCategories.map(thirdLevel => (
+                                <Link
+                                  key={thirdLevel.id}
+                                  to={`/products/${thirdLevel.slug}`}
+                                  className="text-[10px] text-gray-500 hover:text-[#4A041D] transition-colors"
+                                >
+                                  {thirdLevel.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -454,16 +474,30 @@ const Header = () => {
 
                 {/* Subcategories Dropdown */}
                 {cat.subCategories && cat.subCategories.length > 0 && (
-                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw] h-[20vh] overflow-y-auto z-[60] p-6 custom-scrollbar">
+                  <div className="absolute top-full left-0 mt-2 bg-white shadow-2xl opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 border border-gray-100 w-[30vw]   z-[60] p-6 custom-scrollbar">
                     <div className="grid grid-cols-2 gap-x-10 gap-y-1">
                       {cat.subCategories.map(sub => (
-                        <Link
-                          key={sub.id}
-                          to={`/products/${sub.slug}`}
-                          className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
-                        >
-                          {sub.name}
-                        </Link>
+                        <div key={sub.id} className="flex flex-col">
+                          <Link
+                            to={`/products/${sub.slug}`}
+                            className="block py-2.5 text-[12px] text-gray-800 hover:text-[#4A041D] hover:translate-x-1 uppercase tracking-[0.1em] transition-all font-semibold border-b border-gray-50 last:border-0"
+                          >
+                            {sub.name}
+                          </Link>
+                          {sub.subCategories && sub.subCategories.length > 0 && (
+                            <div className="pl-4 pb-2 flex flex-col gap-1.5">
+                              {sub.subCategories.map(thirdLevel => (
+                                <Link
+                                  key={thirdLevel.id}
+                                  to={`/products/${thirdLevel.slug}`}
+                                  className="text-[10px] text-gray-500 hover:text-[#4A041D] transition-colors"
+                                >
+                                  {thirdLevel.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>

@@ -10,8 +10,8 @@ const FilterSection = ({ title, isExpanded, onToggle, children }) => (
       type="button"
       className="w-full px-4 py-4 flex justify-between items-center text-left"
     >
-      <span className="text-lg font-medium text-gray-900">{title}</span>
-      {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      <span className="text-base font-semibold text-[#4A041D] uppercase tracking-wider">{title}</span>
+      {isExpanded ? <ChevronUp size={18} className="text-[#4A041D]" /> : <ChevronDown size={18} className="text-[#4A041D]" />}
     </button>
     {isExpanded && (
       <div className="px-4 pb-4">
@@ -30,7 +30,7 @@ const CheckboxItem = ({ label, checked, onChange }) => (
         onChange={onChange}
         className="sr-only"
       />
-      <div className={`w-5 h-5 border-2 rounded flex items-center justify-center ${checked ? 'bg-red-500 border-red-500' : 'border-gray-300'
+      <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${checked ? 'bg-[#4A041D] border-[#4A041D]' : 'border-gray-200'
         }`}>
         {checked && (
           <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -350,10 +350,10 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
     <>
       {/* Mobile Filter Modal */}
       <div className={`fixed inset-0 bg-white z-5000 flex flex-col ${isFilter ? 'block' : 'hidden'}`}>
-        <div className="flex justify-between items-center p-4 border-b border-gray-200">
-          <h1 className="text-xl font-medium text-gray-900">Filtrlər</h1>
-          <button onClick={() => setIsFilter(false)} className="p-1">
-            <X size={24} className="text-gray-600" />
+        <div className="flex justify-between items-center p-5 border-b border-[#F3E7E1] bg-[#FDFBF8]">
+          <h1 className="text-xl font-bold text-[#4A041D] uppercase tracking-widest" style={{ fontFamily: 'Montserrat, sans-serif' }}>Filtrlər</h1>
+          <button onClick={() => setIsFilter(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <X size={20} className="text-[#4A041D]" />
           </button>
         </div>
 
@@ -364,24 +364,58 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
             isExpanded={expandedSections.category}
             onToggle={() => toggleSection('category')}
           >
-            <div className="space-y-1">
+            <div className="space-y-4">
               {ParentCat?.slice(0, showAllCategories ? ParentCat.length : 5).map(item => (
-                <CheckboxItem
-                  key={item.id}
-                  label={item.name}
-                  checked={selectedCategories.includes(item.id)}
-                  onChange={() => handleCategoryChange(item.id)}
-                />
+                <div key={item.id} className="flex flex-col gap-1">
+                  {/* Level 1 Parent */}
+                  <CheckboxItem
+                    label={item.name}
+                    checked={selectedCategories.includes(item.id)}
+                    onChange={() => handleCategoryChange(item.id)}
+                  />
+
+                  {/* Level 2 Subcategories */}
+                  {item.subCategories && item.subCategories.length > 0 && (
+                    <div className="ml-6 space-y-1 py-1">
+                      {item.subCategories.map(sub => (
+                        <div key={sub.id} className="flex flex-col gap-1">
+                          <CheckboxItem
+                            label={sub.name}
+                            checked={selectedCategories.includes(sub.id)}
+                            onChange={() => handleCategoryChange(sub.id)}
+                          />
+
+                          {/* Level 3 Categories */}
+                          {sub.subCategories && sub.subCategories.length > 0 && (
+                            <div className="ml-6 space-y-1">
+                              {sub.subCategories.map(third => (
+                                <label key={third.id} className="flex items-center py-1.5 cursor-pointer opacity-80">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedCategories.includes(third.id)}
+                                    onChange={() => handleCategoryChange(third.id)}
+                                    className="w-3.5 h-3.5 accent-[#C5A059]"
+                                  />
+                                  <span className="ml-3 text-[11px] uppercase tracking-wider text-gray-500">{third.name}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
-              {ParentCat?.length > 5 && (
-                <button
-                  onClick={() => setShowAllCategories(!showAllCategories)}
-                  className="text-sm text-red-500 hover:text-red-600 font-medium mt-2"
-                >
-                  {showAllCategories ? "Daha az gör" : "Hamısını gör"}
-                </button>
-              )}
             </div>
+            {ParentCat?.length > 5 && (
+              <button
+                onClick={() => setShowAllCategories(!showAllCategories)}
+                className="text-sm text-[#9E2A2B] hover:text-[#4A041D] font-bold uppercase tracking-wider mt-2 transition-colors"
+              >
+                {showAllCategories ? "Daha az gör" : "Hamısını gör"}
+              </button>
+            )}
           </FilterSection>
 
           {/* Custom Filters */}
@@ -430,54 +464,56 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 onFocus={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                className="w-full px-3 py-2 border border-[#F3E7E1] rounded-md focus:outline-none focus:ring-1 focus:ring-[#4A041D] text-sm bg-white"
                 min="0"
               />
-              <span className="text-gray-500">-</span>
+              <span className="text-[#C5A059]">-</span>
               <input
                 type="number"
                 placeholder="Maks."
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 onFocus={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                className="w-full px-3 py-2 border border-[#F3E7E1] rounded-md focus:outline-none focus:ring-1 focus:ring-[#4A041D] text-sm bg-white"
                 min="0"
               />
             </div>
           </FilterSection>
-        </div>
+        </div >
 
-        <div className="p-4 border-t border-gray-200 flex gap-3">
+        <div className="p-6 border-t border-[#F3E7E1] flex flex-col md:flex-rowhttp://localhost:5173/products/brand/alerana gap-4 bg-[#FDFBF8]">
           <button
             onClick={handleClearFilters}
-            className="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium"
+            className="flex-1 py-3 text-[#4A041D] font-bold uppercase tracking-wider text-xs border border-[#4A041D] rounded-full hover:bg-[#4A041D]/5 transition-all"
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             Təmizlə
           </button>
           <button
             onClick={handleShowResults}
-            className="flex-1 py-3 px-4 bg-red-500 text-white rounded-lg font-medium"
+            className="flex-1 py-3 bg-[#4A041D] text-white font-bold uppercase tracking-wider text-xs rounded-full hover:bg-[#6D082D] shadow-lg shadow-[#4A041D]/20 transition-all"
             disabled={isFiltering}
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             {isFiltering ? "Yüklənir..." : "Nəticələri göstər"}
           </button>
         </div>
-      </div>
+      </div >
 
       {/* Mobile Sort & Filter Buttons */}
-      <div className="flex gap-2 mb-4 lg:hidden relative">
+      < div className="flex gap-2 mb-4 lg:hidden relative" >
         <div className="flex gap-2 w-full">
           <div className="flex-1 min-w-0">
             <button
               onClick={() => setIsSort(!isSort)}
-              className={`${isSort && 'rounded-b-none border-b-0'} flex items-center  justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-all duration-500 w-full`}
+              className={`${isSort && 'rounded-b-none border-b-0'} flex items-center justify-center gap-2 py-3 px-4 border border-[#F3E7E1] rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full`}
             >
-              <SlidersHorizontal className="w-4 h-4 flex-shrink-0" />
-              <span className='whitespace-nowrap text-sm  '>Sıralama</span>
+              <SlidersHorizontal className="w-4 h-4 text-[#4A041D]" />
+              <span className='whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[#4A041D]'>Sıralama</span>
             </button>
 
-            <div className={`overflow-hidden transition-all duration-500 rounded-b-lg ${isSort ? "max-h-80 opacity-100" : "max-h-0 opacity-0"}`}>
-              <div className="border border-gray-300 border-t-0 rounded-b-lg bg-white shadow-lg">
+            <div className={`overflow-hidden transition-all duration-500 rounded-b-lg absolute left-0 right-0 z-[60] ${isSort ? "max-h-80 opacity-100 mt-0" : "max-h-0 opacity-0"}`}>
+              <div className="border border-[#F3E7E1] border-t-0 rounded-b-lg bg-white shadow-2xl">
                 <div className="py-2 rounded-b-lg">
                   {[
                     { value: null, label: "Sıralama" },
@@ -488,7 +524,8 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
                   ].map((option) => (
                     <button
                       key={option.value}
-                      className={`w-full text-start px-4 py-2 hover:bg-gray-50 transition-colors duration-200 ${currentSort === option.value ? 'bg-gray-100 font-medium' : ''}`}
+                      className={`w-full text-start px-6 py-3 hover:bg-[#FDFBF8] hover:text-[#C5A059] transition-all duration-200 text-xs font-semibold uppercase tracking-wider ${currentSort === option.value ? 'bg-[#FDFBF8] text-[#4A041D] font-bold' : 'text-gray-600'}`}
+                      style={{ fontFamily: 'Montserrat, sans-serif' }}
                       onClick={() => {
                         if (onSortChange) {
                           onSortChange({ target: { value: option.value } });
@@ -506,7 +543,8 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
 
           <button
             onClick={() => setIsFilter(true)}
-            className={`flex items-center justify-center gap-2 rounded-md bg-gray-900 text-white hover:bg-gray-800 transition-all duration-500 overflow-hidden min-w-0 ${isSort ? "flex-shrink-[999] w-0 p-0 opacity-0" : "flex-1 opacity-100"}`}
+            className={`flex items-center justify-center gap-2 rounded-lg bg-[#4A041D] text-white hover:bg-[#6D082D] shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden min-w-0 ${isSort ? "flex-shrink-[999] w-0 p-0 opacity-0" : "flex-1 opacity-100"}`}
+            style={{ fontFamily: 'Montserrat, sans-serif' }}
           >
             <Filter className={`w-4 h-4 flex-shrink-0 transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`} />
             <span className={`whitespace-nowrap text-sm transition-opacity duration-300 ${isSort ? "opacity-0" : "opacity-100"}`}>
@@ -514,7 +552,7 @@ export function MobileFilterButtons({ onFilterResults, onLoadingChange, currentS
             </span>
           </button>
         </div>
-      </div>
+      </div >
     </>
   );
 }

@@ -45,7 +45,7 @@ export const API = createApi({
     },
   }),
 
-  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders', 'Loyalty', 'Wallet', 'Installment'],
+  tagTypes: ['Categories', 'Users', 'Products', 'Banners', 'Filters', 'Cart', 'Auth', 'PromoCodes', 'Orders', 'Loyalty', 'Wallet', 'Installment', 'Quiz'],
 
   endpoints: builder => ({
     // *AUTHENTICATION*
@@ -798,6 +798,77 @@ export const API = createApi({
         method: 'DELETE',
       }),
       invalidatesTags: ['Banners'],
+    }),
+
+    // *QUIZ*
+    getQuizQuestions: builder.query({
+      query: () => ({
+        url: '/api/v1/Quiz/questions',
+        method: 'GET',
+      }),
+      providesTags: ['Quiz'],
+    }),
+
+    submitQuizAnswers: builder.mutation({
+      query: (answerIds) => ({
+        url: '/api/v1/Quiz/submit',
+        method: 'POST',
+        body: {
+          selectedAnswerIds: answerIds
+        },
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
+    // *ADMIN QUIZ*
+    getAdminQuizQuestions: builder.query({
+      query: () => ({
+        url: '/api/v1/Admin/quiz/questions',
+        method: 'GET',
+      }),
+      providesTags: ['Quiz'],
+    }),
+
+    getQuizRules: builder.query({
+      query: () => ({
+        url: '/api/v1/Admin/quiz/rules',
+        method: 'GET',
+      }),
+      providesTags: ['Quiz'],
+    }),
+
+    getQuizRule: builder.query({
+      query: (id) => ({
+        url: `/api/v1/Admin/quiz/rules/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Quiz'],
+    }),
+
+    addQuizRule: builder.mutation({
+      query: (ruleData) => ({
+        url: '/api/v1/Admin/quiz/rules',
+        method: 'POST',
+        body: ruleData,
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
+    updateQuizRule: builder.mutation({
+      query: ({ id, ...ruleData }) => ({
+        url: `/api/v1/Admin/quiz/rules/${id}`,
+        method: 'PUT',
+        body: ruleData,
+      }),
+      invalidatesTags: ['Quiz'],
+    }),
+
+    deleteQuizRule: builder.mutation({
+      query: (id) => ({
+        url: `/api/v1/Admin/quiz/rules/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Quiz'],
     }),
 
     // *WALLET & LOYALTY*
@@ -1868,5 +1939,15 @@ export const {
   useGetLoyaltySettingsQuery,
   useUpdateLoyaltySettingsMutation,
   useGetWalletBalanceQuery,
-  useGetWalletTransactionsQuery
+  useGetWalletTransactionsQuery,
+
+  useGetQuizQuestionsQuery,
+  useSubmitQuizAnswersMutation,
+
+  useGetAdminQuizQuestionsQuery,
+  useGetQuizRulesQuery,
+  useAddQuizRuleMutation,
+  useGetQuizRuleQuery,
+  useUpdateQuizRuleMutation,
+  useDeleteQuizRuleMutation,
 } = API;

@@ -49,32 +49,52 @@ const SubCategoriesSkeleton = () => {
 };
 
 // Category Card
-const CategoryCard = ({ title, imageSrc = null, slug, parentCategory }) => (
-  <Link
-    to={`/products/${slug}`}
-    state={{
-      parentCategoryName: parentCategory?.name,
-      parentCategorySlug: parentCategory?.slug
-    }}
-    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer group"
-  >
-    <div className="flex flex-col items-center text-center h-full">
-      <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-50 transition-colors">
-        {imageSrc ? (
-          <img
-            src={`${API_BASE_URL}${imageSrc}`}
-            alt={title}
-            className="w-full h-full object-contain rounded-lg"
-          />
-        ) : (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gray-200 rounded-md" />
-        )}
+const CategoryCard = ({ title, imageSrc = null, slug, parentCategory, subCategories = [] }) => (
+  <div className="flex flex-col gap-3">
+    <Link
+      to={`/products/${slug}`}
+      state={{
+        parentCategoryName: parentCategory?.name,
+        parentCategorySlug: parentCategory?.slug
+      }}
+      className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-xl hover:border-[#C5A059]/30 transition-all duration-300 cursor-pointer group flex-1"
+    >
+      <div className="flex flex-col items-center text-center h-full">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#FDFBF8] transition-all duration-500 overflow-hidden border border-transparent group-hover:border-[#F3E7E1]">
+          {imageSrc ? (
+            <img
+              src={`${API_BASE_URL}${imageSrc}`}
+              alt={title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gray-50 rounded-full flex items-center justify-center text-[#4A041D]/20">
+              No Image
+            </div>
+          )}
+        </div>
+        <h3 className="text-sm sm:text-base md:text-lg font-sans font-bold text-[#4A041D] group-hover:text-[#9E2A2B] transition-colors uppercase tracking-wider">
+          {title}
+        </h3>
       </div>
-      <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-800 group-hover:text-blue-600 transition-colors">
-        {title}
-      </h3>
-    </div>
-  </Link>
+    </Link>
+
+    {/* Sub-subcategories (3rd Level) */}
+    {subCategories && subCategories.length > 0 && (
+      <div className="flex flex-col gap-1.5 px-4 py-2 border-l-2 border-[#C5A059]/20 ml-4 lg:ml-8">
+        {subCategories.map((sub) => (
+          <Link
+            key={sub.id}
+            to={`/products/${sub.slug}`}
+            className="text-[11px] lg:text-xs text-gray-400 hover:text-[#4A041D] transition-colors flex items-center gap-2 group/third"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]/30 group-hover/third:bg-[#4A041D] transition-colors"></span>
+            {sub.name}
+          </Link>
+        ))}
+      </div>
+    )}
+  </div>
 );
 
 // Main Component
@@ -120,6 +140,7 @@ const SubCategories = () => {
               imageSrc={category.imageUrl}
               slug={category.slug}
               parentCategory={subs}
+              subCategories={category.subCategories}
             />
           ))}
         </div>

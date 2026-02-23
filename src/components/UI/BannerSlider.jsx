@@ -35,7 +35,7 @@ const BannerSlider = ({ banners, isLoading, disableAnimation = false }) => {
   };
 
   const handleMouseEnter = () => setIsAutoPlaying(false);
-  const handleMouseLeave = () => setIsAutoPlaying(false);
+  const handleMouseLeave = () => setIsAutoPlaying(true);
 
 
 

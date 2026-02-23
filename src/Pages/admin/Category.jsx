@@ -12,7 +12,6 @@ const Category = () => {
   const { data: categories, isLoading, error, refetch } = useGetCategoriesQuery();
   console.log(categories);
   const { data: ParCat, isParCatLoading } = useGetParentCategoriesQuery();
-  console.log(ParCat);
   const [expanded, setExpanded] = useState({});
 
   const [deleteCategory] = useDeleteCategoryMutation();
@@ -137,7 +136,7 @@ const Category = () => {
 
       {/* Modals */}
       <Modal open={modalType === "add"} setOpen={handleCloseModal}>
-        <AddCategoryUIStatic setOpen={handleCloseModal} categories={ParCat} />
+        <AddCategoryUIStatic setOpen={handleCloseModal} categories={categories} />
       </Modal>
 
       <Modal open={modalType === "edit"} setOpen={handleCloseModal}>

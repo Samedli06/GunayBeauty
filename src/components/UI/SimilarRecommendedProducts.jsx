@@ -110,9 +110,9 @@ const SimilarProducts = ({ products, isLoading }) => {
             <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
           </div>
         </div>
-        <div className="flex overflow-x-auto gap-4 pb-4 px-4 md:px-0 scrollbar-hide">
+        <div className="flex overflow-x-auto gap-4 pb-10 px-4 md:px-0 luxury-scrollbar">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className="min-w-[150px] md:min-w-[180px] lg:min-w-[270px] h-[280px] lg:h-[350px]">
+            <div key={index} className="min-w-[150px] md:min-w-[180px] lg:min-w-[220px] xl:min-w-[270px] h-[280px] lg:h-[350px]">
               <SkeletonProductCard />
             </div>
           ))}
@@ -158,8 +158,8 @@ const SimilarProducts = ({ products, isLoading }) => {
       {/* Product List */}
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-scroll items-stretch  gap-4 pb-8 px-4 md:px-0 scrollbar-hide snap-x snap-mandatory"
-        style={{ scrollBehavior: 'smooth' }}
+        className="flex overflow-x-auto items-stretch gap-4 pb-10 px-4 md:px-0 luxury-scrollbar snap-x snap-mandatory"
+        style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
       >
         {products.map((product) => {
           const cardInfo = {

@@ -163,7 +163,7 @@ const About = () => {
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-6">
                   <Heart className="w-8 h-8 text-[#C5A059]" />
-                  <h3 className="text-3xl font-bold">Missiyamız</h3>
+                  <h3 className="text-3xl font-bold !text-white">Missiyamız</h3>
                 </div>
                 <p className="text-white/80 text-lg leading-relaxed">
                   İnsanlara öz təbii gözəlliklərini kəşf etmək üçün ilham vermək. Hər bir müştərinin ehtiyaclarına fərdi yanaşaraq, onlara ən keyfiyyətli və trend məhsulları təqdim etmək bizim əsas missiyamızdır.

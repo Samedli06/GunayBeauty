@@ -90,6 +90,7 @@ const Profile = () => {
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Failed to change password:', error);
+      toast.error(getApiErrorMessage(error));
     }
   };
 
@@ -258,7 +259,7 @@ const Profile = () => {
                   </div>
                   <span className="font-bold text-[#4A041D]">{orders.length}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
+                {/* <div className="flex items-center justify-between p-3 bg-[#FDFBF8] rounded-xl border border-[#F3E7E1]/50">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
                       <CreditCard className="w-4 h-4" />
@@ -266,7 +267,7 @@ const Profile = () => {
                     <span className="text-sm text-gray-600 font-sans">Kreditlər</span>
                   </div>
                   <span className="font-bold text-[#4A041D]">₼ 0.00</span>
-                </div>
+                </div> */}
               </div>
             </div>
 

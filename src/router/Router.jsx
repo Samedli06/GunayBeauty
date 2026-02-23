@@ -42,6 +42,8 @@ import OrdersAdmin from "../Pages/admin/Orders";
 import Loyalty from "../Pages/admin/Loyalty";
 import ReturnPolicy from "../Pages/user/ReturnPolicy";
 import PaymentAdmin from "../Pages/admin/PaymentAdmin";
+import QuizAdmin from "../Pages/admin/QuizAdmin";
+import Quiz from "../Pages/user/Quiz";
 
 const Router = () => {
 
@@ -93,6 +95,7 @@ const Router = () => {
             <Route path="/return-policy" element={<ReturnPolicy />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/error" element={<PaymentError />} />
+            <Route path="/quiz" element={<Quiz />} />
 
             {/* 404 Error Page - MUST BE LAST */}
             <Route path="*" element={<ErrorPage />} />
@@ -118,6 +121,7 @@ const Router = () => {
             <Route path="promo-codes" element={<PromoCodes />} />
             <Route path="loyalty" element={<Loyalty />} />
             <Route path="orders" element={<OrdersAdmin />} />
+            <Route path="quiz" element={<QuizAdmin />} />
             <Route path="payment" element={<PaymentAdmin />} />
           </Route>
 

@@ -129,6 +129,13 @@ const Brands = () => {
 
 
       <div className='max-w-[90vw] mx-auto py-8'>
+        <div className="mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-[#4A041D]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            Brendlər
+          </h1>
+          <div className="h-1 w-20 bg-[#C5A059] mt-2 rounded-full"></div>
+        </div>
+
         {/* Search Bar */}
         {/* Search Bar */}
         <div className='bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 mb-8 max-w-2xl mx-auto'>

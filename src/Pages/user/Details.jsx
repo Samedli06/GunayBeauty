@@ -475,21 +475,14 @@ function Details() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4 mt-2">
+                <div className="flex  mt-2">
                   <button
                     onClick={handleAddToCart}
                     disabled={!isInStock || isAddingToCart}
-                    className="col-span-1 py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-xs shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="col-span-1 w-full py-4 px-6 bg-[#4A041D] hover:bg-[#6D082D] text-white rounded-2xl font-bold text-xs shadow-lg shadow-[#4A041D]/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isAddingToCart ? <Loader2 className="animate-spin" /> : <ShoppingBag size={21} />}
                     Səbətə əlavə et
-                  </button>
-                  <button
-                    onClick={() => setShowQuickOrderModal(true)}
-                    disabled={!isInStock}
-                    className="col-span-1 py-4 px-6 bg-white border-2 border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-white rounded-2xl font-bold text-xs transition-all hover:-translate-y-1 flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    İndi al
                   </button>
                 </div>
               </div>

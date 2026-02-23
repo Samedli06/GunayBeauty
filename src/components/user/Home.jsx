@@ -2,10 +2,11 @@ import React, { act, useEffect, useRef, useState } from 'react'
 import HomePageUI from '../UI/HomePageUI'
 import { Link } from 'react-router'
 import BannerSlider from '../UI/BannerSlider'
-import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery, useGetBrandsAdminQuery, useGetProductsCategorySlugQuery, API_BASE_URL } from '../../store/API'
-import { Loader2 } from 'lucide-react'
+import { useAddCartItemMutation, useGetBannersQuery, useGetHotDealsQuery, useGetParentCategoriesQuery, useGetRecommendedQuery, useGetSubCategoriesQuery, useGetBrandsAdminQuery, useGetProductsCategorySlugQuery, useGetProductsCategorySlugPageQuery, API_BASE_URL } from '../../store/API'
+import { Loader2, ArrowRight, Sparkles } from 'lucide-react'
 import { toast } from 'react-toastify'
 import SEO from '../SEO/SEO'
+import UnauthorizedModal from '../UI/UnauthorizedModal'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
@@ -58,8 +59,10 @@ const Home = () => {
   const [addCartItem, { isLoading: isAddingToCart, error: cartError }] = useAddCartItemMutation();
 
   const { data: bannersD, isLoading: isBannersLoading } = useGetBannersQuery();
-  const { data: giftSets, isLoading: isGiftSetsLoading } = useGetProductsCategorySlugQuery('skin-care');
-  const { data: skinCare, isLoading: isSkinCareLoading } = useGetProductsCategorySlugQuery('skin-care');
+  const { data: giftSetsData, isLoading: isGiftSetsLoading } = useGetProductsCategorySlugPageQuery({ categorySlug: 'setler-ve-hediyyeler', page: 1, pageSize: 12 });
+  const giftSets = giftSetsData?.items;
+  const { data: skinCareData, isLoading: isSkinCareLoading } = useGetProductsCategorySlugPageQuery({ categorySlug: 'uz-baxim', page: 1, pageSize: 12 });
+  const skinCare = skinCareData?.items;
   const heroBanners = bannersD?.filter(b => b.sortOrder === 0 && b.isActive) || [];
   const middleBanner = bannersD?.find(b => b.sortOrder === 2 && b.isActive);
   const bottomBanners = bannersD?.filter(b => b.sortOrder === 3 && b.isActive) || [];
@@ -262,14 +265,88 @@ const Home = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center mt-3">
                   <span className="text-[#4A041D] font-sans text-xs lg:text-sm font-bold tracking-[0.2em] uppercase group-hover:text-[#9E2A2B] transition-colors text-center px-2">
                     {item.name}
                   </span>
                   <div className="w-6 h-[2px] bg-[#C5A059] mt-3 group-hover:w-12 transition-all duration-300"></div>
+
+                  {/* Subcategories (Level 2 & 3) */}
+                  {item.subCategories && item.subCategories.length > 0 && (
+                    <div className="mt-4 flex flex-col items-center gap-2">
+                      <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+                        {item.subCategories.slice(0, 2).map((sub) => (
+                          <div key={sub.id} className="flex flex-col items-center">
+                            <Link
+                              to={`/products/${sub.slug}`}
+                              className="text-[9px] lg:text-[10px] text-gray-400 hover:text-[#4A041D] font-bold uppercase tracking-widest transition-colors"
+                            >
+                              {sub.name}
+                            </Link>
+
+                            {/* 3rd Level categories */}
+                            {sub.subCategories && sub.subCategories.length > 0 && (
+                              <div className="hidden lg:flex gap-1 mt-0.5">
+                                {sub.subCategories.slice(0, 2).map(third => (
+                                  <Link
+                                    key={third.id}
+                                    to={`/products/${third.slug}`}
+                                    className="text-[8px] text-gray-300 hover:text-[#C5A059] transition-colors"
+                                  >
+                                    {third.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      {item.subCategories.length > 2 && (
+                        <span className="text-[8px] text-[#C5A059] uppercase font-bold tracking-tighter opacity-50">
+                          və daha çox...
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Link>
             ))}
+          </div>
+        </section>
+
+        {/* Quiz Section */}
+        <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-[#4A041D] text-white">
+            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+              <img
+                src="/Icons/logo.jpeg"
+                alt=""
+                className="w-full h-full object-cover grayscale invert"
+              />
+            </div>
+            <div className="relative z-10 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-10">
+              <div className="max-w-2xl text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md">
+                  <Sparkles size={14} className="text-[#C5A059]" />
+                  Gözəllik Testi
+                </div>
+                <h2 className="text-3xl lg:text-5xl font-bold mb-6 leading-tight !text-white font-logo">Sizin üçün ən doğru məhsulları tapın</h2>
+                <p className="text-white/80 text-lg lg:text-xl mb-10 max-w-xl font-sans leading-relaxed">
+                  Bir neçə saniyəlik testimizə cavab verərək, dərinizə və zövqünüzə ən uyğun tövsiyələri əldə edin.
+                </p>
+                <Link
+                  to="/quiz"
+                  className="inline-flex items-center gap-3 px-10 py-5 bg-[#C5A059] text-white rounded-2xl font-bold text-lg hover:bg-white hover:text-[#4A041D] transition-all transform active:scale-95 shadow-xl shadow-black/20"
+                >
+                  Testə başla
+                  <ArrowRight size={20} />
+                </Link>
+              </div>
+              <div className="relative hidden xl:block">
+                <div className="w-64 h-64 bg-[#C5A059]/10 rounded-full animate-pulse blur-3xl absolute -inset-10"></div>
+                <Sparkles className="w-32 h-32 text-[#C5A059] opacity-20 translate-y-30" />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -550,6 +627,11 @@ const Home = () => {
 
 
       </main >
+      <UnauthorizedModal
+        isOpen={showUnauthorizedModal}
+        onClose={() => setShowUnauthorizedModal(false)}
+        action={unauthorizedAction}
+      />
     </>
   )
 }

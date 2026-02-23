@@ -52,13 +52,14 @@ function Products() {
   const searchQuery = searchParams.get('search');
   const categoryParam = searchParams.get('category');
   const brandParam = searchParams.get('brand');
+  const isHotDealParam = searchParams.get('isHotDeal') === 'true';
 
   // Extract brand slug if this is a brand route - memoize this
   const { isBrandRoute, brandSlug, isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, isBrandParam, isSpecialSlug } = useMemo(() => {
     const pathParts = locationPath.split('/');
     const isBrandRoute = pathParts.includes('brand');
     const brandSlug = isBrandRoute ? pathParts[pathParts.indexOf('brand') + 1] : null;
-    const isHotDeals = slug === 'hot-deals';
+    const isHotDeals = slug === 'hot-deals' || isHotDealParam;
     const isRecommended = slug === 'recommended';
     const isBrand = isBrandRoute && brandSlug;
     const isSearch = !!searchQuery;
@@ -67,7 +68,7 @@ function Products() {
     const isSpecialSlug = isHotDeals || isRecommended || isBrand || isSearch || isCategoryParam || isBrandParam;
 
     return { isBrandRoute, brandSlug, isHotDeals, isRecommended, isBrand, isSearch, isCategoryParam, isBrandParam, isSpecialSlug };
-  }, [locationPath, slug, searchQuery, categoryParam, brandParam]);
+  }, [locationPath, slug, searchQuery, categoryParam, brandParam, isHotDealParam]);
 
   const categoryName = useMemo(() => {
     if (isHotDeals) return "Qaynar təkliflər";
@@ -459,7 +460,7 @@ function Products() {
 
 
 
-            <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-6 items-stretch pb-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-6 items-stretch pb-4">
               {shouldShowLoading ? (
                 skeletonArray.map((_, index) => (
                   <ProductCardSkeleton key={index} />

@@ -167,27 +167,47 @@ const CategoriesDropdown = () => {
                                     {subCategories && subCategories.length > 0 ? (
                                         <div className="grid grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-8 content-start">
                                             {subCategories.map((sub) => (
-                                                <Link
-                                                    key={sub.id}
-                                                    to={`/products/${sub.slug}`}
-                                                    onClick={handleLinkClick}
-                                                    className="group flex flex-col items-center gap-3 p-2 rounded-xl hover:bg-[#FDFBF8] transition-all duration-300 transform hover:-translate-y-1"
-                                                >
-                                                    <div className="w-14 h-14 lg:w-16 lg:h-16 bg-white rounded-full border border-[#F3E7E1] p-1 flex items-center justify-center group-hover:border-[#C5A059] transition-colors relative overflow-hidden shadow-sm">
-                                                        <img
-                                                            src={sub.imageUrl ? `${API_BASE_URL}/${sub.imageUrl}` : getCategoryIcon(sub.slug)}
-                                                            alt={sub.name}
-                                                            className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500"
-                                                            onError={(e) => {
-                                                                e.target.src = getCategoryIcon(sub.slug);
-                                                                e.target.className = "w-8 h-8 opacity-30 grayscale object-contain";
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <span className="text-center font-sans font-medium text-[#4A041D] text-xs group-hover:text-[#9E2A2B] transition-colors line-clamp-2 leading-tight px-1">
-                                                        {sub.name}
-                                                    </span>
-                                                </Link>
+                                                <div key={sub.id} className="flex flex-col gap-2">
+                                                    <Link
+                                                        to={`/products/${sub.slug}`}
+                                                        onClick={handleLinkClick}
+                                                        className="group flex flex-col items-center gap-3 p-2 rounded-xl hover:bg-[#FDFBF8] transition-all duration-300 transform hover:-translate-y-1"
+                                                    >
+                                                        <div className="w-14 h-14 lg:w-16 lg:h-16 bg-white rounded-full border border-[#F3E7E1] p-1 flex items-center justify-center group-hover:border-[#C5A059] transition-colors relative overflow-hidden shadow-sm">
+                                                            <img
+                                                                src={sub.imageUrl ? `${API_BASE_URL}/${sub.imageUrl}` : getCategoryIcon(sub.slug)}
+                                                                alt={sub.name}
+                                                                className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500"
+                                                                onError={(e) => {
+                                                                    e.target.src = getCategoryIcon(sub.slug);
+                                                                    e.target.className = "w-8 h-8 opacity-30 grayscale object-contain";
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <span className="text-center font-sans font-medium text-[#4A041D] text-xs group-hover:text-[#9E2A2B] transition-colors line-clamp-2 leading-tight px-1">
+                                                            {sub.name}
+                                                        </span>
+                                                    </Link>
+                                                    {sub.subCategories && sub.subCategories.length > 0 && (
+                                                        <div className="flex flex-col gap-1 items-center">
+                                                            {sub.subCategories.slice(0, 3).map(third => (
+                                                                <Link
+                                                                    key={third.id}
+                                                                    to={`/products/${third.slug}`}
+                                                                    onClick={handleLinkClick}
+                                                                    className="text-[10px] text-gray-400 hover:text-[#4A041D] text-center transition-colors line-clamp-1 px-2"
+                                                                >
+                                                                    {third.name}
+                                                                </Link>
+                                                            ))}
+                                                            {sub.subCategories.length > 3 && (
+                                                                <span className="text-[9px] text-[#C5A059] font-semibold opacity-70">
+                                                                    +{sub.subCategories.length - 3} daha...
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             ))}
                                         </div>
                                     ) : (

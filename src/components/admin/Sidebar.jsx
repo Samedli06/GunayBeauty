@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Package, CreditCard, ShoppingBag, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket, ChevronDown, Gift } from 'lucide-react';
+import { Menu, X, Package, CreditCard, ShoppingBag, Grid3X3, Users, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Home, User, Filter, Tags, File, Navigation, Icon, Store, Ticket, ChevronDown, Gift, Sparkles } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router';
 import { useLogoutMutation } from '../../store/API';
 import { PiFlagBanner } from 'react-icons/pi';
@@ -35,7 +35,8 @@ const SideBar = () => {
       label: 'Marketinq',
       children: [
         { label: 'Promokodlar', to: 'promo-codes', icon: Ticket },
-        { label: 'Loyallıq', to: 'loyalty', icon: Gift }
+        { label: 'Loyallıq', to: 'loyalty', icon: Gift },
+        { label: 'Gözəllik Testi', to: 'quiz', icon: Sparkles }
       ]
     },
     { icon: ShoppingBag, label: 'Sifarişlər', to: 'orders' },

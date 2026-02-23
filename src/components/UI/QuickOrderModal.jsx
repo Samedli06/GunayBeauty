@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ShoppingBag, Loader2, Check } from 'lucide-react';
-import { useGetMeQuery, useQuickOrderMutation } from '../../store/API';
+import { useGetMeQuery, useQuickOrderMutation, API_BASE_URL } from '../../store/API';
 
 const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
   const [formData, setFormData] = useState({

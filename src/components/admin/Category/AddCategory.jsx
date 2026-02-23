@@ -134,11 +134,14 @@ const AddCategoryUIStatic = ({ setOpen, categories }) => {
           className="w-full px-3 py-2 bg-[#2c2c2c] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <option value="">Ana kateqoriya yoxdur</option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
+          {categories?.map((category) => {
+            
+            return (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            )
+          })}
         </select>
       </div>
 
