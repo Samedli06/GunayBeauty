@@ -160,7 +160,8 @@ const Quiz = () => {
                                 url: product.imageUrl,
                                 name: product.name,
                                 description: product.shortDescription,
-                                isHotDeal: product.isHotDeal
+                                isHotDeal: product.isHotDeal,
+                                brandName: product.brandName
                             }}
                             productData={product}
                             handleAddToCart={handleAddToCart}

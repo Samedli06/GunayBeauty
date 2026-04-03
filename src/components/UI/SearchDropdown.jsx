@@ -178,6 +178,11 @@ const SearchDropdown = ({
                       <h4 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2 min-h-[2.5em] leading-snug group-hover:text-[#4A041D] transition-colors">
                         {product.name}
                       </h4>
+                      {product.brandName && (
+                        <p className="text-[10px] font-bold text-[#9E2A2B] uppercase tracking-wider mb-2">
+                          {product.brandName}
+                        </p>
+                      )}
                       <div className="flex items-baseline gap-2">
                         {parseFloat(product.discountedPrice || 0) > 0 ? (
                           <>

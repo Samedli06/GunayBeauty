@@ -198,9 +198,14 @@ const MobileSearchDropdown = ({
                   <p className="!text-[9px] text-gray-400 uppercase tracking-wide truncate mb-0.5">
                     {product.categoryName}
                   </p>
-                  <h4 className="!text-xs font-semibold text-gray-900 mb-1.5 line-clamp-2 min-h-[2.4em] leading-snug">
+                  <h4 className="!text-xs font-semibold text-gray-900 mb-1 line-clamp-2 min-h-[2.4em] leading-snug">
                     {product.name}
                   </h4>
+                  {product.brandName && (
+                    <p className="!text-[9px] font-bold text-[#9E2A2B] uppercase tracking-wide mb-1.5">
+                      {product.brandName}
+                    </p>
+                  )}
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {parseFloat(product.discountedPrice || 0) > 0 ? (
                       <>

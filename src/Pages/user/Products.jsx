@@ -473,7 +473,8 @@ function Products() {
                     priceOriginal: item?.price,
                     price: item?.discountedPrice && item?.discountedPrice > 0 ? item.discountedPrice : item.price,
                     id: item.id,
-                    description: item.shortDescription
+                    description: item.shortDescription,
+                    brandName: item.brandName
                   };
                   return (
                     <ProductCard

@@ -170,7 +170,8 @@ const SimilarProducts = ({ products, isLoading }) => {
             id: product.id,
             description: product.description || product.shortDescription,
             discountPercentage: product.discountPercentage,
-            isHotDeal: product.isHotDeal
+            isHotDeal: product.isHotDeal,
+            brandName: product.brandName
           };
 
           return (

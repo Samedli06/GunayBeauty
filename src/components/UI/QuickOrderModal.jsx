@@ -134,6 +134,11 @@ const QuickOrderModal = ({ isOpen, onClose, product, quantity }) => {
               />
               <div className="flex-1">
                 <h4 className="font-medium text-gray-900 line-clamp-2">{product?.name}</h4>
+                {product?.brandName && (
+                  <p className="text-xs font-bold text-[#9E2A2B] uppercase tracking-wider mt-0.5">
+                    {product.brandName}
+                  </p>
+                )}
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-red-600 font-semibold">
                     {product.discountedPrice > 0 ? product.discountedPrice : product.price} AZN

@@ -436,21 +436,21 @@ const Home = () => {
             </div>
 
             {/* Right Side: Cards Row */}
-            <div className="flex-1 w-full overflow-x-auto pb-6 luxury-scrollbar">
+            <div className="flex-1 w-full  pb-6 luxury-scrollbar">
               <div className="flex gap-4 min-w-max">
-                {allBrands?.map((brand) => (
+                {allBrands?.slice(0, 5).map((brand) => (
                   <Link
                     key={brand.id}
                     to={`/products/brand/${brand.slug}`}
-                    className="group bg-white w-[140px] h-[160px] lg:w-[160px] lg:h-[180px] rounded-xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
+                    className="group bg-white w-[140px] h-[160px] lg:w-[160px] lg:h-[180px] rounded-xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
                     {/* Brand Logo Container */}
-                    <div className="flex-1 flex items-center justify-center mb-3">
+                    <div className="flex-1 flex items-center justify-center mb-2 overflow-hidden bg-gray-50/30 rounded-lg">
                       <div className="w-full h-full flex items-center justify-center">
                         <img
                           src={brand.logoUrl ? `${API_BASE_URL}${brand.logoUrl}` : './Icons/logo2.jpeg'}
                           alt={brand.name}
-                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           onError={(e) => {
                             e.target.src = './Icons/logo2.jpeg';
                           }}
@@ -459,7 +459,7 @@ const Home = () => {
                     </div>
 
                     {/* Brand Name - Small text below logo */}
-                    <div className="text-center">
+                    <div className="text-center h-[2.5em] flex items-center justify-center">
                       <span className="text-[10px] lg:text-xs font-semibold text-gray-600 uppercase tracking-wide leading-tight group-hover:text-[#4A041D] transition-colors line-clamp-2">
                         {brand.name}
                       </span>

@@ -119,9 +119,17 @@ export function ProductCard({
         <div className={`${compact ? 'p-2 lg:p-3' : 'p-2 lg:p-4'} pt-2 bg-white flex flex-col flex-1`}>
           <Link to={`/details/${id}`} className="block">
             <div className='flex gap-2 items-start justify-between'>
-              <h3 className={`${compact ? '!text-xs md:!text-sm lg:!text-lg' : '!text-[10px] lg:!text-sm'} font-semibold text-gray-900 mb-1 line-clamp-3 leading-snug flex-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                {name}
-              </h3>
+              <div className="flex-1">
+                <h3 className={`${compact ? '!text-xs md:!text-sm lg:!text-lg' : '!text-[10px] lg:!text-sm'} font-semibold text-gray-900 mb-0.5 line-clamp-3 leading-snug`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                  {name}
+                </h3>
+                {info.brandName && (
+                  <p className={`${compact ? 'text-[8px] md:text-[10px] lg:text-xs' : 'text-[8px] lg:text-[10px]'} font-bold text-[#9E2A2B] uppercase tracking-wider mb-1`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    {info.brandName}
+                  </p>
+                )}
+                {console.log(info)}
+              </div>
               <button
                 onClick={handleFavoriteClick}
                 disabled={isTogglingFavorite}
@@ -201,6 +209,11 @@ export function ProductCard({
               <Link to={`/details/${id}`}>
                 <h2 className="text-xl md:text-2xl font-semibold text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif' }}>{name}</h2>
               </Link>
+              {info.brandName && (
+                <p className="text-sm font-bold text-[#9E2A2B] uppercase tracking-wider mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                  {info.brandName}
+                </p>
+              )}
               {description && (
                 <p className="text-sm text-gray-600 mt-2 line-clamp-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>{description}</p>
               )}

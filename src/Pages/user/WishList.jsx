@@ -142,7 +142,8 @@ const WishList = () => {
                 id: item.product.id,
                 description: item.product.shortDescription || item.product.description,
                 discountPercentage: item.product.discountPercentage,
-                isHotDeal: item.product.isHotDeal
+                isHotDeal: item.product.isHotDeal,
+                brandName: item.product.brandName
               };
 
               return (
@@ -155,6 +156,7 @@ const WishList = () => {
                   isAddingToCart={loadingProductId === item.product.id}
                   toggleFavorite={(id) => handleRemoveFavorite({ preventDefault: () => { }, stopPropagation: () => { } }, id)}
                   isFavorite={true}
+                  
                 />
               );
             })}

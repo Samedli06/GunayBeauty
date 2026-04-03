@@ -189,8 +189,13 @@ const HomePageUI = ({
         {/* Content */}
         <div className="flex flex-1 flex-col px-4 pb-4 items-center  text-center">
 
-          {/* Brand/Category Placeholder */}
-          <p className="text-[#9E2A2B] !text-[12px] font-bold uppercase tracking-widest mb-1">GunayBeauty</p>
+          {/* Brand/Category */}
+          {product.brandName && (
+            <p className="text-[#9E2A2B] !text-[12px] font-bold uppercase tracking-widest mb-1">
+              {product.brandName}
+            </p>
+          )}
+          {console.log(product)}
 
           <h3 className="font-sans text-[#4A041D] !text-[12px] leading-[1.2rem] !line-clamp-2 w-full mb-1 flex items-center justify-center overflow-hidden">
             {product?.name}
