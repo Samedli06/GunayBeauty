@@ -316,12 +316,12 @@ const Home = () => {
 
         {/* Quiz Section */}
         <section className='max-w-[1340px] px-4 lg:px-12 lg:mx-auto mt-20 lg:mt-32' data-aos="fade-up">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-[#4A041D] text-white">
+          <div className="relative overflow-hidden rounded -[2.5rem] bg-[#4A041D] text-white">
             <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
               <img
                 src="/Icons/logo.jpeg"
                 alt=""
-                className="w-full h-full object-cover grayscale invert"
+                className="w-full h-full object-cover invert "
               />
             </div>
             <div className="relative z-10 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-10">
@@ -437,7 +437,7 @@ const Home = () => {
 
             {/* Right Side: Cards Row */}
             <div className="flex-1 w-full  pb-6 luxury-scrollbar">
-              <div className="flex gap-4 min-w-max">
+              <div className="flex gap-4 min-w-screen overflow-x-auto">
                 {allBrands?.slice(0, 5).map((brand) => (
                   <Link
                     key={brand.id}

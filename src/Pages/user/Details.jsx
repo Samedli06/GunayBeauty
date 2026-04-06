@@ -508,7 +508,8 @@ function Details() {
               {currentProduct.description && (
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <h4 className="!text-sm md:!text-base lg:!text-xl font-bold text-[#4A041D] mb-3">Məhsulun təsviri</h4>
-                  <div className="!text-sm md:!text-base lg:!text-lg prose prose-stone text-gray-600 leading-relaxed">
+                  <div className="!text-sm whitespace-pre-line md:!text-base lg:!text-lg prose prose-stone text-gray-600 leading-relaxed">
+                    
                     {currentProduct.description}
                   </div>
                 </div>
