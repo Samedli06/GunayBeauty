@@ -606,6 +606,14 @@ export const API = createApi({
       invalidatesTags: ['Products'],
     }),
 
+    exportProducts: builder.query({
+      query: () => ({
+        url: '/api/v1/Products/export',
+        method: 'GET',
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
+
     editProduct: builder.mutation({
       query: ({
         name,
@@ -1708,20 +1716,36 @@ export const API = createApi({
     }),
 
     updateOrderStatus: builder.mutation({
-      query: ({ orderId, status }) => ({
-        url: `/api/v1/Order/admin/${orderId}/status`,
-        method: 'PUT',
-        body: { status },
-      }),
-      invalidatesTags: (result, error, { orderId }) => ['Orders', { type: 'Orders', id: orderId }],
-    }),
-    updateOrderStatus: builder.mutation({
-      query: ({ id, status }) => ({
+      query: ({
+        id,
+        status
+      }) => ({
         url: `/api/v1/Order/${id}/status`,
         method: 'PUT',
-        body: { status },
+        body: {
+          status
+        },
       }),
-      invalidatesTags: ['Orders'],
+      invalidatesTags: (result, error, {
+        id
+      }) => ['Orders', {
+        type: 'Orders',
+        id
+      }],
+    }),
+
+    updateProductStock: builder.mutation({
+      query: ({
+        id,
+        stockQuantity
+      }) => ({
+        url: `/api/v1/Products/${id}/stock`,
+        method: 'PATCH',
+        body: {
+          stockQuantity
+        },
+      }),
+      invalidatesTags: ['Products'],
     }),
     // *INSTALLMENT*
     getInstallmentOptions: builder.query({
@@ -1891,6 +1915,7 @@ export const {
   useGetProductsBrandQuery,
   useEditProductWithImageMutation,
   useDeleteDetailImageMutation,
+  useLazyExportProductsQuery,
 
 
   useLogoutMutation,
@@ -1936,6 +1961,7 @@ export const {
   useGetOrderQuery,
   useGetAdminOrdersQuery,
   useUpdateOrderStatusMutation,
+  useUpdateProductStockMutation,
   useGetLoyaltySettingsQuery,
   useUpdateLoyaltySettingsMutation,
   useGetWalletBalanceQuery,

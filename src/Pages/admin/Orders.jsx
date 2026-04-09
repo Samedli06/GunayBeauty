@@ -9,6 +9,7 @@ const OrdersAdmin = () => {
     const { t } = useTranslation();
 
     const { data: ordersData, isLoading, isFetching } = useGetAdminOrdersQuery();
+    console.log(ordersData)
     const [updateStatus, { isLoading: isUpdating }] = useUpdateOrderStatusMutation();
 
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -79,14 +80,17 @@ const OrdersAdmin = () => {
         );
     }
 
+    // Handle potential .NET JSON structure ($values) or direct array
+    const orders = ordersData?.items || (Array.isArray(ordersData) ? ordersData : []);
+
     // Filter orders based on search query (client-side since API doesn't support it)
-    const filteredOrders = (Array.isArray(ordersData) ? ordersData : []).filter(order => {
+    const filteredOrders = orders.filter(order => {
         const query = searchQuery.toLowerCase();
         return (
-            order.customerName?.toLowerCase().includes(query) ||
-            order.orderNumber?.toLowerCase().includes(query) ||
-            order.id?.toLowerCase().includes(query) ||
-            order.customerPhone?.includes(query)
+            (order.customerName?.toLowerCase() || '').includes(query) ||
+            (order.orderNumber?.toLowerCase() || '').includes(query) ||
+            (order.id?.toLowerCase() || '').includes(query) ||
+            (String(order.customerPhone || '')).includes(query)
         );
     });
 

@@ -436,13 +436,13 @@ const Home = () => {
             </div>
 
             {/* Right Side: Cards Row */}
-            <div className="flex-1 w-full  pb-6 luxury-scrollbar">
-              <div className="flex gap-4 min-w-screen overflow-x-auto">
+            <div className="flex-1 w-full overflow-x-auto pb-6 luxury-scrollbar">
+              <div className="flex gap-4">
                 {allBrands?.slice(0, 5).map((brand) => (
                   <Link
                     key={brand.id}
                     to={`/products/brand/${brand.slug}`}
-                    className="group bg-white w-[140px] h-[160px] lg:w-[160px] lg:h-[180px] rounded-xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                    className="group flex-shrink-0 bg-white w-[140px] h-[160px] lg:w-[160px] lg:h-[180px] rounded-xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
                     {/* Brand Logo Container */}
                     <div className="flex-1 flex items-center justify-center mb-2 overflow-hidden bg-gray-50/30 rounded-lg">

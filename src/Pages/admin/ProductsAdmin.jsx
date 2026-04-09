@@ -1,7 +1,7 @@
-import { Loader2, Pen, Trash, Package, DollarSign, Palette, Ruler, Eye, Search, X, ChevronDown, Filter } from "lucide-react";
+import { Loader2, Pen, Trash, Package, DollarSign, Palette, Ruler, Eye, Search, X, ChevronDown, Filter, Download, Check } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useActivateUserMutation, useDeActivateUserMutation, useDeleteProductMutation, useGetProductsQuery, useGetProductsSummaryQuery, useGetParentCategoriesQuery, API_BASE_URL } from "../../store/API";
+import { useActivateUserMutation, useDeActivateUserMutation, useDeleteProductMutation, useGetProductsQuery, useGetProductsSummaryQuery, useGetParentCategoriesQuery, API_BASE_URL, useUpdateProductStockMutation, useLazyExportProductsQuery } from "../../store/API";
 import Modal from "../../components/UI/Modal";
 import AddProductStatic from "../../components/admin/Product/AddProduct";
 import EditProduct from "../../components/admin/Product/EditProduct";
@@ -26,6 +26,9 @@ const ProductsUI = () => {
   const categoryFilterRef = useRef(null);
 
   const [deleteCategory] = useDeleteProductMutation();
+  const [updateStock] = useUpdateProductStockMutation();
+  const [triggerExport, { isFetching: isExporting }] = useLazyExportProductsQuery();
+  const [editingStock, setEditingStock] = useState(null); // { id: value }
 
   const handleDeleteProduct = async (id) => {
     try {
@@ -45,6 +48,33 @@ const ProductsUI = () => {
     setModalType(false);
     setOpen(false);
     refetch();
+  };
+
+  const handleExportProducts = async () => {
+    try {
+      const blob = await triggerExport().unwrap();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `products_export_${new Date().toISOString().split('T')[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Eksport faylı hazırlandı');
+    } catch (error) {
+      toast.error('Eksport baş tutmadı');
+    }
+  };
+
+  const handleStockUpdate = async (id, value) => {
+    try {
+      await updateStock({ id, stockQuantity: parseInt(value) }).unwrap();
+      toast.success('Stok yeniləndi');
+      setEditingStock(null);
+    } catch (error) {
+      toast.error(error?.data?.message || 'Stok yenilənmədi');
+    }
   };
 
   // Close category filter when clicking outside
@@ -121,12 +151,26 @@ const ProductsUI = () => {
             <h2 className="text-4xl font-bold !text-white mb-2">{t('admin.products')}</h2>
             <p className="text-gray-400">{t('admin.manageProducts')}</p>
           </div>
-          <button
-            onClick={() => setModalType("add")}
-            className="md:px-6 md:py-3 px-4 py-2 bg-white text-sm md:text-base transition-all duration-300 rounded-lg font-semibold text-gray-900 shadow-lg transform hover:bg-gray-100 hover:scale-105"
-          >
-            {t('admin.addNewProduct')}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleExportProducts}
+              disabled={isExporting}
+              className="flex items-center gap-2 md:px-6 md:py-3 px-4 py-2 bg-green-600 text-sm md:text-base transition-all duration-300 rounded-lg font-semibold text-white shadow-lg transform hover:bg-green-700 hover:scale-105 disabled:opacity-50 disabled:scale-100"
+            >
+              {isExporting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              {isExporting ? 'Hazırlanır...' : 'Eksport et'}
+            </button>
+            <button
+              onClick={() => setModalType("add")}
+              className="md:px-6 md:py-3 px-4 py-2 bg-white text-sm md:text-base transition-all duration-300 rounded-lg font-semibold text-gray-900 shadow-lg transform hover:bg-gray-100 hover:scale-105"
+            >
+              {t('admin.addNewProduct')}
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -432,7 +476,25 @@ const ProductsUI = () => {
                           <Package className="w-4 h-4" />
                           Stok
                         </span>
-                        <span className="text-white font-medium">{product.stockQuantity}</span>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            defaultValue={product.stockQuantity}
+                            onClick={(e) => e.stopPropagation()}
+                            onBlur={(e) => {
+                              if (parseInt(e.target.value) !== product.stockQuantity) {
+                                handleStockUpdate(product.id, e.target.value);
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleStockUpdate(product.id, e.target.value);
+                              }
+                            }}
+                            className="w-16 px-1 py-0.5 bg-gray-700 border border-gray-600 rounded text-white text-left text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all font-sans"
+                            title="Stoku dəyişmək üçün rəqəmi dəyişin və kənara klikləyin"
+                          />
+                        </div>
                       </div>
 
                       {product.colors && product.colors.length > 0 && (

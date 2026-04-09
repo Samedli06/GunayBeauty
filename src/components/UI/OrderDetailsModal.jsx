@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Package, Clock, MapPin, CreditCard, ShoppingBag } from 'lucide-react';
 import { useGetOrderQuery } from '../../store/API';
+import { API_BASE_URL } from '../../store/API';
 
 const OrderDetailsModal = ({ orderId, isOpen, onClose }) => {
     const { data: order, isLoading, error } = useGetOrderQuery(orderId, {
